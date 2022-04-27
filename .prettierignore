@@ -1,0 +1,14 @@
+# https://prettier.io/docs/en/options.html#parser
+
+build
+dist
+coverage
+.vscode
+.husky
+node_modules
+*.log*
+.DS_Store
+.code
+*.iml
+package-lock.json
+yarn.lock

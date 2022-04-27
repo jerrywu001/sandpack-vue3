@@ -1,0 +1,34 @@
+.phone {
+  transform: scale(0.5);
+
+  &_title {
+    width: 500px;
+
+    @media (max-width: 500px) {
+      width: auto;
+    }
+
+    body.is_dark & {
+      color: white;
+    }
+  }
+
+  img {
+    display: block;
+  }
+}
+
+.title {
+  display: flex;
+  font-size: var(--font);
+
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  @at-root html {
+    --font: 16px;
+  }
+}
+
+.a {
+  box-sizing: border-box;
+  user-select: all;
+}

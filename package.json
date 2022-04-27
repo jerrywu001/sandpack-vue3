@@ -1,0 +1,114 @@
+{
+  "name": "@codesandbox/sandpack-vue3",
+  "version": "0.1.1-beta.2",
+  "private": "true",
+  "description": "Vue3 components that give you the power of editable sandboxes that run in the browser.",
+  "keywords": [
+    "vue3",
+    "sandpack",
+    "sandpack-vue3",
+    "codesandbox"
+  ],
+  "homepage": "https://github.com/jerrywu001/sandpack-vue3#readme",
+  "bugs": {
+    "url": "https://github.com/jerrywu001/sandpack-vue3/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerrywu001/sandpack-vue3.git"
+  },
+  "license": "MIT",
+  "author": "jerrywu001 <57242263@163.com>",
+  "sideEffects": [
+    "dist/styles/index.css"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
+  "workspaces": [
+    "playground"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:css": "postcss src/styles/index.scss -o dist/styles/index.css",
+    "dev": "tsup --watch",
+    "preinstall": "npx only-allow npm",
+    "lint": "eslint **/*.{ts,tsx,js,vue} --ext .ts,.tsx,.js,.vue",
+    "play": "npm run dev --workspace playground",
+    "play:build": "npm run build --workspace playground",
+    "play:preview": "npm run preview --workspace playground",
+    "prepare": "chmod +x .husky/* && husky install",
+    "prepublishOnly": "npm run build && npm run build:css",
+    "release": "bumpp --commit --tag --push && npm run publish",
+    "stylelint": "stylelint **/*.{css,less,scss,vue}",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@vueuse/core": "^8.3.1",
+    "core-js": "^3.22.2",
+    "vue": "^3.2.33"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/plugin-transform-typescript": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@codesandbox/sandpack-client": "^0.19.1",
+    "@swc/core": "^1.2.172",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/user-event": "^14.1.1",
+    "@testing-library/vue": "^6.5.1",
+    "@types/node": "^17.0.29",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "@vitest/ui": "^0.10.0",
+    "@vue/babel-plugin-jsx": "^1.1.1",
+    "@vue/eslint-config-typescript": "^10.0.0",
+    "autoprefixer": "^10.4.5",
+    "bumpp": "^7.1.1",
+    "cssnano": "^5.1.7",
+    "esbuild-plugin-babel": "^0.2.3",
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "husky": "^7.0.4",
+    "jsdom": "^19.0.0",
+    "lint-staged": "^12.4.1",
+    "nanoid": "^3.3.3",
+    "npm": "^8.7.0",
+    "postcss": "^8.4.12",
+    "postcss-cli": "^9.1.0",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-less": "^6.0.0",
+    "postcss-loader": "^6.2.1",
+    "postcss-nested": "^5.0.6",
+    "postcss-scss": "^4.0.4",
+    "stylelint": "^14.8.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended-vue": "^1.4.0",
+    "stylelint-config-standard": "^25.0.0",
+    "stylelint-prettier": "^2.0.0",
+    "tsup": "^5.12.6",
+    "typescript": "^4.6.3",
+    "vite": "^2.9.6",
+    "vitest": "^0.10.0",
+    "vue-tsc": "^0.34.10"
+  },
+  "packageManager": "npm@8.7.0"
+}

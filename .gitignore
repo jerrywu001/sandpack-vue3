@@ -1,0 +1,15 @@
+.DS_Store
+.vite-ssg-dist
+.vite-ssg-temp
+*.local
+dist
+dist-ssr
+node_modules
+.idea/
+*.log
+/coverage
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+playground/dist
