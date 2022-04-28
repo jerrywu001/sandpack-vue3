@@ -12,3 +12,5 @@ node_modules
 *.iml
 package-lock.json
 yarn.lock
+
+__unconfig_vite.config.ts

@@ -15,7 +15,6 @@
     "types": [
       "vite/client",
       "vite-plugin-pages/client",
-      "@codesandbox/sandpack-vue3"
     ],
     "paths": {
       "~/*": [
@@ -25,7 +24,7 @@
         "../dist/*"
       ],
       "@codesandbox/sandpack-vue3": [
-        "../src/index.ts"
+        "../src"
       ]
     }
   }

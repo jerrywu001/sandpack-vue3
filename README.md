@@ -6,7 +6,7 @@ Vue3 components that give you the power of editable sandboxes that run in the br
 
 ```jsx
 import { Sandpack } from "@codesandbox/sandpack-vue3";
-import "@codesandbox/sandpack-vue3/dist/index.css";
+import "@codesandbox/sandpack-vue3/dist/styles/index.css";
 
 <Sandpack template="vue3" />;
 ```
@@ -17,6 +17,19 @@ import "@codesandbox/sandpack-vue3/dist/index.css";
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
 
+## install
+
+```bash
+npm i
+
+npm run play
+```
+
+> If .tsx file has a type error about JSX (The storybook relies on @types/react), Please delete the @types/react.
+
+```bash
+rm -rf node_modules/@types/react
+```
 
 ## sipport browsers
 

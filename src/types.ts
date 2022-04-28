@@ -1,3 +1,187 @@
+import type {
+  BundlerState,
+  ListenerFunction,
+  ReactDevToolsMode,
+  SandpackBundlerFiles,
+  SandpackClient,
+  SandpackError,
+  SandpackMessage,
+  UnsubscribeFunction,
+} from '@codesandbox/sandpack-client';
+import { Ref } from 'vue';
+
+import type { CodeEditorProps } from '.';
+
+export type SandpackClientDispatch = (
+  msg: SandpackMessage,
+  clientId?: string
+) => void;
+
+export type SandpackClientListen = (
+  listener: ListenerFunction,
+  clientId?: string
+) => UnsubscribeFunction;
+
+export type SandpackContext = SandpackState & {
+  dispatch: SandpackClientDispatch;
+  listen: SandpackClientListen;
+};
+
+export interface SandpackState {
+  bundlerState: BundlerState | undefined;
+  openPaths: string[];
+  activePath: string;
+  startRoute?: string;
+
+  /**
+   * Returns the current state of the editor, meaning that any
+   * changes from the original `files` must return a `dirty` value;
+   * otherwise, it'll return `pristine`
+   */
+  editorState: EditorState;
+  error: SandpackError | null;
+  files: SandpackBundlerFiles;
+  environment?: SandboxEnvironment;
+  status: SandpackStatus;
+  initMode: SandpackInitMode;
+  clients: Record<string, SandpackClient>;
+
+  runSandpack: () => void;
+  registerBundler: (iframe: HTMLIFrameElement, clientId: string) => void;
+  unregisterBundler: (clientId: string) => void;
+  updateFile: (pathOrFiles: string | SandpackFiles, code?: string) => void;
+  updateCurrentFile: (newCode: string) => void;
+  openFile: (path: string) => void;
+  closeFile: (path: string) => void;
+  deleteFile: (path: string) => void;
+  setActiveFile: (path: string) => void;
+  resetFile: (path: string) => void;
+  resetAllFiles: () => void;
+  registerReactDevTools: (value: ReactDevToolsMode) => void;
+
+  /**
+   * Element refs
+   * Different components inside the SandpackProvider might register certain elements of interest for sandpack
+   * eg: lazy anchor - if no component registers this, then the sandpack runs on mount, without lazy mode
+   */
+  lazyAnchorRef: Ref<HTMLDivElement>;
+
+  /**
+   * eg: error screen - if no component registers this, the bundler needs to show the custom error screen
+   * When the value is boolean, we only care if the components have the responsibility to render the elements,
+   * we don't need the actual element reference
+   */
+  errorScreenRegisteredRef: Ref<boolean>;
+  openInCSBRegisteredRef: Ref<boolean>;
+  loadingScreenRegisteredRef: Ref<boolean>;
+}
+
+export type SandpackStatus =
+  | 'initial'
+  | 'idle'
+  | 'running'
+  | 'timeout'
+  | 'done';
+
+export type EditorState = 'pristine' | 'dirty';
+
+export interface SandboxTemplate {
+  files: Record<string, SandpackFile>;
+  dependencies: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  entry: string;
+  main: string;
+  environment: SandboxEnvironment;
+}
+
+export interface SandpackFile {
+  code: string;
+  hidden?: boolean;
+  active?: boolean;
+  readOnly?: boolean;
+}
+
+export type SandpackFiles = Record<string, string | SandpackFile>;
+
+export interface SandpackSetup {
+  /**
+   * Examples:
+   * ```js
+   * {
+   *  "react": "latest",
+   *  "@material-ui/core": "4.12.3",
+   * }
+   * ```
+   */
+  dependencies?: Record<string, string>;
+
+  /**
+   * Examples:
+   * ```js
+   * {
+   *  "@types/react": "latest",
+   * }
+   * ```
+   */
+  devDependencies?: Record<string, string>;
+
+  /**
+   * The entry file is the starting point of the bundle process.
+   *
+   * If you change the path of the entry file, make sure you control all the files that go into the bundle process,
+   * as prexisting settings in the template might not work anymore.
+   */
+  entry?: string;
+  main?: string;
+  files?: SandpackFiles;
+  environment?: SandboxEnvironment;
+}
+
+/**
+ * `immediate`: It immediately mounts all components, such as the code-editor
+ * and the preview - this option might overload the memory usage
+ * and resource from the browser on a page with multiple instances;
+ *
+ * `lazy`: Only initialize the components when the user is about to scroll
+ * them to the viewport and keep these components mounted until the user
+ * leaves the page - this is the default value;
+ *
+ * `user-visible`: Only initialize the components when the user is about
+ * to scroll them to the viewport, but differently from lazy, this option
+ * unmounts those components once it's no longer in the viewport.
+ */
+export type SandpackInitMode = 'immediate' | 'lazy' | 'user-visible';
+
+export type SandboxEnvironment =
+  | 'angular-cli'
+  | 'create-react-app'
+  | 'create-react-app-typescript'
+  | 'svelte'
+  | 'parcel'
+  | 'vue-cli'
+  | 'static'
+  | 'solid';
+
+export type SandpackPredefinedTemplate =
+  | 'angular'
+  | 'react'
+  | 'react-ts'
+  | 'vanilla'
+  | 'vanilla-ts'
+  | 'vue'
+  | 'vue3'
+  | 'svelte'
+  | 'solid';
+
+export type SandpackPredefinedTheme =
+  | 'light'
+  | 'dark'
+  | 'sandpack-dark'
+  | 'night-owl'
+  | 'aqua-blue'
+  | 'github-light'
+  | 'monokai-pro';
+
 export interface SandpackSyntaxStyle {
   color?: string;
   fontStyle?: 'normal' | 'italic';
@@ -19,8 +203,6 @@ export interface SandpackSyntaxStyle {
   | 'line-through'
   | 'underline line-through';
 }
-
-export type EditorState = 'pristine' | 'dirty';
 
 export interface SandpackTheme {
   palette: {
@@ -60,85 +242,20 @@ export type SandpackThemeProp =
   | SandpackPartialTheme
   | 'auto';
 
-export interface SandpackFile {
-  code: string;
-  hidden?: boolean;
-  active?: boolean;
-  readOnly?: boolean;
-}
-
-export type SandpackFiles = Record<string, string | SandpackFile>;
-export interface SandpackSetup {
+/**
+ * Custom properties to be used in the SandpackCodeEditor component,
+ * some of which are exclusive to customize the CodeMirror instance.
+ */
+export interface SandpackCodeOptions {
   /**
-   * Examples:
-   * ```js
-   * {
-   *  "react": "latest",
-   *  "@material-ui/core": "4.12.3",
-   * }
-   * ```
+   * CodeMirror extensions for the editor state, which can
+   * provide extra features and functionalities to the editor component.
    */
-  dependencies?: Record<string, string>;
-
+  extensions?: CodeEditorProps['extensions'];
   /**
-   * Examples:
-   * ```js
-   * {
-   *  "@types/react": "latest",
-   * }
-   * ```
+   * Property to register CodeMirror extension keymap.
    */
-  devDependencies?: Record<string, string>;
-
-  /**
-   * The entry file is the starting point of the bundle process.
-   *
-   * If you change the path of the entry file, make sure you control all the files that go into the bundle process,
-   *  - as prexisting settings in the template might not work anymore.
-   */
-  entry?: string;
-  main?: string;
-  files?: SandpackFiles;
-  environment?: SandboxEnvironment;
-}
-
-export type SandboxEnvironment =
-  | 'angular-cli'
-  | 'create-react-app'
-  | 'create-react-app-typescript'
-  | 'svelte'
-  | 'parcel'
-  | 'vue-cli'
-  | 'static'
-  | 'solid';
-
-export type SandpackPredefinedTemplate =
-  | 'angular'
-  | 'react'
-  | 'react-ts'
-  | 'vanilla'
-  | 'vanilla-ts'
-  | 'vue'
-  | 'vue3'
-  | 'svelte'
-  | 'solid-beta';
-
-export type SandpackPredefinedTheme =
-  | 'light'
-  | 'dark'
-  | 'sandpack-dark'
-  | 'night-owl'
-  | 'aqua-blue'
-  | 'github-light'
-  | 'monokai-pro';
-
-export interface SandboxTemplate {
-  files: Record<string, SandpackFile>;
-  dependencies: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  entry: string;
-  main: string;
-  environment: SandboxEnvironment;
+  extensionsKeymap?: CodeEditorProps['extensionsKeymap'];
 }
 
 /**

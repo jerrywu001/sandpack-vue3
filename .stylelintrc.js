@@ -23,6 +23,7 @@ module.exports = {
     'no-missing-end-of-source-newline': true,
     'no-descending-specificity': null,
     'font-family-no-missing-generic-family-keyword': null,
+    'declaration-block-no-redundant-longhand-properties': null,
   },
   overrides: [
     // 若项目中存在scss文件，添加以下配置

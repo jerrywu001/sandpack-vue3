@@ -3,25 +3,24 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vite build",
+    "build-storybook": "build-storybook",
     "dev": "vite --port 3333 --open",
+    "dev:usepack": "cross-env USEPACK=true vite --port 3100 --open",
     "preview": "vite preview",
+    "storybook": "start-storybook -p 6006",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@vueuse/core": "^8.3.1",
-    "vue": "^3.2.33",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
     "@iconify-json/carbon": "^1.1.3",
     "@unocss/reset": "^0.31.17",
-    "@vitejs/plugin-legacy": "^1.8.1",
-    "@vitejs/plugin-vue": "^2.3.1",
-    "@vitejs/plugin-vue-jsx": "^1.3.10",
-    "eslint": "^8.14.0",
+    "babel-loader": "^8.2.5",
+    "cross-env": "^7.0.3",
     "unocss": "^0.31.17",
-    "unplugin-auto-import": "^0.7.1",
-    "vite": "^2.9.6",
-    "vite-plugin-pages": "^0.23.0"
+    "vite-plugin-pages": "^0.23.0",
+    "vue-loader": "^16.8.3"
   }
 }
