@@ -1,11 +1,11 @@
 import type { DefineComponent } from 'vue';
 import { defineComponent, h, onMounted, ref } from 'vue';
-import type { SandpackProps } from '../../types';
+import { SandpackProps } from '.';
 
 /**
  * The proxy component wrapper for the Starport.
  */
-export const Sandpack = defineComponent({
+const Sandpack = defineComponent({
   name: 'Sandpack',
   inheritAttrs: true,
   setup(props, ctx) {
@@ -37,3 +37,5 @@ export const Sandpack = defineComponent({
     );
   },
 }) as DefineComponent<SandpackProps>;
+
+export { Sandpack };

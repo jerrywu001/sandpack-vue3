@@ -8,14 +8,17 @@ export default defineConfig({
   name: 'tsup',
   entry: [
     './src/index.ts',
-    './src/components/**/*',
   ],
   target: 'es6',
-  format: ['cjs', 'esm'],
+  format: [
+    'cjs',
+    'esm',
+  ],
   shims: false,
   clean: true,
-  dts: true,
+  dts: './src/index.ts',
   sourcemap: true,
+  splitting: false,
   minify: true,
   esbuildPlugins: [
     babel(),

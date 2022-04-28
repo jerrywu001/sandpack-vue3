@@ -1,11 +1,9 @@
 import type { Plugin } from 'vue';
-import { Sandpack } from './components/sand-pack/Sandpack';
-import type { SandpackInitOptions } from './types';
+import { SandpackInitOptions } from './components';
 
 export function SanpackPlugin(defaultOptions = {} as SandpackInitOptions): Plugin {
   return {
     install(app) {
-      app.component('Sandpack', Sandpack);
     },
   };
 }

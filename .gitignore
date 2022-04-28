@@ -4,6 +4,7 @@
 *.local
 dist
 dist-ssr
+build
 node_modules
 .idea/
 *.log

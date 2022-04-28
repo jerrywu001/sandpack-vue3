@@ -16,3 +16,8 @@ import "@codesandbox/sandpack-vue3/dist/index.css";
 ## Documentation
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
+
+
+## sipport browsers
+
+npx browserslist

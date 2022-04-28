@@ -14,7 +14,8 @@
     "skipDefaultLibCheck": true,
     "types": [
       "vite/client",
-      "vite-plugin-pages/client"
+      "vite-plugin-pages/client",
+      "@codesandbox/sandpack-vue3"
     ],
     "paths": {
       "~/*": [

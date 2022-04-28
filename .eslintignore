@@ -10,7 +10,6 @@ babel.config.js
 src/setupTests.ts
 postcss.config.js
 tsconfig.json
-vite.config.ts
 **/*.css
 **/*.scss
 **/*.less
