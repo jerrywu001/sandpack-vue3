@@ -117,8 +117,7 @@ const SandpackProvider = defineComponent({
     // // editor state (override values)
     activePath: {
       type: String,
-      required: true,
-      default: '',
+      required: false,
     },
     openPaths: {
       type: Array as PropType<string[]>,

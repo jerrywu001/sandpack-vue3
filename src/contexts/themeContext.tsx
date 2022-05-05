@@ -25,7 +25,7 @@ const SandpackThemeProvider = defineComponent({
     const context = reactive({ theme: theme || defaultLight, id: defaultId });
     const c = useClasser('sp');
 
-    if (props.theme) {
+    if (context.theme) {
       injectThemeStyleSheet(context.theme, context.id);
       provide(SandpackThemeContext, context);
     }

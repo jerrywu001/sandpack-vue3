@@ -183,7 +183,7 @@ const Sandpack = defineComponent({
                 minWidth: 700 * (editorPart.value / (previewPart.value + editorPart.value)),
               }}
             />
-            {/* <SandpackPreview
+            <SandpackPreview
               {...previewOptions.value}
               customStyle={{
                 height: editorHeight.value as HeightProperty<string | number>,
@@ -191,7 +191,7 @@ const Sandpack = defineComponent({
                 flexShrink: previewPart.value,
                 minWidth: 700 * (previewPart.value / (previewPart.value + editorPart.value)),
               }}
-            /> */}
+            />
           </SandpackLayout>
         </ClasserProvider>
       </SandpackProvider>

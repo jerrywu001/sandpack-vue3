@@ -12,7 +12,7 @@ import { LoadingOverlay } from '../../common/LoadingOverlay';
 import { OpenInCodeSandboxButton } from '../../common/OpenInCodeSandboxButton';
 import { SandpackStack } from '../../common/Stack';
 import { generateRandomId } from '../../utils/stringUtils';
-import { Navigator } from '../Navigator';
+import { Navigator } from '../navigator';
 
 import { RefreshButton } from './RefreshButton';
 
@@ -190,14 +190,14 @@ export const SandpackPreview = defineComponent({
 
           {props.showSandpackErrorOverlay ? <ErrorOverlay /> : null}
 
-          <div class={c('preview-actions')}>
+          {/* <div class={c('preview-actions')}>
             {props.actionsChildren}
             {!props.showNavigator && props.showRefreshButton && status === 'running' ? (
               <RefreshButton clientId={clientId.value} />
             ) : null}
 
             {props.showOpenInCodeSandbox ? <OpenInCodeSandboxButton /> : null}
-          </div>
+          </div> */}
 
           <LoadingOverlay clientId={clientId.value} />
 

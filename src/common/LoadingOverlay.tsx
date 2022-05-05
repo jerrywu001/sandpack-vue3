@@ -35,7 +35,7 @@ export const LoadingOverlay = defineComponent({
     const c = useClasser('sp');
 
     if (loadingOverlayState.value === 'HIDDEN') {
-      return null;
+      return () => null;
     }
 
     if (loadingOverlayState.value === 'TIMEOUT') {
