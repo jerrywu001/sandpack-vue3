@@ -10,15 +10,13 @@ export const ErrorOverlay = defineComponent({
     const error = useErrorMessage();
     const c = useClasser('sp');
 
-    const children = slots.default ? slots.default() : null;
-
-    if (!error.value.message && !children) {
-      return () => null;
+    if (!error.value.message) {
+      return () => slots.default ? slots.default() : null;
     }
 
     return () => (
       <div class={c('overlay', 'error')} translate="no">
-        <div class={c('error-message')}>{error.value.message || children}</div>
+        <div class={c('error-message')}>{error.value.message || (slots.default ? slots.default() : null) }</div>
       </div>
     );
   },

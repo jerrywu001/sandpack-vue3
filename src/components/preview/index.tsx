@@ -97,15 +97,13 @@ export const SandpackPreview = defineComponent({
     actionsChildren: {
       type: Object as PropType<JSX.Element>,
       required: false,
-      default: <></>,
+      default: null,
     },
   },
   // @ts-ignore
   setup(props: PreviewProps, { slots, expose }) {
     const { sandpack, listen } = useSandpack();
     const iframeComputedHeight = ref<number | null>(null);
-
-    const children = slots.default ? slots.default() : null;
 
     let unsubscribe: UnsubscribeFunction;
 
@@ -190,18 +188,18 @@ export const SandpackPreview = defineComponent({
 
           {props.showSandpackErrorOverlay ? <ErrorOverlay /> : null}
 
-          {/* <div class={c('preview-actions')}>
+          <div class={c('preview-actions')}>
             {props.actionsChildren}
-            {!props.showNavigator && props.showRefreshButton && status === 'running' ? (
+            {!props.showNavigator && props.showRefreshButton && sandpack.status === 'running' ? (
               <RefreshButton clientId={clientId.value} />
             ) : null}
 
             {props.showOpenInCodeSandbox ? <OpenInCodeSandboxButton /> : null}
-          </div> */}
+          </div>
 
           <LoadingOverlay clientId={clientId.value} />
 
-          {children}
+          {slots.default ? slots.default() : null}
         </div>
       </SandpackStack>
     );

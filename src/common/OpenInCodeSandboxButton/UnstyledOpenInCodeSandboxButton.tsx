@@ -49,9 +49,11 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
 
     const paramsValues = ref({} as URLSearchParams);
 
-    const children = slots.default ? slots.default() : null;
-
-    watch([sandpack.activePath, sandpack.environment, sandpack.files], () => {
+    watch([
+      () => sandpack.activePath,
+      () => sandpack.environment,
+      () => sandpack.files,
+    ], () => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         const params = getFileParameters(sandpack.files, sandpack.environment);
@@ -88,7 +90,7 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
               ),
             )}
           </form>
-          {children}
+          { slots.default ? slots.default() : null }
         </button>
       );
     }
@@ -100,7 +102,7 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
         target="_blank"
         title="Open in CodeSandbox"
       >
-        {children}
+        { slots.default ? slots.default() : null }
       </a>
     );
   },
