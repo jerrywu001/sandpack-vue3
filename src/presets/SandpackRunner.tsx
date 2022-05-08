@@ -31,25 +31,27 @@ const SandpackRunner = defineComponent({
     code: {
       type: String,
       required: false,
+      default: undefined,
     },
     template: {
       type: String as PropType<SandpackPredefinedTemplate>,
       required: false,
+      default: undefined,
     },
     customSetup: {
       type: Object as PropType<SandpackSetup>,
       required: false,
+      default: undefined,
     },
     options: {
       type: Object as PropType<SandpackRunnerOption>,
       required: false,
-      default() {
-        return {};
-      },
+      default: undefined,
     },
     theme: {
       type: [String, Object] as PropType<SandpackThemeProp>,
       required: false,
+      default: undefined,
     },
   },
   // @ts-ignore

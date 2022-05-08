@@ -26,10 +26,12 @@ export const Navigator = defineComponent({
     clientId: {
       type: String,
       required: false,
+      default: undefined,
     },
     onURLChange: {
       type: Function as PropType<(newURL: string) => void>,
       required: false,
+      default: undefined,
     },
   },
   setup(props: NavigatorProps, { slots }) {
@@ -133,7 +135,7 @@ export const Navigator = defineComponent({
           onChange={handleInputChange}
           onKeydown={handleKeyDown}
           type="text"
-          value={relativeUrl}
+          value={relativeUrl.value}
         />
       </div>
     );

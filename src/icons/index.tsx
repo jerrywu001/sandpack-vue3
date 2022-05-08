@@ -21,6 +21,7 @@ const SVG = defineComponent({
     stroke: {
       type: String,
       required: false,
+      default: undefined,
     },
     width: {
       type: String,

@@ -29,28 +29,32 @@ export const SandpackCodeViewer = defineComponent({
     showTabs: {
       type: Boolean,
       required: false,
-      default: false,
+      default: undefined,
     },
     showLineNumbers: {
       type: Boolean,
       required: false,
-      default: false,
+      default: undefined,
     },
     decorators: {
       type: Object as PropType<Decorators>,
       required: false,
+      default: undefined,
     },
     code: {
       type: String,
       required: false,
+      default: undefined,
     },
     initMode: {
       type: String as PropType<SandpackInitMode>,
       required: false,
+      default: undefined,
     },
     wrapContent: {
       type: String,
       required: false,
+      default: undefined,
     },
   },
   // @ts-ignore

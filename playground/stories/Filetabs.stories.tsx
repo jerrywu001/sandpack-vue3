@@ -38,7 +38,7 @@ export const WithClosableTabs = () => (
   </SandpackProvider>
 );
 
-export const WithHiddenFiles = () => ( // TODO: s
+export const WithHiddenFiles = () => (
   <SandpackProvider
     customSetup={{
       entry: '/index.tsx',

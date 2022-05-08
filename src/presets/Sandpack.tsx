@@ -86,23 +86,27 @@ const SandpackPropValues = {
   files: {
     type: Object as PropType<SandpackFiles>,
     required: false,
+    default: undefined,
   },
   template: {
     type: String as PropType<SandpackPredefinedTemplate>,
     required: false,
+    default: undefined,
   },
   customSetup: {
     type: Object as PropType<SandpackSetup>,
     required: false,
+    default: undefined,
   },
   theme: {
     type: [String, Object] as PropType<SandpackThemeProp>,
     required: false,
-    default: 'default',
+    default: undefined, // TODO: u
   },
   options: {
     type: Object as PropType<SandpackOption>,
     required: false,
+    default: undefined,
   },
 };
 

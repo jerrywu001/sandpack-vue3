@@ -59,6 +59,7 @@ export const SandpackPreview = defineComponent({
     customStyle: {
       type: Object as PropType<PreviewProps>,
       required: false,
+      default: undefined,
     },
     showNavigator: {
       type: Boolean,

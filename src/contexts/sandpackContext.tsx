@@ -109,20 +109,24 @@ const SandpackProvider = defineComponent({
     template: {
       type: String as PropType<SandpackPredefinedTemplate>,
       required: false,
+      default: undefined,
     },
     customSetup: {
       type: Object as PropType<SandpackSetup>,
       required: false,
+      default: undefined,
     },
 
     // // editor state (override values)
     activePath: {
       type: String,
       required: false,
+      default: undefined,
     },
     openPaths: {
       type: Array as PropType<string[]>,
       required: false,
+      default: undefined,
     },
 
     // // execution and recompile
@@ -144,24 +148,29 @@ const SandpackProvider = defineComponent({
     initMode: {
       type: String as PropType<SandpackInitMode>,
       required: false,
+      default: undefined,
     },
     initModeObserverOptions: {
       type: Object as PropType<IntersectionObserverInit>,
       required: false,
+      default: undefined,
     },
 
     // // bundler options
     bundlerURL: {
       type: String,
       required: false,
+      default: undefined,
     },
     logLevel: {
       type: Number as PropType<SandpackLogLevel>,
       required: false,
+      default: undefined,
     },
     startRoute: {
       type: String,
       required: false,
+      default: undefined,
     },
     skipEval: {
       type: Boolean,
@@ -171,10 +180,12 @@ const SandpackProvider = defineComponent({
     fileResolver: {
       type: Object as PropType<FileResolver>,
       required: false,
+      default: undefined,
     },
     externalResources: {
       type: Array as PropType<string[]>,
       required: false,
+      default: undefined,
     },
   },
   // @ts-ignore

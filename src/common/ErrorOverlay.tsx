@@ -12,7 +12,7 @@ export const ErrorOverlay = defineComponent({
     return () => (
       <>
         {
-          !error.value.message ? (slots.default ? slots.default() : null) : (
+          !error.value.message && !slots.default ? null : (
             <div class={c('overlay', 'error')} translate="no">
               <div class={c('error-message')}>{error.value.message || (slots.default ? slots.default() : null) }</div>
             </div>

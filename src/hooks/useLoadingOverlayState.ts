@@ -1,6 +1,6 @@
 import { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useSandpack } from '../contexts/sandpackContext';
-import { ref, watch } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 
 export type LoadingOverlayState =
   | 'LOADING'
@@ -31,6 +31,10 @@ export const useLoadingOverlayState = (
   let fadeTimeout: NodeJS.Timer;
   const { sandpack, listen } = useSandpack();
   const state = ref<LoadingOverlayState>('LOADING');
+
+  onBeforeMount(() => {
+    state.value = 'LOADING';
+  });
 
   /**
    * Sandpack listener

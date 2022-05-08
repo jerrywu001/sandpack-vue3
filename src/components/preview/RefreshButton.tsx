@@ -14,6 +14,7 @@ export const RefreshButton = defineComponent({
     clientId: {
       type: String,
       required: false,
+      default: undefined,
     },
   },
   setup(props: RefreshButtonProps) {

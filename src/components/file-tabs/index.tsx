@@ -21,7 +21,7 @@ export const FileTabs = defineComponent({
     closableTabs: {
       type: Boolean,
       required: false,
-      default: false,
+      default: undefined,
     },
   },
   setup(props: FileTabsProps) {

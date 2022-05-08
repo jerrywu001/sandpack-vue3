@@ -16,6 +16,7 @@ export const SandpackLayout = defineComponent({
     theme: {
       type: [String, Object] as PropType<SandpackThemeProp>,
       required: false,
+      default: undefined,
     },
   },
   setup(props: SandpackLayoutProps, { slots }) {

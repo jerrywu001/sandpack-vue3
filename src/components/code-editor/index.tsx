@@ -134,10 +134,12 @@ export const SandpackCodeEditor = defineComponent({
     customStyle: {
       type: Object as PropType<CSSProperties>,
       required: false,
+      default: undefined,
     },
     showTabs: {
       type: Boolean,
       required: false,
+      default: undefined,
     },
     showLineNumbers: {
       type: Boolean,
@@ -166,26 +168,32 @@ export const SandpackCodeEditor = defineComponent({
     initMode: {
       type: String as PropType<SandpackInitMode>,
       required: false,
+      default: undefined,
     },
     extensions: {
       type: Array as PropType<Extension[]>,
       required: false,
+      default: undefined,
     },
     extensionsKeymap: {
       type: Array as PropType<Array<readonly KeyBinding[]>>,
       required: false,
+      default: undefined,
     },
     id: {
       type: String,
       required: false,
+      default: undefined,
     },
     readOnly: {
       type: Boolean,
       required: false,
+      default: undefined,
     },
     showReadOnly: {
       type: Boolean,
       required: false,
+      default: undefined,
     },
   },
   // @ts-ignore

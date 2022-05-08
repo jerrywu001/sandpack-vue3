@@ -1,5 +1,5 @@
 const path = require('path');
-// const Vue = require('@vitejs/plugin-vue');
+const Vue = require('@vitejs/plugin-vue');
 const vueJsx = require('@vitejs/plugin-vue-jsx');
 const { mergeConfig } = require('vite');
 
@@ -27,9 +27,9 @@ module.exports = {
         },
       },
       plugins: [
-        // Vue({
-        //   reactivityTransform: true,
-        // }),
+        Vue({
+          reactivityTransform: true,
+        }),
 
         vueJsx(),
       ],
