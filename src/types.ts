@@ -71,9 +71,9 @@ export interface SandpackState {
    * When the value is boolean, we only care if the components have the responsibility to render the elements,
    * we don't need the actual element reference
    */
-  errorScreenRegisteredRef: Ref<boolean>;
-  openInCSBRegisteredRef: Ref<boolean>;
-  loadingScreenRegisteredRef: Ref<boolean>;
+  errorScreenRegisteredRef: boolean;
+  openInCSBRegisteredRef: boolean;
+  loadingScreenRegisteredRef: boolean;
 }
 
 export type SandpackStatus =

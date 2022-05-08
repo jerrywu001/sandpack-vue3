@@ -11,9 +11,7 @@ export const useErrorMessage = (): ComputedRef<SandpackError> => {
   const error = computed(() => sandpack.error ?? { message: '' } as SandpackError);
 
   onMounted(() => {
-    if (sandpack.errorScreenRegisteredRef) {
-      sandpack.errorScreenRegisteredRef.value = true;
-    }
+    sandpack.errorScreenRegisteredRef = true;
   });
 
   return error;

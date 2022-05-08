@@ -15,6 +15,7 @@ import {
   watch,
   provide,
   PropType,
+  onMounted,
 } from 'vue';
 import type {
   BundlerState,
@@ -190,9 +191,6 @@ const SandpackProvider = defineComponent({
     let unsubscribe: UnsubscribeFunction = () => {};
 
     const lazyAnchorRef = ref<HTMLDivElement>();
-    const errorScreenRegistered = ref<boolean>();
-    const openInCSBRegistered = ref<boolean>();
-    const loadingScreenRegistered = ref<boolean>();
 
     const { activePath, openPaths, files, environment } = getSandpackStateFromProps(props);
 
@@ -211,36 +209,27 @@ const SandpackProvider = defineComponent({
       reactDevTools: undefined,
     } as SandpackProviderState);
 
-    const {
-      startRoute,
-      bundlerState,
-      editorState,
-      error,
-      sandpackStatus,
-      initMode,
-    } = data;
-
     const state = reactive({
       files: data.files,
       environment: data.environment,
       openPaths: data.openPaths,
       activePath: data.activePath,
-      startRoute,
-      error,
-      bundlerState,
-      status: sandpackStatus,
-      editorState,
-      initMode,
+      startRoute: data.startRoute,
+      error: data.error,
+      bundlerState: data.bundlerState,
+      status: data.sandpackStatus,
+      editorState: data.editorState,
+      initMode: data.initMode,
       clients,
       closeFile,
       deleteFile,
       dispatch: dispatchMessage,
-      errorScreenRegisteredRef: errorScreenRegistered as Ref<boolean>,
+      openInCSBRegisteredRef: false,
+      errorScreenRegisteredRef: false,
+      loadingScreenRegisteredRef: false,
       lazyAnchorRef: lazyAnchorRef as Ref<HTMLDivElement>,
       listen: addListener,
-      loadingScreenRegisteredRef: loadingScreenRegistered as Ref<boolean>,
       openFile,
-      openInCSBRegisteredRef: openInCSBRegistered as Ref<boolean>,
       registerBundler,
       resetAllFiles,
       resetFile,
@@ -250,7 +239,7 @@ const SandpackProvider = defineComponent({
       updateCurrentFile,
       updateFile,
       registerReactDevTools,
-    });
+    } as Record<string, any>);
 
     // @ts-ignore
     provide(SandpackStateContext, state);
@@ -400,9 +389,9 @@ const SandpackProvider = defineComponent({
           startRoute: props.startRoute,
           fileResolver: props.fileResolver,
           skipEval: props.skipEval,
-          showOpenInCodeSandbox: !openInCSBRegistered.value,
-          showErrorScreen: !errorScreenRegistered.value,
-          showLoadingScreen: !loadingScreenRegistered.value,
+          showOpenInCodeSandbox: !state.openInCSBRegisteredRef,
+          showErrorScreen: !state.errorScreenRegisteredRef,
+          showLoadingScreen: !state.loadingScreenRegisteredRef,
           reactDevTools: data.reactDevTools,
         },
       );
@@ -416,7 +405,7 @@ const SandpackProvider = defineComponent({
         unsubscribe = client.listen(handleMessage);
 
         timeoutHook = setTimeout(() => {
-          data.sandpackStatus = 'timeout';
+          state.sandpackStatus = 'timeout';
         }, BUNDLER_TIMEOUT);
       }
 
@@ -458,11 +447,11 @@ const SandpackProvider = defineComponent({
         clients[clientId] = createClient(iframe, clientId);
       });
 
-      data.sandpackStatus = 'running';
+      state.sandpackStatus = 'running';
     }
 
     function registerBundler(iframe: HTMLIFrameElement, clientId: string) {
-      if (data.sandpackStatus === 'running') {
+      if (state.sandpackStatus === 'running') {
         clients[clientId] = createClient(iframe, clientId);
       } else {
         preregisteredIframes[clientId] = iframe;
@@ -483,7 +472,7 @@ const SandpackProvider = defineComponent({
         clearTimeout(timeoutHook);
       }
 
-      data.sandpackStatus = 'idle';
+      state.sandpackStatus = 'idle';
     }
 
     function unregisterAllClients() {
@@ -512,7 +501,7 @@ const SandpackProvider = defineComponent({
       }
 
       const indexOfRemovedPath = state.openPaths.indexOf(path);
-      const newPaths = state.openPaths.filter((openPath) => openPath !== path);
+      const newPaths = state.openPaths.filter((openPath: any) => openPath !== path);
       state.activePath =
           path === state.activePath
             ? indexOfRemovedPath === 0
@@ -541,7 +530,7 @@ const SandpackProvider = defineComponent({
     }
 
     function dispatchMessage(message: SandpackMessage, clientId?: string) {
-      if (data.sandpackStatus !== 'running') {
+      if (state.sandpackStatus !== 'running') {
         console.warn('dispatch cannot be called while in idle mode');
         return;
       }
@@ -669,7 +658,7 @@ const SandpackProvider = defineComponent({
           state.files = stateFromProps.files;
           state.environment = stateFromProps.environment;
 
-          if (data.sandpackStatus !== 'running') {
+          if (state.sandpackStatus !== 'running') {
             return;
           }
 
@@ -688,6 +677,10 @@ const SandpackProvider = defineComponent({
         }
       },
     );
+
+    onMounted(() => {
+      initializeSandpackIframe();
+    });
 
     onUnmounted(() => {
       if (typeof unsubscribe === 'function') {

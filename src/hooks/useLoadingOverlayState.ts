@@ -11,13 +11,22 @@ export type LoadingOverlayState =
 
 export const FADE_ANIMATION_DURATION = 200;
 
+interface LoadingOverlayStateProp {
+  clientId?: string;
+
+  /**
+   * It enforces keeping the loading state visible,
+   * which is helpful for external loading states.
+   */
+  loading?: boolean;
+}
+
 /**
  * @category Hooks
  */
 export const useLoadingOverlayState = (
-  clientId?: string,
-  externalLoading?: boolean,
-): Ref<LoadingOverlayState> => {
+  props: LoadingOverlayStateProp,
+) => {
   let unsubscribe: UnsubscribeFunction;
   let fadeTimeout: NodeJS.Timer;
   const { sandpack, listen } = useSandpack();
@@ -26,8 +35,11 @@ export const useLoadingOverlayState = (
   /**
    * Sandpack listener
    */
-  watch([() => clientId, () => sandpack.status === 'idle'], () => {
-    sandpack.loadingScreenRegisteredRef.value = true;
+  watch([
+    () => props.clientId,
+    () => sandpack.status === 'idle',
+  ], () => {
+    sandpack.loadingScreenRegisteredRef = true;
 
     if (unsubscribe) unsubscribe();
 
@@ -39,16 +51,19 @@ export const useLoadingOverlayState = (
       if (message.type === 'done') {
         state.value = state.value === 'LOADING' ? 'PRE_FADING' : 'HIDDEN';
       }
-    }, clientId);
-  });
+    }, props.clientId);
+  }, { immediate: true });
 
   /**
    * Fading transient state
    */
-  watch([state, () => externalLoading], () => {
+  watch([
+    state,
+    () => props.loading,
+  ], () => {
     if (fadeTimeout) clearTimeout(fadeTimeout);
 
-    if (state.value === 'PRE_FADING' && !externalLoading) {
+    if (state.value === 'PRE_FADING' && !props.loading) {
       state.value = 'FADING';
     } else if (state.value === 'FADING') {
       if (fadeTimeout) clearTimeout(fadeTimeout);
@@ -59,14 +74,14 @@ export const useLoadingOverlayState = (
         FADE_ANIMATION_DURATION,
       );
     }
-  });
+  }, { deep: true });
 
   if (sandpack.status === 'timeout') {
-    return ref('TIMEOUT');
+    state.value = 'TIMEOUT';
   }
 
   if (sandpack.status !== 'running') {
-    return ref('HIDDEN');
+    state.value = 'HIDDEN';
   }
 
   return state;

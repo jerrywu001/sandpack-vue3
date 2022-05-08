@@ -6,7 +6,6 @@ import {
   InjectionKey,
   provide,
   reactive,
-  readonly,
   SetupContext,
   UnwrapRef,
   VNode,
@@ -33,7 +32,7 @@ export const createContext = <T extends Record<string, any>>(
     name: 'ContextProvider',
     inheritAttrs: false,
     setup(_, { slots }: SetupContext) {
-      provide(contextInjectKey, readonly(state));
+      provide(contextInjectKey, state);
       return () => slots.default?.();
     },
   });
@@ -50,5 +49,5 @@ export const useContext = <T>(
 ): T => {
   const ctx = inject<ContextType<T>>(contextInjectKey, defaultValue);
   const isNull = ctx === null || ctx === undefined;
-  return (!isNull ? readonly(ctx) : defaultValue) as T;
+  return (!isNull ? ctx : defaultValue) as T;
 };

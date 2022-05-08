@@ -16,7 +16,7 @@ const theme = ref<SandpackPredefinedTheme>('light');
 const enableClose = ref(false);
 const showLineNumbers = ref(true);
 const wrapContent = ref(true);
-const readOnly = ref(true);
+const readOnly = ref(false);
 
 const toggleTheme = () => {
   theme.value = theme.value !== 'github-light' ? 'github-light' : 'light';
@@ -63,14 +63,6 @@ const toggleReadOnly = () => {
         showReadOnly: true,
         readOnly: readOnly,
         wrapContent: wrapContent,
-      }"
-      :files="{
-        '/src/main.js': `
-import { createApp } from 'vue'
-import App from './App.vue'
-// test
-createApp(App).mount('#app')
-        `,
       }"
     />
     <!-- <SandpackProvider>

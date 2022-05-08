@@ -1,7 +1,7 @@
 import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 import LZString from 'lz-string';
 import { useSandpack } from '../../contexts/sandpackContext';
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import type { SandboxEnvironment } from '../../types';
 
 const getParameters = (parameters: Record<string, any>): string => LZString.compressToBase64(JSON.stringify(parameters))
@@ -46,7 +46,6 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
     let timer: NodeJS.Timeout;
     const { sandpack } = useSandpack();
     const formRef = ref<HTMLFormElement>();
-
     const paramsValues = ref({} as URLSearchParams);
 
     watch([
@@ -68,12 +67,10 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
 
         paramsValues.value = searchParams;
       }, 600);
-    });
+    }, { deep: true, immediate: true });
 
     onMounted(() => {
-      if (sandpack.openInCSBRegisteredRef) {
-        sandpack.openInCSBRegisteredRef.value = true;
-      }
+      sandpack.openInCSBRegisteredRef = true;
     });
 
     if ((paramsValues.value?.get?.('parameters')?.length ?? 0) > 1500) {

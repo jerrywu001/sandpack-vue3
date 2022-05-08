@@ -112,15 +112,9 @@ export const SandpackPreview = defineComponent({
     const iframeRef = ref<HTMLIFrameElement | null>(null);
 
     // SandpackPreview immediately registers the custom screens/components so the bundler does not render any of them
-    if (sandpack.openInCSBRegisteredRef) {
-      sandpack.openInCSBRegisteredRef.value = true;
-    }
-    if (sandpack.errorScreenRegisteredRef) {
-      sandpack.errorScreenRegisteredRef.value = true;
-    }
-    if (sandpack.loadingScreenRegisteredRef) {
-      sandpack.loadingScreenRegisteredRef.value = true;
-    }
+    sandpack.openInCSBRegisteredRef = true;
+    sandpack.errorScreenRegisteredRef = true;
+    sandpack.loadingScreenRegisteredRef = true;
 
     onMounted(() => {
       nextTick(() => {

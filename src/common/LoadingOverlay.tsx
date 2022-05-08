@@ -1,15 +1,10 @@
 import { useClasser } from 'code-hike-classer-vue3';
-import { DefineComponent, defineComponent } from 'vue';
-import {
-  useLoadingOverlayState,
-  FADE_ANIMATION_DURATION,
-} from '../hooks/useLoadingOverlayState';
-
+import { computed, DefineComponent, defineComponent } from 'vue';
+import { useLoadingOverlayState, FADE_ANIMATION_DURATION } from '../hooks/useLoadingOverlayState';
 import { OpenInCodeSandboxButton } from './OpenInCodeSandboxButton';
 
 export interface LoadingOverlayProps {
   clientId?: string;
-
   /**
    * It enforces keeping the loading state visible,
    * which is helpful for external loading states.
@@ -21,58 +16,48 @@ export const LoadingOverlay = defineComponent({
   name: 'LoadingOverlay',
   inheritAttrs: true,
   props: {
-    clientId: {
-      type: String,
-      required: false,
-    },
-    loading: {
-      type: Boolean,
-      required: false,
-    },
+    clientId: String,
+    loading: Boolean,
   },
   setup(props: LoadingOverlayProps, { slots }) {
-    const loadingOverlayState = useLoadingOverlayState(props.clientId, props.loading);
+    const loadingOverlayState = useLoadingOverlayState(props);
     const c = useClasser('sp');
 
-    if (loadingOverlayState.value === 'HIDDEN') {
-      return () => null;
-    }
+    const isLoading = computed(() => (loadingOverlayState.value === 'LOADING'));
+    const stillLoading = computed(() => (isLoading.value || loadingOverlayState.value === 'PRE_FADING'));
+    const notHidden = computed(() => loadingOverlayState.value !== 'HIDDEN');
+    const timeout = computed(() => loadingOverlayState.value === 'TIMEOUT');
 
-    if (loadingOverlayState.value === 'TIMEOUT') {
-      return () => (
-        <div class={c('overlay', 'error')}>
-          <div class={c('error-message')}>
-            Unable to establish connection with the sandpack bundler. Make sure
-            you are online or try again later. If the problem persists, please
-            report it via{' '}
-            <a
-              class={c('error-message')}
-              href="mailto:hello@codesandbox.io?subject=Sandpack Timeout Error"
-            >
-              email
-            </a>{' '}
-            or submit an issue on{' '}
-            <a
-              class={c('error-message')}
-              href="https://github.com/codesandbox/sandpack/issues"
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              GitHub.
-            </a>
-          </div>
+    const timeoutLayout = () => (
+      <div class={c('overlay', 'error')}>
+        <div class={c('error-message')}>
+          Unable to establish connection with the sandpack bundler. Make sure
+          you are online or try again later. If the problem persists, please
+          report it via{' '}
+          <a
+            class={c('error-message')}
+            href="mailto:hello@codesandbox.io?subject=Sandpack Timeout Error"
+          >
+            email
+          </a>{' '}
+          or submit an issue on{' '}
+          <a
+            class={c('error-message')}
+            href="https://github.com/codesandbox/sandpack/issues"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            GitHub.
+          </a>
         </div>
-      );
-    }
+      </div>
+    );
 
-    const stillLoading =
-      loadingOverlayState.value === 'LOADING' || loadingOverlayState.value === 'PRE_FADING';
-
-    return () => (
+    const loadingLayout = () => (
       <div
         class={c('overlay', 'loading')}
         style={{
-          opacity: stillLoading ? 1 : 0,
+          opacity: stillLoading.value ? 1 : 0,
           transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
         }}
       >
@@ -90,6 +75,17 @@ export const LoadingOverlay = defineComponent({
           </div>
         </div>
       </div>
+    );
+
+    return () => (
+      <>
+        {
+          notHidden.value
+            ? timeout.value
+              ? timeoutLayout() : isLoading.value ? loadingLayout() : null
+            : null
+        }
+      </>
     );
   },
 }) as DefineComponent<LoadingOverlayProps>;
