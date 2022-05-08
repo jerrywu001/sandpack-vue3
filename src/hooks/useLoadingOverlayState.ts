@@ -1,6 +1,6 @@
 import { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useSandpack } from '../contexts/sandpackContext';
-import { Ref, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 export type LoadingOverlayState =
   | 'LOADING'
@@ -35,46 +35,54 @@ export const useLoadingOverlayState = (
   /**
    * Sandpack listener
    */
-  watch([
-    () => props.clientId,
-    () => sandpack.status === 'idle',
-  ], () => {
-    sandpack.loadingScreenRegisteredRef = true;
+  watch(
+    [
+      () => props.clientId,
+      () => sandpack.status === 'idle',
+    ],
+    () => {
+      sandpack.loadingScreenRegisteredRef = true;
 
-    if (unsubscribe) unsubscribe();
+      if (unsubscribe) unsubscribe();
 
-    unsubscribe = listen((message) => {
-      if (message.type === 'start' && message.firstLoad === true) {
-        state.value = 'LOADING';
-      }
+      unsubscribe = listen((message) => {
+        if (message.type === 'start' && message.firstLoad === true) {
+          state.value = 'LOADING';
+        }
 
-      if (message.type === 'done') {
-        state.value = state.value === 'LOADING' ? 'PRE_FADING' : 'HIDDEN';
-      }
-    }, props.clientId);
-  }, { immediate: true });
+        if (message.type === 'done') {
+          state.value = state.value === 'LOADING' ? 'PRE_FADING' : 'HIDDEN';
+        }
+      }, props.clientId);
+    },
+    { immediate: true },
+  );
 
   /**
    * Fading transient state
    */
-  watch([
-    state,
-    () => props.loading,
-  ], () => {
-    if (fadeTimeout) clearTimeout(fadeTimeout);
-
-    if (state.value === 'PRE_FADING' && !props.loading) {
-      state.value = 'FADING';
-    } else if (state.value === 'FADING') {
+  watch(
+    [
+      state,
+      () => props.loading,
+    ],
+    () => {
       if (fadeTimeout) clearTimeout(fadeTimeout);
-      fadeTimeout = setTimeout(
-        () => {
-          state.value = 'HIDDEN';
-        },
-        FADE_ANIMATION_DURATION,
-      );
-    }
-  }, { deep: true });
+
+      if (state.value === 'PRE_FADING' && !props.loading) {
+        state.value = 'FADING';
+      } else if (state.value === 'FADING') {
+        if (fadeTimeout) clearTimeout(fadeTimeout);
+        fadeTimeout = setTimeout(
+          () => {
+            state.value = 'HIDDEN';
+          },
+          FADE_ANIMATION_DURATION,
+        );
+      }
+    },
+    { deep: true, immediate: true },
+  );
 
   if (sandpack.status === 'timeout') {
     state.value = 'TIMEOUT';

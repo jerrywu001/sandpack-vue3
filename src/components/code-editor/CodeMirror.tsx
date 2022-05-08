@@ -130,6 +130,7 @@ const CodeMirror = defineComponent({
           }
         });
       },
+      { immediate: true },
     );
 
     // ======= render ===========

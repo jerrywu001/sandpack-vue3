@@ -1,3 +1,4 @@
+import { Ref, ref } from 'vue';
 import { useSandpack } from '../contexts/sandpackContext';
 import type { SandpackState } from '../types';
 
@@ -14,11 +15,13 @@ function getTranspiledCode(sandpack: SandpackState): string | null {
 /**
  * @category Hooks
  */
-export const useTranspiledCode = (): string | null => {
+export const useTranspiledCode = (): Ref<string> => {
   const { sandpack } = useSandpack();
-  if (sandpack.status !== 'running') {
-    return null;
+  const code = ref('');
+
+  if (sandpack.status === 'running') {
+    code.value = getTranspiledCode(sandpack) || '';
   }
 
-  return getTranspiledCode(sandpack);
+  return code;
 };

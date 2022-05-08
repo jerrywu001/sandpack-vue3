@@ -188,38 +188,28 @@ const SandpackProvider = defineComponent({
     const unsubscribeQueuedListeners: Record<string, Record<string, UnsubscribeFunction>> = {};
     const queuedListeners: Record<string, Record<string, ListenerFunction>> = { global: {} };
 
-    let unsubscribe: UnsubscribeFunction = () => {};
+    let unsubscribe: UnsubscribeFunction | undefined;
 
     const lazyAnchorRef = ref<HTMLDivElement>();
 
     const { activePath, openPaths, files, environment } = getSandpackStateFromProps(props);
 
     const data = reactive({
+      renderHiddenIframe: false,
+      reactDevTools: undefined,
+    } as SandpackProviderState);
+
+    const state = reactive({
       files,
       environment,
       openPaths,
       activePath,
       startRoute: props.startRoute,
+      error: { message: '' } as SandpackError,
       bundlerState: undefined,
-      error: null,
-      sandpackStatus: props.autorun ? 'initial' : 'idle',
+      status: props.autorun ? 'initial' : 'idle',
       editorState: 'pristine',
-      renderHiddenIframe: false,
       initMode: props.initMode || 'lazy',
-      reactDevTools: undefined,
-    } as SandpackProviderState);
-
-    const state = reactive({
-      files: data.files,
-      environment: data.environment,
-      openPaths: data.openPaths,
-      activePath: data.activePath,
-      startRoute: data.startRoute,
-      error: data.error,
-      bundlerState: data.bundlerState,
-      status: data.sandpackStatus,
-      editorState: data.editorState,
-      initMode: data.initMode,
       clients,
       closeFile,
       deleteFile,
@@ -241,7 +231,6 @@ const SandpackProvider = defineComponent({
       registerReactDevTools,
     } as Record<string, any>);
 
-    // @ts-ignore
     provide(SandpackStateContext, state);
 
     function handleMessage(msg: SandpackMessage) {
@@ -252,7 +241,7 @@ const SandpackProvider = defineComponent({
       if (msg.type === 'state') {
         state.bundlerState = msg.state;
       } else if (msg.type === 'done' && !msg.compilatonError) {
-        state.error = null;
+        state.error = { message: '' };
       } else if (msg.type === 'action' && msg.action === 'show-error') {
         state.error = extractErrorDetails(msg);
       } else if (
@@ -286,7 +275,7 @@ const SandpackProvider = defineComponent({
     }
 
     function updateClients() {
-      const { sandpackStatus: latestStatus } = data;
+      const { status: latestStatus } = state;
       const { recompileMode, recompileDelay } = props;
 
       if (latestStatus !== 'running') {
@@ -405,7 +394,7 @@ const SandpackProvider = defineComponent({
         unsubscribe = client.listen(handleMessage);
 
         timeoutHook = setTimeout(() => {
-          state.sandpackStatus = 'timeout';
+          state.status = 'timeout';
         }, BUNDLER_TIMEOUT);
       }
 
@@ -447,11 +436,11 @@ const SandpackProvider = defineComponent({
         clients[clientId] = createClient(iframe, clientId);
       });
 
-      state.sandpackStatus = 'running';
+      state.status = 'running';
     }
 
     function registerBundler(iframe: HTMLIFrameElement, clientId: string) {
-      if (state.sandpackStatus === 'running') {
+      if (state.status === 'running') {
         clients[clientId] = createClient(iframe, clientId);
       } else {
         preregisteredIframes[clientId] = iframe;
@@ -472,7 +461,7 @@ const SandpackProvider = defineComponent({
         clearTimeout(timeoutHook);
       }
 
-      state.sandpackStatus = 'idle';
+      state.status = 'idle';
     }
 
     function unregisterAllClients() {
@@ -480,7 +469,7 @@ const SandpackProvider = defineComponent({
 
       if (typeof unsubscribe === 'function') {
         unsubscribe();
-        unsubscribe = () => {};
+        unsubscribe = undefined;
       }
     }
 
@@ -530,7 +519,7 @@ const SandpackProvider = defineComponent({
     }
 
     function dispatchMessage(message: SandpackMessage, clientId?: string) {
-      if (state.sandpackStatus !== 'running') {
+      if (state.status !== 'running') {
         console.warn('dispatch cannot be called while in idle mode');
         return;
       }
@@ -658,7 +647,7 @@ const SandpackProvider = defineComponent({
           state.files = stateFromProps.files;
           state.environment = stateFromProps.environment;
 
-          if (state.sandpackStatus !== 'running') {
+          if (state.status !== 'running') {
             return;
           }
 
@@ -676,6 +665,7 @@ const SandpackProvider = defineComponent({
           state.editorState = newEditorState;
         }
       },
+      { immediate: true },
     );
 
     onMounted(() => {

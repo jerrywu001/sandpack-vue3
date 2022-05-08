@@ -1,8 +1,4 @@
-import type {
-  SandpackClient,
-  SandpackMessage,
-  UnsubscribeFunction,
-} from '@codesandbox/sandpack-client';
+import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { CSSProperties, DefineComponent, defineComponent, nextTick, onMounted, PropType, ref } from 'vue';
@@ -183,12 +179,14 @@ export const SandpackPreview = defineComponent({
           {props.showSandpackErrorOverlay ? <ErrorOverlay /> : null}
 
           <div class={c('preview-actions')}>
-            {props.actionsChildren}
-            {!props.showNavigator && props.showRefreshButton && sandpack.status === 'running' ? (
-              <RefreshButton clientId={clientId.value} />
-            ) : null}
+            { props.actionsChildren }
+            {
+              !props.showNavigator && props.showRefreshButton && sandpack.status === 'running' ? (
+                <RefreshButton clientId={clientId.value} />
+              ) : null
+            }
 
-            {props.showOpenInCodeSandbox ? <OpenInCodeSandboxButton /> : null}
+            { props.showOpenInCodeSandbox ? <OpenInCodeSandboxButton /> : null }
           </div>
 
           <LoadingOverlay clientId={clientId.value} />

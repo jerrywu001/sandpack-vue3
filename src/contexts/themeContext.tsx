@@ -39,7 +39,11 @@ const SandpackThemeProvider = defineComponent({
       }
     };
 
-    watch(() => props.theme, updateThemeState, { deep: true });
+    watch(
+      () => props.theme,
+      updateThemeState,
+      { immediate: true },
+    );
 
     return () => (
       <div class={c('wrapper', context.id)}>{ slots.default ? slots.default() : null }</div>

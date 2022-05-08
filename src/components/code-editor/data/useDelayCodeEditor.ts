@@ -210,7 +210,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     shouldInitEditor,
     sandpackTheme,
     sortedDecorators,
-  ], doDelayCodeEditorInit);
+  ], doDelayCodeEditorInit, { immediate: true });
 
   watch([
     () => props.initMode,

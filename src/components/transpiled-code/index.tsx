@@ -41,13 +41,15 @@ export const SandpackTranspiledCode = defineComponent({
 
     return () => (
       <div class={c('transpiled-code')}>
-        {transpiledCode && (
-          <SandpackCodeViewer
-            code={transpiledCode}
-            initMode={sandpack.initMode}
-            {...props}
-          />
-        )}
+        {
+          transpiledCode.value && (
+            <SandpackCodeViewer
+              code={transpiledCode.value}
+              initMode={sandpack.initMode}
+              {...props}
+            />
+          )
+        }
         <iframe
           ref={hiddenIframeRef}
           style={{ display: 'none' }}

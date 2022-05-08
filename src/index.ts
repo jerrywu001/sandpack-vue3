@@ -16,8 +16,8 @@ export { SanpackPlugin as default } from './plugin';
 
 export * from './presets';
 export * from './components';
- export * from "./common";
- export * from "./hooks";
+export * from "./common";
+export * from "./hooks";
 
 export * from "./contexts/sandpackContext";
 export * from "./contexts/themeContext";

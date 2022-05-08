@@ -44,21 +44,25 @@ export const Navigator = defineComponent({
 
     const c = useClasser('sp');
 
-    watch(() => props.clientId, () => {
-      if (unsub) unsub();
-      unsub = listen((message) => {
-        if (message.type === 'urlchange') {
-          const { url, back, forward } = message;
+    watch(
+      () => props.clientId,
+      () => {
+        if (unsub) unsub();
+        unsub = listen((message) => {
+          if (message.type === 'urlchange') {
+            const { url, back, forward } = message;
 
-          const [newBaseUrl, newRelativeUrl] = splitUrl(url);
+            const [newBaseUrl, newRelativeUrl] = splitUrl(url);
 
-          baseUrl.value = newBaseUrl;
-          relativeUrl.value = newRelativeUrl;
-          backEnabled.value = back;
-          forwardEnabled.value = forward;
-        }
-      }, props.clientId);
-    });
+            baseUrl.value = newBaseUrl;
+            relativeUrl.value = newRelativeUrl;
+            backEnabled.value = back;
+            forwardEnabled.value = forward;
+          }
+        }, props.clientId);
+      },
+      { immediate: true },
+    );
 
     const handleInputChange = (e: any): void => {
       const path = e.target.value.startsWith('/')

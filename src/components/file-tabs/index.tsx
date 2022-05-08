@@ -2,10 +2,7 @@ import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { DefineComponent, defineComponent } from 'vue';
 import { CloseIcon } from '../../icons';
-import {
-  calculateNearestUniquePath,
-  getFileName,
-} from '../../utils/stringUtils';
+import { calculateNearestUniquePath, getFileName } from '../../utils/stringUtils';
 
 export interface FileTabsProps {
   /**

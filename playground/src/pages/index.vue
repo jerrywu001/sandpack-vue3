@@ -9,6 +9,7 @@ import {
   SandpackTranspiledCode,
   SandpackCodeViewer,
   SandpackProvider,
+  SandpackCodeEditor,
 } from '@codesandbox/sandpack-vue3';
 
 const template = ref<SandpackPredefinedTemplate>('vue3');
@@ -57,6 +58,7 @@ const toggleReadOnly = () => {
       :theme="theme"
       :template="template"
       :options="{
+        autorun: true,
         showTabs: true,
         showLineNumbers: showLineNumbers,
         closableTabs: enableClose,
@@ -65,12 +67,10 @@ const toggleReadOnly = () => {
         wrapContent: wrapContent,
       }"
     />
-    <!-- <SandpackProvider>
+    <!-- <SandpackProvider template="react">
       <SandpackLayout>
-        <SandpackStack>
-          <SandpackTranspiledCode />
-        </SandpackStack>
-        <SandpackCodeViewer />
+        <SandpackCodeEditor />
+        <SandpackTranspiledCode />
       </SandpackLayout>
     </SandpackProvider> -->
   </div>

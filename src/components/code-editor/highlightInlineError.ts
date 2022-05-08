@@ -1,7 +1,6 @@
 import type { Extension } from '@codemirror/state';
 import type { DecorationSet, EditorView, ViewUpdate } from '@codemirror/view';
 import { Decoration, ViewPlugin } from '@codemirror/view';
-
 import { getCodeMirrorPosition } from './utils';
 
 export function highlightInlineError(): Extension {

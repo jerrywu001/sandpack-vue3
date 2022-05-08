@@ -2,7 +2,6 @@ import type { Extension } from '@codemirror/state';
 import type { DecorationSet, EditorView, ViewUpdate } from '@codemirror/view';
 import { Decoration, ViewPlugin } from '@codemirror/view';
 import { Decorators } from '.';
-
 import { getCodeMirrorPosition } from './utils';
 
 export function highlightDecorators(positions: Decorators): Extension {

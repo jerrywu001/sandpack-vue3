@@ -12,9 +12,7 @@ import { SandpackStack } from '../../common';
 import { useActiveCode } from '../../hooks';
 import { useClasser } from 'code-hike-classer-vue3';
 
-import type {
-  EditorState as SandpackEditorState, SandpackInitMode,
-} from '../../types';
+import type { EditorState as SandpackEditorState, SandpackInitMode } from '../../types';
 import type { Extension } from '@codemirror/state';
 import type { EditorView, KeyBinding } from '@codemirror/view';
 import { RunButton } from '../../common/RunButton';
@@ -226,7 +224,7 @@ export const SandpackCodeEditor = defineComponent({
             wrapContent={props.wrapContent}
           />
 
-          {props.showRunButton && status === 'idle' ? <RunButton /> : null}
+          {props.showRunButton && sandpack.status === 'idle' ? <RunButton /> : null}
         </div>
       </SandpackStack>
     );

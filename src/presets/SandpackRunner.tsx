@@ -4,12 +4,7 @@ import { SandpackLayout } from '../common';
 import { SandpackPredefinedTemplate, SandpackSetup, SandpackThemeProp } from '../types';
 import { SandpackPreview } from '../components';
 import { SandpackProvider } from '../contexts/sandpackContext';
-import {
-  computed,
-  DefineComponent,
-  defineComponent,
-  PropType,
-} from 'vue';
+import { computed, DefineComponent, defineComponent, PropType } from 'vue';
 
 interface SandpackRunnerOption {
   showNavigator?: boolean;
