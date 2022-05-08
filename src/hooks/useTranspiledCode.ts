@@ -1,26 +1,23 @@
-import { Ref, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { useSandpack } from '../contexts/sandpackContext';
-import type { SandpackState } from '../types';
-
-function getTranspiledCode(sandpack: SandpackState): string | null {
-  const { activePath, bundlerState } = sandpack;
-  if (bundlerState == null) {
-    return null;
-  }
-
-  const tModule = bundlerState.transpiledModules[activePath + ':'];
-  return tModule?.source?.compiledCode ?? null;
-}
 
 /**
- * @category Hooks
+ * useTranspiledCode
  */
 export const useTranspiledCode = (): Ref<string> => {
-  const { sandpack } = useSandpack();
   const code = ref('');
+  const { sandpack } = useSandpack();
+  const transpiledCode = computed(() => {
+    if (sandpack.bundlerState == null) {
+      return '';
+    }
+
+    const tModule = sandpack.bundlerState?.transpiledModules[sandpack.activePath + ':'];
+    return tModule?.source?.compiledCode ?? '';
+  });
 
   if (sandpack.status === 'running') {
-    code.value = getTranspiledCode(sandpack) || '';
+    code.value = transpiledCode.value;
   }
 
   return code;
