@@ -182,7 +182,7 @@ const SandpackProvider = defineComponent({
     let debounceHook: number = 0;
     let timeoutHook: NodeJS.Timer | null = null;
     let initializeSandpackIframeHook: NodeJS.Timer | null = null;
-    let intersectionObserver = {} as IntersectionObserver;
+    let intersectionObserver: IntersectionObserver;
     const preregisteredIframes: Record<string, HTMLIFrameElement> = {};
     const clients: Record<string, SandpackClient> = {};
     const unsubscribeQueuedListeners: Record<string, Record<string, UnsubscribeFunction>> = {};
@@ -330,7 +330,7 @@ const SandpackProvider = defineComponent({
           }
         }, observerOptions);
 
-        intersectionObserver.observe(lazyAnchorRef.value);
+        intersectionObserver?.observe(lazyAnchorRef.value);
       } else if (
         lazyAnchorRef.value &&
         state.initMode === 'user-visible'
@@ -351,7 +351,7 @@ const SandpackProvider = defineComponent({
           }
         }, observerOptions);
 
-        intersectionObserver.observe(lazyAnchorRef.value);
+        intersectionObserver?.observe(lazyAnchorRef.value);
       } else {
         // else run the sandpack on mount, with a slight delay to allow all subcomponents to mount/register components
         initializeSandpackIframeHook = setTimeout(
@@ -690,7 +690,7 @@ const SandpackProvider = defineComponent({
       }
 
       if (intersectionObserver) {
-        intersectionObserver.disconnect();
+        intersectionObserver?.disconnect();
       }
     });
 

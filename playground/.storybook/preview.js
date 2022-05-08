@@ -1,4 +1,5 @@
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
+import '../../src/styles/index.css';
 
 const customViewports = {
   pixel2: {
@@ -32,6 +33,11 @@ export const parameters = {
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
+    },
+  },
+  options: {
+    storySort: {
+      order: ["Intro"],
     },
   },
   viewport: {

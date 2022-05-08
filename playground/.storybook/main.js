@@ -1,4 +1,6 @@
 const path = require('path');
+// const Vue = require('@vitejs/plugin-vue');
+const vueJsx = require('@vitejs/plugin-vue-jsx');
 const { mergeConfig } = require('vite');
 
 module.exports = {
@@ -24,6 +26,13 @@ module.exports = {
           '@codesandbox/sandpack-vue3/': path.resolve(__dirname, '../../src/'),
         },
       },
+      plugins: [
+        // Vue({
+        //   reactivityTransform: true,
+        // }),
+
+        vueJsx(),
+      ],
     });
   },
 };

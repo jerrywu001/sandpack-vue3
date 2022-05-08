@@ -25,6 +25,9 @@
       ],
       "@codesandbox/sandpack-vue3": [
         "../src"
+      ],
+      "@codesandbox/sandpack-vue3/*": [
+        "../src/*"
       ]
     }
   }
