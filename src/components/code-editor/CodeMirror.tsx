@@ -165,7 +165,7 @@ const CodeMirror = defineComponent({
       >
         <pre
           class={c('pre-placeholder')}
-          style={{ marginLeft: props.showLineNumbers ? 28 : 0 }}
+          style={{ marginLeft: props.showLineNumbers ? '28px' : 0 }}
         >
           {props.code}
         </pre>

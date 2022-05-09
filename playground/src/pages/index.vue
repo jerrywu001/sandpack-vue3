@@ -5,9 +5,7 @@ import {
   SandpackLayout,
   SandpackPredefinedTemplate,
   SandpackPredefinedTheme,
-  SandpackStack,
   SandpackTranspiledCode,
-  SandpackCodeViewer,
   SandpackProvider,
   SandpackCodeEditor,
 } from '@codesandbox/sandpack-vue3';
@@ -67,12 +65,16 @@ const toggleReadOnly = () => {
         wrapContent: wrapContent,
       }"
     />
-    <!-- <SandpackProvider template="react">
+
+    <br>
+    <br>
+
+    <SandpackProvider template="react">
       <SandpackLayout>
         <SandpackCodeEditor />
         <SandpackTranspiledCode />
       </SandpackLayout>
-    </SandpackProvider> -->
+    </SandpackProvider>
   </div>
 </template>
 

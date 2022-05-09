@@ -7,7 +7,7 @@ import {
   SandpackProvider,
   SandpackStack,
 } from '@codesandbox/sandpack-vue3';
-import { Provider } from './Provider';
+import { Provider } from './widgets/Provider';
 
 export default {
   title: 'components/Common',

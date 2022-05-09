@@ -10,7 +10,7 @@ export default {
   title: 'components/Transpiled Code View',
 };
 
-export const Component = () => ( // TODO: n
+export const Component = () => (
   <SandpackProvider
     customSetup={{
       entry: '/index.js',

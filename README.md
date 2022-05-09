@@ -17,6 +17,30 @@ import "@codesandbox/sandpack-vue3/dist/styles/index.css";
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
 
+## Tips ☕
+
+*When using vue, please do not write it that way*, It will not take effect
+
+```jsx
+// 💀
+<div style={{ height: 200 }}>
+
+// 💀
+<SandpackPreview
+  customStyle={{ width: 400, height: 300 }}
+/>
+```
+
+👉🏽**Write it like this**
+
+```jsx
+<div style={{ height: '200px' }}>
+
+<SandpackPreview
+  customStyle={{ width: '400px', height: '300px' }}
+/>
+```
+
 ## install
 
 ```bash

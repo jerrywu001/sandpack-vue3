@@ -17,10 +17,11 @@ const SandpackThemeProvider = defineComponent({
   props: {
     theme: {
       type: [String, Object] as PropType<SandpackThemeProp>,
-      required: true,
+      required: false,
+      default: 'default',
     },
   },
-  setup(props, { slots }) {
+  setup(props: { theme?: SandpackThemeProp }, { slots }) {
     const { theme, id: defaultId } = createThemeObject(props.theme);
     const context = reactive({ theme: theme || defaultLight, id: defaultId });
     const c = useClasser('sp');

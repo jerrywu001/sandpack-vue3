@@ -16,6 +16,7 @@ import {
   provide,
   PropType,
   onMounted,
+  UnwrapNestedRefs,
 } from 'vue';
 import type {
   BundlerState,
@@ -95,7 +96,7 @@ export interface SandpackProviderProps {
   externalResources?: string[];
 }
 
-const SandpackStateContext: InjectionKey<SandpackContext> = Symbol('sandpackStateContext');
+const SandpackStateContext: InjectionKey<UnwrapNestedRefs<SandpackState>> = Symbol('sandpackStateContext');
 
 /**
  * SandpackProvider
@@ -210,14 +211,14 @@ const SandpackProvider = defineComponent({
       reactDevTools: undefined,
     } as SandpackProviderState);
 
-    const state = reactive({
+    const state: UnwrapNestedRefs<SandpackState> = reactive({
       files,
       environment,
       openPaths,
       activePath,
       startRoute: props.startRoute,
       error: { message: '' } as SandpackError,
-      bundlerState: undefined,
+      bundlerState: { entry: '', transpiledModules: {} } as BundlerState,
       status: props.autorun ? 'initial' : 'idle',
       editorState: 'pristine',
       initMode: props.initMode || 'lazy',
@@ -240,7 +241,7 @@ const SandpackProvider = defineComponent({
       updateCurrentFile,
       updateFile,
       registerReactDevTools,
-    } as Record<string, any>);
+    });
 
     provide(SandpackStateContext, state);
 
@@ -676,7 +677,7 @@ const SandpackProvider = defineComponent({
           state.editorState = newEditorState;
         }
       },
-      { immediate: true },
+      { immediate: true, deep: true },
     );
 
     onMounted(() => {

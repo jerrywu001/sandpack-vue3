@@ -207,8 +207,8 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     () => props.showLineNumbers,
     () => props.wrapContent,
     () => props.readOnly,
+    () => sandpackTheme.id,
     shouldInitEditor,
-    sandpackTheme,
     sortedDecorators,
   ], doDelayCodeEditorInit, { immediate: true });
 

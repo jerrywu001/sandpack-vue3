@@ -135,7 +135,7 @@ export const AdditionalContent = () => (
   </SandpackProvider>
 );
 
-const SandpackClient = () => { // TODO: n
+const SandpackClient = () => {
   const { sandpack } = useSandpack();
   const previewRef = ref<SandpackPreviewRef>();
 

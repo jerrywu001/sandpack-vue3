@@ -1,0 +1,40 @@
+import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-vue3';
+import { computed, defineComponent, ref } from 'vue';
+import { SandpackListener } from './SandpackListener';
+
+export const MultiplePreviewsAndListenersStory = defineComponent({ // TODO: this page has error
+  name: 'MultiplePreviewsAndListenersStory',
+  inheritAttrs: true,
+  setup() {
+    const count = ref(2);
+    const listenersCount = ref(0);
+
+    const previews = computed(() => Array.from(Array(count.value).keys()));
+
+    return () => (
+      <>
+        <SandpackProvider template="react">
+          {new Array(listenersCount.value).fill(' ').map((pr) => (
+            <SandpackListener key={pr} />
+          ))}
+          <SandpackLayout>
+            <SandpackCodeEditor />
+            {previews.value.map((pr) => (
+              <SandpackPreview key={pr} />
+            ))}
+          </SandpackLayout>
+        </SandpackProvider>
+        <button onClick={() => { count.value += 1; }}>Add</button>
+        <button onClick={() => { count.value -= 1; }}>Remove</button>
+
+        <p>Amount of listeners: {listenersCount}</p>
+        <button onClick={() => { listenersCount.value += 1; }}>
+          Add listener
+        </button>
+        <button onClick={() => { listenersCount.value += 1; }}>
+          Remove listener
+        </button>
+      </>
+    );
+  },
+});

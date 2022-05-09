@@ -101,7 +101,7 @@ const SandpackPropValues = {
   theme: {
     type: [String, Object] as PropType<SandpackThemeProp>,
     required: false,
-    default: undefined, // TODO: u
+    default: undefined,
   },
   options: {
     type: Object as PropType<SandpackOption>,
@@ -170,6 +170,9 @@ const Sandpack = defineComponent({
     const previewPart = computed(() => 100 - editorPart.value);
     const editorHeight = computed(() => props.options?.editorHeight);
 
+    const minWidth = computed(() => `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`);
+    const minWidthPreview = computed(() => `${700 * (previewPart.value / (previewPart.value + editorPart.value))}px`);
+
     return () => (
       <SandpackProvider
         customSetup={userInputSetup}
@@ -184,7 +187,7 @@ const Sandpack = defineComponent({
                 height: editorHeight.value as HeightProperty<string | number>,
                 flexGrow: editorPart.value,
                 flexShrink: editorPart.value,
-                minWidth: 700 * (editorPart.value / (previewPart.value + editorPart.value)),
+                minWidth: minWidth.value,
               }}
             />
             <SandpackPreview
@@ -193,7 +196,7 @@ const Sandpack = defineComponent({
                 height: editorHeight.value as HeightProperty<string | number>,
                 flexGrow: previewPart.value,
                 flexShrink: previewPart.value,
-                minWidth: 700 * (previewPart.value / (previewPart.value + editorPart.value)),
+                minWidth: minWidthPreview.value,
               }}
             />
           </SandpackLayout>

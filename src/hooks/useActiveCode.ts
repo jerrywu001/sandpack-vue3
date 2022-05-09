@@ -10,6 +10,7 @@ import { useSandpack } from '../contexts/sandpackContext';
 export const useActiveCode = (): {
   code: Ref<string>;
   readOnly: Ref<boolean>;
+  updateCode: (newCode: string) => void;
 } => {
   const { sandpack } = useSandpack();
 
@@ -19,5 +20,6 @@ export const useActiveCode = (): {
   return {
     code,
     readOnly,
+    updateCode: sandpack.updateCurrentFile,
   };
 };

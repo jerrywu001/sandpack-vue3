@@ -1,6 +1,5 @@
 import { useClasser } from 'code-hike-classer-vue3';
-import { useTranspiledCode } from '../../hooks/useTranspiledCode';
-import { DefineComponent, defineComponent, onUnmounted, onMounted, ref, PropType } from 'vue';
+import { DefineComponent, defineComponent, onUnmounted, onMounted, ref, PropType, computed } from 'vue';
 import { ErrorOverlay } from '../../common/ErrorOverlay';
 import { LoadingOverlay } from '../../common/LoadingOverlay';
 import { CodeViewerProps, SandpackCodeViewer } from '../code-viewer';
@@ -45,11 +44,15 @@ export const SandpackTranspiledCode = defineComponent({
   },
   // @ts-ignore
   setup(props: CodeViewerProps, { slots }) {
-    const { sandpack } = useSandpack();
-    const transpiledCode = useTranspiledCode();
     const c = useClasser('sp');
-
+    const { sandpack } = useSandpack();
     const hiddenIframeRef = ref<HTMLIFrameElement | null>(null);
+
+    const bundlerState = computed(() => sandpack.bundlerState);
+    const transpiledCode = computed(() => {
+      const tModule = bundlerState.value?.transpiledModules[sandpack.activePath + ':'];
+      return tModule?.source?.compiledCode ?? '';
+    });
 
     onMounted(() => {
       const hiddenIframe = hiddenIframeRef.value;
@@ -68,9 +71,9 @@ export const SandpackTranspiledCode = defineComponent({
         {
           transpiledCode.value && (
             <SandpackCodeViewer
-              code={transpiledCode.value}
-              initMode={sandpack.initMode}
               {...props}
+              code={sandpack.status === 'running' ? transpiledCode.value : ''}
+              initMode={sandpack.initMode}
             />
           )
         }

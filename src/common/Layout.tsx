@@ -3,7 +3,6 @@ import { useSandpack } from '../contexts/sandpackContext';
 import { DefineComponent, defineComponent, HtmlHTMLAttributes, PropType } from 'vue';
 import { SandpackThemeProvider } from '../contexts/themeContext';
 import type { SandpackThemeProp } from '../types';
-import { useActiveCode } from '../hooks';
 
 export interface SandpackLayoutProps extends HtmlHTMLAttributes {
   theme?: SandpackThemeProp;
