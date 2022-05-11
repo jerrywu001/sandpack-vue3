@@ -13,11 +13,13 @@ export default defineConfig({
   format: [
     'cjs',
     'esm',
+    'iife',
   ],
   shims: false,
   clean: true,
   dts: './src/index.ts',
-  sourcemap: true,
+  // sourcemap: true,
+  legacyOutput: true,
   splitting: false,
   // minify: true,
   esbuildPlugins: [

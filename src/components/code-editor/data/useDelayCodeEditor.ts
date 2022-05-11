@@ -184,11 +184,9 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     view.contentDOM.setAttribute('data-gramm', 'false');
 
     if (!props.readOnly) {
+      const attrVal = 'exit-instructions-' + ariaId.value;
       view.contentDOM.setAttribute('tabIndex', '-1');
-      view.contentDOM.setAttribute(
-        'aria-describedby',
-        `exit-instructions-${ariaId.value}`,
-      );
+      view.contentDOM.setAttribute('aria-describedby', attrVal);
     }
 
     cmView.value = view;

@@ -6,7 +6,7 @@ Vue3 components that give you the power of editable sandboxes that run in the br
 
 ```jsx
 import { Sandpack } from "@codesandbox/sandpack-vue3";
-import "@codesandbox/sandpack-vue3/dist/styles/index.css";
+import "@codesandbox/sandpack-vue3/dist/index.css";
 
 <Sandpack template="vue3" />;
 ```
