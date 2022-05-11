@@ -17,6 +17,7 @@ import {
   PropType,
   onMounted,
   UnwrapNestedRefs,
+  nextTick,
 } from 'vue';
 import type {
   BundlerState,
@@ -202,8 +203,6 @@ const SandpackProvider = defineComponent({
 
     let unsubscribe: UnsubscribeFunction | undefined;
 
-    const lazyAnchorRef = ref<HTMLDivElement>();
-
     const { activePath, openPaths, files, environment } = getSandpackStateFromProps(props);
 
     const data = reactive({
@@ -219,6 +218,7 @@ const SandpackProvider = defineComponent({
       startRoute: props.startRoute,
       error: { message: '' } as SandpackError,
       bundlerState: { entry: '', transpiledModules: {} } as BundlerState,
+      autorun: props.autorun ?? true,
       status: props.autorun ? 'initial' : 'idle',
       editorState: 'pristine',
       initMode: props.initMode || 'lazy',
@@ -229,7 +229,8 @@ const SandpackProvider = defineComponent({
       openInCSBRegisteredRef: false,
       errorScreenRegisteredRef: false,
       loadingScreenRegisteredRef: false,
-      lazyAnchorRef: lazyAnchorRef as Ref<HTMLDivElement>,
+      lazyAnchorRef: ref<HTMLDivElement>() as Ref<HTMLDivElement>,
+      // lazyAnchorRef: lazyAnchorRef as Ref<HTMLDivElement>,
       listen: addListener,
       openFile,
       registerBundler,
@@ -323,11 +324,11 @@ const SandpackProvider = defineComponent({
         rootMargin: '1000px 0px',
       };
 
-      if (intersectionObserver && lazyAnchorRef.value) {
-        intersectionObserver?.unobserve(lazyAnchorRef.value);
+      if (intersectionObserver && state.lazyAnchorRef) {
+        intersectionObserver?.unobserve(state.lazyAnchorRef);
       }
 
-      if (lazyAnchorRef.value && state.initMode === 'lazy') {
+      if (state.lazyAnchorRef && state.initMode === 'lazy') {
         // If any component registerd a lazy anchor ref component, use that for the intersection observer
         intersectionObserver = new IntersectionObserver((entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
@@ -336,15 +337,15 @@ const SandpackProvider = defineComponent({
               runSandpack();
             }, 50);
 
-            if (lazyAnchorRef.value) {
-              intersectionObserver?.unobserve(lazyAnchorRef.value);
+            if (state.lazyAnchorRef) {
+              intersectionObserver?.unobserve(state.lazyAnchorRef);
             }
           }
         }, observerOptions);
 
-        intersectionObserver?.observe(lazyAnchorRef.value);
+        intersectionObserver?.observe(state.lazyAnchorRef);
       } else if (
-        lazyAnchorRef.value &&
+        state.lazyAnchorRef &&
         state.initMode === 'user-visible'
       ) {
         intersectionObserver = new IntersectionObserver((entries) => {
@@ -363,7 +364,7 @@ const SandpackProvider = defineComponent({
           }
         }, observerOptions);
 
-        intersectionObserver?.observe(lazyAnchorRef.value);
+        intersectionObserver?.observe(state.lazyAnchorRef);
       } else {
         // else run the sandpack on mount, with a slight delay to allow all subcomponents to mount/register components
         initializeSandpackIframeHook = setTimeout(
@@ -473,6 +474,7 @@ const SandpackProvider = defineComponent({
         clearTimeout(timeoutHook);
       }
 
+      state.autorun = false;
       state.status = 'idle';
     }
 
@@ -663,10 +665,12 @@ const SandpackProvider = defineComponent({
             return;
           }
 
-          Object.values(clients).forEach((client) => client.updatePreview({
-            files,
-            template: stateFromProps.environment,
-          }));
+          Object.values(clients).forEach((client) => {
+            client.updatePreview({
+              files: state.files,
+              template: environment,
+            });
+          });
         }
 
         /**
@@ -681,7 +685,9 @@ const SandpackProvider = defineComponent({
     );
 
     onMounted(() => {
-      initializeSandpackIframe();
+      nextTick(() => {
+        initializeSandpackIframe();
+      });
     });
 
     onUnmounted(() => {

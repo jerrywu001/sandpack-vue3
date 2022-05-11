@@ -6,11 +6,9 @@ import {
   SandpackLayout,
   SandpackPreview,
   PreviewProps,
-  useSandpack,
-  SandpackPreviewRef,
 } from '@codesandbox/sandpack-vue3';
 import { Story } from '@storybook/vue3';
-import { ref, watch } from 'vue';
+import { SandpackClient } from './widgets/SandpackClient';
 
 export default {
   title: 'components/Preview',
@@ -134,23 +132,6 @@ export const AdditionalContent = () => (
     </SandpackLayout>
   </SandpackProvider>
 );
-
-const SandpackClient = () => {
-  const { sandpack } = useSandpack();
-  const previewRef = ref<SandpackPreviewRef>();
-
-  watch(sandpack, () => {
-    const client = previewRef.value?.getClient();
-    const clientId = previewRef.value?.clientId;
-
-    if (client && clientId) {
-      console.log(client);
-      console.log(sandpack.clients[clientId]);
-    }
-  });
-
-  return <SandpackPreview ref={previewRef} />;
-};
 
 export const GetClient = () => (
   <SandpackProvider template="react">

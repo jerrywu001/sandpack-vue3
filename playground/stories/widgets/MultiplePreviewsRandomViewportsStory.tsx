@@ -9,7 +9,7 @@ import {
 } from '@codesandbox/sandpack-vue3';
 import { VIEWPORTS } from './Common';
 
-export const MultiplePreviewsRandomViewportsStory = defineComponent({ // TODO: not render after add
+export const MultiplePreviewsRandomViewportsStory = defineComponent({
   name: 'MultiplePreviewsRandomViewportsStory',
   inheritAttrs: true,
   setup() {
@@ -20,9 +20,11 @@ export const MultiplePreviewsRandomViewportsStory = defineComponent({ // TODO: n
     return () => (
       <>
         <button onClick={() => { count.value += 1; }}>Add</button>
-        <button onClick={() => { count.value = count.value > 0 ? count.value - 1 : 0; }}>
-          Remove
-        </button>
+        {
+          previews.value.length > 0 && (
+            <button onClick={() => { count.value -= 1; }}>Remove</button>
+          )
+        }
         <SandpackProvider>
           <SandpackThemeProvider>
             <div style={{ display: 'flex', alignItems: 'flex-start' }}>

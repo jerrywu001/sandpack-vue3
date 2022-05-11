@@ -129,7 +129,7 @@ export default () => {
   />
 );
 
-export const RunnableComponent = () => ( // TODO: no has loading
+export const RunnableComponent = () => (
   <Sandpack
     files={{
       '/App.js': `export default function Kitten() {
@@ -142,15 +142,14 @@ export const RunnableComponent = () => ( // TODO: no has loading
       autorun: false,
       showTabs: true,
       showLineNumbers: true,
-      showNavigator: true,
     }}
     template="react"
   />
 );
 
-export const InitModeUserVisible = () => ( // TODO: obser
+export const InitModeUserVisible = () => (
   <>
-    {new Array(30).fill(' ').map((_, index) => (
+    {new Array(20).fill(' ').map((_, index) => (
       <div key={index} style={{ marginBottom: '200px' }}>
         <Sandpack options={{ initMode: 'user-visible' }} />
       </div>

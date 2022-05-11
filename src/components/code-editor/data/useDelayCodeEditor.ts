@@ -216,7 +216,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   ], () => {
     const mode = theInitMode.value === 'lazy' || theInitMode.value === 'user-visible';
 
-    if (mode && isIntersecting) {
+    if (mode && isIntersecting.value) {
       shouldInitEditor.value = true;
     }
   });

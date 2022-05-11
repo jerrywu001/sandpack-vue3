@@ -41,7 +41,7 @@ export const JustIframeStory = defineComponent({
   inheritAttrs: true,
   setup() {
     const first = ref(true);
-    const code = computed(() => first.value ? code1 : code2); // TODO: Switch not reactive
+    const code = computed(() => first.value ? code1 : code2);
 
     return () => (
       <SandpackProvider

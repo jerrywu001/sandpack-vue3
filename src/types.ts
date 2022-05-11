@@ -32,6 +32,7 @@ export interface SandpackState {
   openPaths: string[];
   activePath: string;
   startRoute?: string;
+  autorun?: boolean;
 
   /**
    * Returns the current state of the editor, meaning that any

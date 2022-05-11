@@ -1,6 +1,6 @@
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../contexts/sandpackContext';
-import { DefineComponent, defineComponent, HtmlHTMLAttributes, PropType } from 'vue';
+import { DefineComponent, defineComponent, HtmlHTMLAttributes, PropType, Ref, ref, watch } from 'vue';
 import { SandpackThemeProvider } from '../contexts/themeContext';
 import type { SandpackThemeProp } from '../types';
 
@@ -19,12 +19,19 @@ export const SandpackLayout = defineComponent({
     },
   },
   setup(props: SandpackLayoutProps, { slots }) {
+    const lazyAnchorRef = ref<HTMLDivElement>();
     const { sandpack } = useSandpack();
     const c = useClasser('sp');
 
+    watch(lazyAnchorRef, () => {
+      if (lazyAnchorRef.value) {
+        sandpack.lazyAnchorRef = lazyAnchorRef as Ref<HTMLDivElement>;
+      }
+    });
+
     return () => (
       <SandpackThemeProvider theme={props.theme}>
-        <div ref={sandpack.lazyAnchorRef} class={c('layout')}>
+        <div ref={lazyAnchorRef} class={c('layout')}>
         { slots.default ? slots.default() : null }
         </div>
       </SandpackThemeProvider>

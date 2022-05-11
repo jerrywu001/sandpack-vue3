@@ -1,4 +1,5 @@
 import { useClasser } from 'code-hike-classer-vue3';
+import { useSandpack } from '../contexts/sandpackContext';
 import { computed, DefineComponent, defineComponent } from 'vue';
 import { useLoadingOverlayState, FADE_ANIMATION_DURATION } from '../hooks/useLoadingOverlayState';
 import { OpenInCodeSandboxButton } from './OpenInCodeSandboxButton';
@@ -20,6 +21,7 @@ export const LoadingOverlay = defineComponent({
     loading: Boolean,
   },
   setup(props: LoadingOverlayProps, { slots }) {
+    const { sandpack } = useSandpack();
     const loadingOverlayState = useLoadingOverlayState(props);
     const c = useClasser('sp');
 
@@ -57,7 +59,7 @@ export const LoadingOverlay = defineComponent({
       <div
         class={c('overlay', 'loading')}
         style={{
-          opacity: stillLoading.value ? 1 : 0,
+          opacity: stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,
           transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
         }}
       >

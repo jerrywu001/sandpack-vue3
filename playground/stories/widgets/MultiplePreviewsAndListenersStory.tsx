@@ -2,7 +2,7 @@ import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider }
 import { computed, defineComponent, ref } from 'vue';
 import { SandpackListener } from './SandpackListener';
 
-export const MultiplePreviewsAndListenersStory = defineComponent({ // TODO: this page has error
+export const MultiplePreviewsAndListenersStory = defineComponent({
   name: 'MultiplePreviewsAndListenersStory',
   inheritAttrs: true,
   setup() {
@@ -25,15 +25,23 @@ export const MultiplePreviewsAndListenersStory = defineComponent({ // TODO: this
           </SandpackLayout>
         </SandpackProvider>
         <button onClick={() => { count.value += 1; }}>Add</button>
-        <button onClick={() => { count.value -= 1; }}>Remove</button>
+        {
+          previews.value.length > 1 && (
+            <button onClick={() => { count.value -= 1; }}>Remove</button>
+          )
+        }
 
-        <p>Amount of listeners: {listenersCount}</p>
+        <p>Amount of listeners: {listenersCount.value}</p>
         <button onClick={() => { listenersCount.value += 1; }}>
           Add listener
         </button>
-        <button onClick={() => { listenersCount.value += 1; }}>
-          Remove listener
-        </button>
+        {
+          listenersCount.value > 0 && (
+            <button onClick={() => { listenersCount.value -= 1; }}>
+              Remove listener
+            </button>
+          )
+        }
       </>
     );
   },

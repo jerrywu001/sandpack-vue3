@@ -1,7 +1,7 @@
 import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-vue3';
 import { computed, defineComponent, ref } from 'vue';
 
-export const MultiplePreviewsStory = defineComponent({ // TODO: not render after add
+export const MultiplePreviewsStory = defineComponent({
   name: 'MultiplePreviewsStory',
   inheritAttrs: true,
   setup() {
@@ -20,7 +20,9 @@ export const MultiplePreviewsStory = defineComponent({ // TODO: not render after
           </SandpackLayout>
         </SandpackProvider>
         <button onClick={() => { count.value += 1; }}>Add</button>
-        <button onClick={() => { count.value -= 1; }}>Remove</button>
+        {
+          previews.value.length > 1 && <button onClick={() => { count.value -= 1; }}>Remove</button>
+        }
       </>
     );
   },

@@ -1,7 +1,7 @@
 import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
-import { CSSProperties, DefineComponent, defineComponent, nextTick, onMounted, PropType, ref } from 'vue';
+import { CSSProperties, DefineComponent, defineComponent, nextTick, onMounted, onUnmounted, PropType, ref } from 'vue';
 
 import { ErrorOverlay } from '../../common/ErrorOverlay';
 import { LoadingOverlay } from '../../common/LoadingOverlay';
@@ -22,7 +22,7 @@ export type ViewportSizePreset =
 export type ViewportSize =
   | ViewportSizePreset
   | 'auto'
-  | { width: number; height: number };
+  | { width: string; height: string };
 
 export type ViewportOrientation = 'portrait' | 'landscape';
 
@@ -118,9 +118,6 @@ export const SandpackPreview = defineComponent({
         const iframeElement = iframeRef.value;
         const clientIdValue = clientId.value;
 
-        if (unsubscribe) unsubscribe();
-        if (sandpack.unregisterBundler) sandpack.unregisterBundler(clientIdValue);
-
         sandpack.registerBundler(iframeElement as HTMLIFrameElement, clientIdValue);
 
         unsubscribe = listen((message: SandpackMessage) => {
@@ -129,6 +126,12 @@ export const SandpackPreview = defineComponent({
           }
         }, clientIdValue);
       });
+    });
+
+    onUnmounted(() => {
+      const clientIdValue = clientId.value;
+      if (unsubscribe) unsubscribe();
+      if (sandpack.unregisterBundler) sandpack.unregisterBundler(clientIdValue);
     });
 
     expose({
@@ -201,19 +204,19 @@ export const SandpackPreview = defineComponent({
 
 const VIEWPORT_SIZE_PRESET_MAP: Record<
 ViewportSizePreset,
-{ x: number; y: number }
+{ x: string; y: string }
 > = {
-  'iPhone X': { x: 375, y: 812 },
-  iPad: { x: 768, y: 1024 },
-  'Pixel 2': { x: 411, y: 731 },
-  'Moto G4': { x: 360, y: 640 },
-  'Surface Duo': { x: 540, y: 720 },
+  'iPhone X': { x: '375px', y: '812px' },
+  iPad: { x: '768px', y: '1024px' },
+  'Pixel 2': { x: '411px', y: '731px' },
+  'Moto G4': { x: '360px', y: '640px' },
+  'Surface Duo': { x: '540px', y: '720px' },
 };
 
 const computeViewportSize = (
   viewport: ViewportSize,
   orientation: ViewportOrientation,
-): { width?: number; height?: number } => {
+): { width?: string; height?: string } => {
   if (viewport === 'auto') {
     return {};
   }

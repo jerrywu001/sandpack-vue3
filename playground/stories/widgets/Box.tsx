@@ -27,11 +27,11 @@ export const Box = defineComponent({
           display: 'flex',
           alignItems: 'center',
           flexDirection: 'column',
-          margin: 10,
+          margin: '10px',
           overflow: 'auto',
           border: '1px solid gray',
-          width: props.width || 'auto',
-          height: props.height || 'auto',
+          width: !props.width ? 'auto' : `${props.width}px`,
+          height: !props.height ? 'auto' : `${props.height}px`,
         }}
       >
         <span style={{ padding: '4px' }}>{props.label}</span>

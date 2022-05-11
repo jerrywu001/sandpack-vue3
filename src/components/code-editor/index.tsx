@@ -96,7 +96,6 @@ export interface CodeEditorProps {
   showTabs?: boolean;
   showLineNumbers?: boolean;
   showInlineErrors?: boolean;
-  showRunButton?: boolean;
   wrapContent?: boolean;
   closableTabs?: boolean;
   /**
@@ -151,11 +150,6 @@ export const SandpackCodeEditor = defineComponent({
       required: false,
       default: false,
     },
-    showRunButton: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
     wrapContent: {
       type: Boolean,
       required: false,
@@ -201,6 +195,7 @@ export const SandpackCodeEditor = defineComponent({
     const { sandpack } = useSandpack();
     const { code, readOnly: readOnlyFile } = useActiveCode();
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.openPaths?.length > 1));
+    const showRunButton = computed(() => !sandpack.autorun);
 
     const sandpackCodeEditorRef = ref<InstanceType<typeof CodeMirror> | null>(null);
     const c = useClasser('sp');
@@ -232,7 +227,7 @@ export const SandpackCodeEditor = defineComponent({
             wrapContent={props.wrapContent}
           />
 
-          {props.showRunButton && sandpack.status === 'idle' ? <RunButton /> : null}
+          { showRunButton.value && sandpack.status === 'idle' ? <RunButton /> : null }
         </div>
       </SandpackStack>
     );

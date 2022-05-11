@@ -9,7 +9,7 @@ export const CustomPreview = defineComponent({
     const iframeRef = ref<HTMLIFrameElement>();
 
     onMounted(() => {
-      sandpack.registerBundler(iframeRef.value as HTMLIFrameElement, 'custom'); // TODO: xxx
+      sandpack.registerBundler(iframeRef.value as HTMLIFrameElement, 'custom');
     });
 
     return () => (
