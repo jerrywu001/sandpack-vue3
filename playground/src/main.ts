@@ -2,8 +2,6 @@ import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from 'virtual:generated-pages';
 
-import SanpackPlugin from '@codesandbox/sandpack-vue3';
-
 import App from './App.vue';
 
 import '@unocss/reset/tailwind.css';
@@ -12,7 +10,8 @@ import 'uno.css';
 import './styles/main.css';
 import './index.css';
 
-import '@codesandbox/sandpack-vue3/styles/index.css';
+// eslint-disable-next-line import/no-relative-packages
+import '../../src/styles/index.css';
 
 const app = createApp(App);
 const router = createRouter({
@@ -20,5 +19,4 @@ const router = createRouter({
   routes,
 });
 app.use(router);
-app.use(SanpackPlugin());
 app.mount('#app');
