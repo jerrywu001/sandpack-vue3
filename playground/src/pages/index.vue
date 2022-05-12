@@ -22,7 +22,7 @@ const toggleTheme = () => {
 };
 
 const toggleTemplate = () => {
-  template.value = template.value !== 'vue3' ? 'vue3' : 'react-ts';
+  template.value = template.value !== 'vue3' ? 'vue3' : 'vue';
 };
 
 const toggleLineNumbers = () => {
