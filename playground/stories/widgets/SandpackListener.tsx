@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from '@codesandbox/sandpack-client';
+import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useSandpack } from '@codesandbox/sandpack-vue3';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 

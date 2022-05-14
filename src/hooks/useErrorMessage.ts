@@ -1,6 +1,6 @@
 import { useSandpack } from '../contexts/sandpackContext';
 import { computed, ComputedRef, onMounted } from 'vue';
-import { SandpackError } from '@codesandbox/sandpack-client';
+import type { SandpackError } from '@codesandbox/sandpack-client';
 
 /**
  * @category Hooks

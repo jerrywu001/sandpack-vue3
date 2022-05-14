@@ -1,7 +1,7 @@
 import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 import LZString from 'lz-string';
 import { useSandpack } from '../../contexts/sandpackContext';
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import type { SandboxEnvironment } from '../../types';
 
 const getParameters = (parameters: Record<string, any>): string => LZString.compressToBase64(JSON.stringify(parameters))

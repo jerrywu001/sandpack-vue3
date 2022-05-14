@@ -492,7 +492,7 @@ const SandpackProvider = defineComponent({
     }
 
     function openFile(path: string) {
-      const { openPaths: prevOpenPaths } = data;
+      const { openPaths: prevOpenPaths } = state;
       const newPaths = prevOpenPaths.includes(path) ? prevOpenPaths : [...prevOpenPaths, path];
       state.activePath = path;
       state.openPaths = newPaths;
@@ -515,7 +515,7 @@ const SandpackProvider = defineComponent({
     }
 
     function deleteFile(path: string) {
-      const { openPaths: prevOpenPaths, files: prevFiles } = data;
+      const { openPaths: prevOpenPaths, files: prevFiles } = state;
       const newPaths = prevOpenPaths.filter((openPath) => openPath !== path);
       const newFiles = Object.keys(prevFiles).reduce(
         (acc: SandpackBundlerFiles, filePath) => {

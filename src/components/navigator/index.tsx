@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from '@codesandbox/sandpack-client';
+import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { DefineComponent, defineComponent, PropType, ref, watch } from 'vue';

@@ -7,7 +7,7 @@ import { useClasser } from 'code-hike-classer-vue3';
 import type { DefineComponent } from 'vue';
 import type { EditorState as SandpackEditorState } from '../../types';
 import { Annotation, EditorSelection } from '@codemirror/state';
-import { SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
+import type { SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { EditorView } from '@codemirror/view';
 import { useSandpack } from '../../contexts/sandpackContext';
 
