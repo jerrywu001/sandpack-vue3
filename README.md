@@ -17,6 +17,10 @@ import "@codesandbox/sandpack-vue3/dist/index.css";
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
 
+## SSR/SSG
+
+Use [vitepress](https://vitepress.vuejs.org/)/[quasar](https://quasar.dev/start/pick-quasar-flavour)
+
 ## Tips ☕
 
 *When using vue, please do not write it that way*, It will not take effect
