@@ -1,4 +1,4 @@
-import { CodeViewerProps, SandpackCodeViewer, SandpackProvider, SandpackThemeProvider } from '@codesandbox/sandpack-vue3';
+import { CodeViewerProps, SandpackCodeViewer, SandpackProvider, SandpackThemeProvider } from 'codesandbox-sandpack-vue3';
 import type { Story } from '@storybook/vue3';
 
 export default {

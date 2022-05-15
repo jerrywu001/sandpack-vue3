@@ -22,8 +22,8 @@ module.exports = {
         alias: {
           '~/': `${path.resolve(__dirname, '../../src')}/`,
           '#/': `${path.resolve(__dirname, '../../dist')}/`,
-          '@codesandbox/sandpack-vue3': path.resolve(__dirname, '../../src'),
-          '@codesandbox/sandpack-vue3/': path.resolve(__dirname, '../../src/'),
+          'codesandbox-sandpack-vue3': path.resolve(__dirname, '../../src'),
+          'codesandbox-sandpack-vue3/': path.resolve(__dirname, '../../src/'),
         },
       },
       plugins: [

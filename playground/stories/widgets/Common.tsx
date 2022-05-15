@@ -4,7 +4,7 @@ import {
   useSandpack,
   useSandpackNavigation,
   useSandpackTheme,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 import { defineComponent, ref } from 'vue';
 
 export const CustomRefreshButton = () => {

@@ -4,7 +4,7 @@ import {
   SandpackProvider,
   SandpackThemeProvider,
   UnstyledOpenInCodeSandboxButton,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 
 export default {
   title: 'components/OpenInCodeSandboxButton',

@@ -4,7 +4,7 @@ import {
   SandpackProvider,
   SandpackStack,
   SandpackTranspiledCode,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 
 export default {
   title: 'components/Transpiled Code View',

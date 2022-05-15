@@ -1,4 +1,4 @@
-import { Sandpack } from '@codesandbox/sandpack-vue3';
+import { Sandpack } from 'codesandbox-sandpack-vue3';
 
 export default {
   title: 'Intro/Playground',

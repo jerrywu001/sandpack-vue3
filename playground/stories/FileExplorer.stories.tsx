@@ -5,7 +5,7 @@ import {
   SandpackCodeEditor,
   SandpackLayout,
   SandpackProvider,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 
 export default {
   title: 'components/File Explorer',

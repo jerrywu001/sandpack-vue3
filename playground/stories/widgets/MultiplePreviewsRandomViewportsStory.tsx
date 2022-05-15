@@ -6,7 +6,7 @@ import {
   SandpackProvider,
   SandpackThemeProvider,
   ViewportSize,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 import { VIEWPORTS } from './Common';
 
 export const MultiplePreviewsRandomViewportsStory = defineComponent({
