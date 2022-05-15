@@ -1,4 +1,4 @@
-import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-vue3';
+import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider } from 'codesandbox-sandpack-vue3';
 import { computed, defineComponent, ref } from 'vue';
 
 export const MultiplePreviewsStory = defineComponent({

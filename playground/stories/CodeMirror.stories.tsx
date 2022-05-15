@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { CodeEditor, SandpackProvider } from '@codesandbox/sandpack-vue3';
+import { CodeEditor, SandpackProvider } from 'codesandbox-sandpack-vue3';
 
 export default {
   title: 'components/CodeMirror',

@@ -21,7 +21,7 @@ import {
   SandpackStack,
   SandpackThemeProvider,
   SandpackTranspiledCode,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 import { MultiplePreviewsRandomViewportsStory } from './widgets/MultiplePreviewsRandomViewportsStory';
 
 export default {

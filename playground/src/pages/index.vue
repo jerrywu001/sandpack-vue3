@@ -8,7 +8,7 @@ import {
   SandpackTranspiledCode,
   SandpackProvider,
   SandpackCodeEditor,
-} from '@codesandbox/sandpack-vue3';
+} from 'codesandbox-sandpack-vue3';
 
 const template = ref<SandpackPredefinedTemplate>('vue3');
 const theme = ref<SandpackPredefinedTheme>('light');

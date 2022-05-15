@@ -1,4 +1,4 @@
-import { SandpackLayout, SandpackProvider } from '@codesandbox/sandpack-vue3';
+import { SandpackLayout, SandpackProvider } from 'codesandbox-sandpack-vue3';
 import { defineComponent } from 'vue';
 
 export const Provider = defineComponent({

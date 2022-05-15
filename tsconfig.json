@@ -20,7 +20,7 @@
     "#/*": [
       "dist/*"
     ],
-    "@codesandbox/sandpack-vue3": [
+    "codesandbox-sandpack-vue3": [
       "src/index.ts"
     ]
   },

@@ -1,4 +1,4 @@
-import { SandpackPreview, SandpackPreviewRef, useSandpack } from '@codesandbox/sandpack-vue3';
+import { SandpackPreview, SandpackPreviewRef, useSandpack } from 'codesandbox-sandpack-vue3';
 import { defineComponent, ref, watch } from 'vue';
 
 export const SandpackClient = defineComponent({
