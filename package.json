@@ -1,11 +1,14 @@
 {
-  "name": "@codesandbox/sandpack-vue3",
+  "name": "codesandbox-sandpack-vue3",
   "version": "0.1.1",
   "description": "Vue3 components that give you the power of editable sandboxes that run in the browser.",
   "keywords": [
     "vue3",
     "sandpack",
     "sandpack-vue3",
+    "@codesandbox",
+    "@codesandbox/sandpack-vue",
+    "@codesandbox/sandpack-vue3",
     "codesandbox"
   ],
   "homepage": "https://github.com/jerrywu001/sandpack-vue3#readme",
