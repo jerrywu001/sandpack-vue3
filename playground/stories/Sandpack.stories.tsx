@@ -1,0 +1,166 @@
+import { Sandpack } from '@codesandbox/sandpack-vue3';
+
+export default {
+  title: 'presets/Sandpack: options',
+  component: Sandpack,
+};
+
+export const Main = () => (
+  <Sandpack
+    files={{
+      '/App.js': `import Button from './button';
+import Link from './link';
+
+export default function App() {
+  return (
+    <div>
+      <h1>Hello World</h1>
+      <Button />
+      <Link />
+    </div>
+  )
+}`,
+      '/button.js': `export default function Button() {
+  return <button>Click me</button>
+}
+`,
+      '/link.js': `export default function Link() {
+  return <a href="https://www.example.com" target="_blank">Click Here</a>
+}`,
+    }}
+    options={{
+      showLineNumbers: true,
+      showInlineErrors: true,
+    }}
+    template="react"
+  />
+);
+
+export const CustomSetup = () => (
+  <Sandpack
+    customSetup={{
+      entry: '/src/index.tsx',
+      main: '/src/main.tsx',
+      dependencies: {
+        react: 'latest',
+        'react-dom': 'latest',
+        'react-scripts': '4.0.0',
+      },
+    }}
+    files={{
+      './tsconfig.json': {
+        code: `{
+"include": [
+  "./src/**/*"
+],
+"compilerOptions": {
+  "strict": true,
+  "esModuleInterop": true,
+  "lib": [
+    "dom",
+    "es2015"
+  ],
+  "jsx": "react"
+}
+}`,
+        hidden: true,
+      },
+      '/public/index.html': {
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+</head>
+<body>
+<div id="root"></div>
+</body>
+</html>`,
+        hidden: true,
+      },
+
+      '/src/index.tsx': {
+        code: `import * as React from "react";
+import { render } from "react-dom";
+
+import { Main } from "./main";
+
+const rootElement = document.getElementById("root");
+render(<Main test="World"/>, rootElement);
+        `,
+        hidden: true,
+      },
+
+      '/src/main.tsx': {
+        code: `import * as React from "react";
+
+export const Main: React.FC<{test: string}> = ({test}) => {
+  return (
+    <h1>Hello {test}</h1>
+  )
+}`,
+      },
+    }}
+    options={{ wrapContent: true }}
+    theme="night-owl"
+  />
+);
+
+export const ExternalResources = () => (
+  <Sandpack
+    files={{
+      '/App.js': `
+export default () => {
+  return <a
+    href="#"
+    className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
+  >
+    Log in
+  </a>
+}`,
+    }}
+    options={{
+      externalResources: [
+        'https://unpkg.com/@tailwindcss/ui/dist/tailwind-ui.min.css',
+      ],
+    }}
+    template="react"
+  />
+);
+
+export const RunnableComponent = () => (
+  <Sandpack
+    files={{
+      '/App.js': `export default function Kitten() {
+  return (
+    <img src="https://placekitten.com/200/250" alt="Kitten" />
+  );
+}`,
+    }}
+    options={{
+      autorun: false,
+      showTabs: true,
+      showLineNumbers: true,
+    }}
+    template="react"
+  />
+);
+
+export const InitModeUserVisible = () => (
+  <>
+    {new Array(20).fill(' ').map((_, index) => (
+      <div key={index} style={{ marginBottom: '200px' }}>
+        <Sandpack options={{ initMode: 'user-visible' }} />
+      </div>
+    ))}
+  </>
+);
+
+export const ShowLineNumber = () => (
+  <Sandpack options={{ showLineNumbers: true }} template="react" />
+);
+
+export const wrapContent = () => (
+  <Sandpack options={{ wrapContent: true }} template="vanilla" />
+);

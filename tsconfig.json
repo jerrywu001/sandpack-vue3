@@ -31,6 +31,7 @@
     "node_modules",
     "build",
     "dist",
-    "src/setupTests.ts"
+    "setupTests.ts",
+    "__unconfig_vite.config.ts"
   ]
 }

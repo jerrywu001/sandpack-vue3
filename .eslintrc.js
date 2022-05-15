@@ -5,6 +5,7 @@ module.exports = {
     'plugin:vue/vue3-recommended',
     '@vue/typescript/recommended',
     'eslint:recommended', // https://eslint.org/docs/rules/
+    'plugin:jsx-a11y/strict', // https://www.npmjs.com/package/eslint-plugin-jsx-a11y
   ],
   env: {
     browser: true,
@@ -13,6 +14,7 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
+    'jsx-a11y',
   ],
   parserOptions: {
     project: './tsconfig.json',
@@ -37,10 +39,17 @@ module.exports = {
     'no-nested-ternary': 'off',
     'no-spaced-func': 'off',
     'import/no-unresolved': 'off',
+    // jsx
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/no-noninteractive-tabindex': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
     // 代码风格
     'vue/multi-word-component-names': 'off',
     'arrow-parens': 'off',
     'no-else-return': 'off',
+    'jsx-quotes': ['error', 'prefer-double'],
     'import/no-cycle': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/no-named-as-default-member': 'off',
@@ -100,6 +109,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': 'off',
     '@typescript-eslint/no-unsafe-argument': 'off',
     // vue - https://eslint.vuejs.org/rules/
+    'vue/require-default-prop': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',
     'vue/max-attributes-per-line': ['warn', {
