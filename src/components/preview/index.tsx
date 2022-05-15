@@ -183,7 +183,11 @@ export const SandpackPreview = defineComponent({
           {props.showSandpackErrorOverlay ? <ErrorOverlay /> : null}
 
           <div class={c('preview-actions')}>
-            { props.actionsChildren }
+            {
+              slots.actionsChildren
+                ? slots.actionsChildren()
+                : props.actionsChildren ? props.actionsChildren : null
+            }
             {
               !props.showNavigator && props.showRefreshButton && sandpack.status === 'running' ? (
                 <RefreshButton clientId={clientId.value} />

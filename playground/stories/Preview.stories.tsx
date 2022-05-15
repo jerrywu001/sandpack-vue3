@@ -104,8 +104,19 @@ export const AutoResize = () => (
 );
 
 export const AdditionalButtons = () => (
+  // For actionsChildren: slot has a higher priority than props
   <SandpackProvider template="react">
     <SandpackLayout>
+      <SandpackPreview
+        v-slots={{
+          actionsChildren: () => <button class="sp-button">just a button</button>,
+        }}
+      />
+      <SandpackPreview>
+        {{
+          actionsChildren: () => <button class="sp-button">just a button (2)</button>,
+        }}
+      </SandpackPreview>
       <SandpackPreview
         actionsChildren={
           <button
