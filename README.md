@@ -25,6 +25,10 @@ For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sa
 
 [ssg demo](https://stackblitz.com/edit/vitejs-vite-ha17a9)
 
+*Here's an example of a react version for comparison*
+
+https://stackblitz.com/edit/vitejs-vite-axyaxx
+
 
 ## SSG/SSR
 
