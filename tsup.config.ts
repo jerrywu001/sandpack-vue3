@@ -13,7 +13,6 @@ export default defineConfig({
   format: [
     'cjs',
     'esm',
-    'iife',
   ],
   shims: false,
   clean: true,

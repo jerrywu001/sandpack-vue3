@@ -71,8 +71,6 @@
     "@codesandbox/sandpack-client": "~0.19.1",
     "@vueuse/core": "^8.4.2",
     "code-hike-classer-vue3": "^0.1.5",
-    "codesandbox-import-util-types": "~2.2.3",
-    "core-js": "^3.22.5",
     "lodash.isequal": "^4.5.0",
     "lz-string": "^1.4.4",
     "vue": "^3.2.33"
@@ -88,7 +86,7 @@
     "@storybook/addon-links": "^6.4.22",
     "@storybook/builder-vite": "^0.1.33",
     "@storybook/vue3": "^6.4.22",
-    "@swc/core": "^1.2.183",
+    "@swc/core": "^1.2.185",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/user-event": "^14.2.0",
     "@testing-library/vue": "^6.5.1",
@@ -104,6 +102,8 @@
     "@vue/eslint-config-typescript": "^10.0.0",
     "autoprefixer": "^10.4.7",
     "bumpp": "^7.1.1",
+    "codesandbox-import-util-types": "~2.2.3",
+    "core-js": "^3.22.5",
     "cssnano": "^5.1.7",
     "esbuild-plugin-babel": "^0.2.3",
     "eslint": "^8.15.0",
@@ -136,6 +136,6 @@
     "vite-plugin-dts": "^1.1.1",
     "vite-plugin-windicss": "^1.8.4",
     "vitest": "^0.12.6",
-    "vue-tsc": "^0.34.13"
+    "vue-tsc": "^0.34.15"
   }
 }

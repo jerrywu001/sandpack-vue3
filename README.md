@@ -17,7 +17,16 @@ import "codesandbox-sandpack-vue3/dist/index.css";
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
 
-## SSR/SSG
+**This project removes devtools component**
+
+## online demo
+
+[demo](https://stackblitz.com/edit/vitejs-vite-s6jdds)
+
+[ssg demo](https://stackblitz.com/edit/vitejs-vite-ha17a9)
+
+
+## SSG/SSR
 
 Use [vitepress](https://vitepress.vuejs.org/)/[quasar](https://quasar.dev/start/pick-quasar-flavour)
 
@@ -59,6 +68,6 @@ npm run play
 rm -rf node_modules/@types/react
 ```
 
-## sipport browsers
+## Supported browsers
 
 npx browserslist
