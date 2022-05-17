@@ -117,7 +117,7 @@ const CodeMirror = defineComponent({
           if (
             message.type === 'action' &&
             message.action === 'show-error' &&
-            'line' in message
+            message.line
           ) {
             view?.dispatch({
               annotations: [

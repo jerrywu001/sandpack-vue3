@@ -43,7 +43,7 @@ export const SandpackTranspiledCode = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: CodeViewerProps, { slots }) {
+  setup(props: CodeViewerProps) {
     const c = useClasser('sp');
     const { sandpack } = useSandpack();
     const hiddenIframeRef = ref<HTMLIFrameElement | null>(null);

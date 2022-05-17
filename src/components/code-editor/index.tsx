@@ -191,7 +191,7 @@ export const SandpackCodeEditor = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: CodeEditorProps, { slots }) {
+  setup(props: CodeEditorProps) {
     const { sandpack } = useSandpack();
     const { code, readOnly: readOnlyFile } = useActiveCode();
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.openPaths?.length > 1));

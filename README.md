@@ -5,8 +5,8 @@
 Vue3 components that give you the power of editable sandboxes that run in the browser.
 
 ```jsx
-import { Sandpack } from "codesandbox-sandpack-vue3";
-import "codesandbox-sandpack-vue3/dist/index.css";
+import { Sandpack } from 'codesandbox-sandpack-vue3';
+import 'codesandbox-sandpack-vue3/dist/index.css';
 
 <Sandpack template="vue3" />;
 ```
@@ -33,6 +33,41 @@ https://stackblitz.com/edit/vitejs-vite-axyaxx
 ## SSG/SSR
 
 Use [vitepress](https://vitepress.vuejs.org/)/[quasar](https://quasar.dev/start/pick-quasar-flavour)
+
+## Register Components Globally
+
+```js
+// main.ts
+import SanpackPlugin from 'codesandbox-sandpack-vue3';
+
+app.use(SanpackPlugin());
+```
+
+```js
+// tsconfig.json
+{
+  "compilerOptions": {
+    "types": [
+      "codesandbox-sandpack-vue3/global"
+    ]
+  }
+}
+```
+
+### registe components
+
+- [Sandpack](https://sandpack.codesandbox.io/docs/api/react/#sandpack)
+- [SandpackLayout](https://sandpack.codesandbox.io/docs/api/react/interfaces/SandpackLayoutProps)
+- [CodeEditor](https://sandpack.codesandbox.io/docs/api/react/#codeeditor)
+- [SandpackProvider](https://sandpack.codesandbox.io/docs/api/react/classes/SandpackProvider)
+- [ErrorOverlay](https://sandpack.codesandbox.io/docs/api/react/#erroroverlay)
+- [LoadingOverlay](https://sandpack.codesandbox.io/docs/api/react/#loadingoverlay)
+- [SandpackCodeEditor](https://sandpack.codesandbox.io/docs/api/react/#sandpackcodeeditor)
+- [SandpackCodeViewer](https://sandpack.codesandbox.io/docs/api/react/#sandpackcodeviewer)
+- [SandpackPreview](https://sandpack.codesandbox.io/docs/api/react/#sandpackpreview)
+- [SandpackRunner](https://sandpack.codesandbox.io/docs/api/react/#sandpackrunner)
+- [SandpackStack](https://sandpack.codesandbox.io/docs/api/react/#sandpackstack)
+- [SandpackTranspiledCode](https://sandpack.codesandbox.io/docs/api/react/#sandpacktranspiledcode)
 
 ## Tips ☕
 
@@ -64,12 +99,10 @@ Use [vitepress](https://vitepress.vuejs.org/)/[quasar](https://quasar.dev/start/
 npm i
 
 npm run play
-```
 
-> If .tsx file has a type error about JSX (The storybook relies on @types/react), Please delete the @types/react.
+# If .tsx file has a type error about JSX (The storybook relies on @types/react), Please delete the @types/react.
 
-```bash
-rm -rf node_modules/@types/react
+# rm -rf node_modules/@types/react
 ```
 
 ## Supported browsers

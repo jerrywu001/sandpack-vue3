@@ -117,9 +117,9 @@ const Sandpack = defineComponent({
   name: 'Sandpack',
   inheritAttrs: true,
   props: SandpackPropValues,
-  setup(props, ctx) {
+  setup(props) {
     // Combine files with customSetup to create the user input structure
-    const userInputSetup = props.files
+    const userInputSetup = computed(() => props.files
       ? {
         ...props.customSetup,
         files: {
@@ -127,7 +127,7 @@ const Sandpack = defineComponent({
           ...props.files,
         },
       }
-      : props.customSetup;
+      : props.customSetup);
 
     const previewOptions = computed<PreviewProps>(() => ({
       showNavigator: props.options?.showNavigator,
@@ -175,7 +175,7 @@ const Sandpack = defineComponent({
 
     return () => (
       <SandpackProvider
-        customSetup={userInputSetup}
+        customSetup={userInputSetup.value}
         template={props.template}
         {...providerOptions.value}
       >

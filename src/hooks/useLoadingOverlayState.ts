@@ -24,41 +24,59 @@ interface LoadingOverlayStateProp {
 /**
  * @category Hooks
  */
-export const useLoadingOverlayState = (
-  props: LoadingOverlayStateProp,
-) => {
+export const useLoadingOverlayState = (props: LoadingOverlayStateProp) => {
   let unsubscribe: UnsubscribeFunction;
   let fadeTimeout: NodeJS.Timer;
   const { sandpack, listen } = useSandpack();
   const state = ref<LoadingOverlayState>('LOADING');
 
+  const handleListener = () => {
+    sandpack.loadingScreenRegisteredRef = true;
+
+    if (unsubscribe) unsubscribe();
+
+    unsubscribe = listen((message) => {
+      if (message.type === 'start' && message.firstLoad === true) {
+        state.value = 'LOADING';
+      }
+
+      if (message.type === 'done') {
+        state.value = state.value === 'LOADING' ? 'PRE_FADING' : 'HIDDEN';
+      }
+    }, props.clientId);
+  };
+
   onBeforeMount(() => {
     state.value = 'LOADING';
   });
 
-  /**
-   * Sandpack listener
-   */
   watch(
-    [
-      () => props.clientId,
-      () => sandpack.status === 'idle',
-    ],
+    () => sandpack.status,
     () => {
-      sandpack.loadingScreenRegisteredRef = true;
+      if (sandpack.status !== 'running') {
+        state.value = 'HIDDEN';
+      }
 
-      if (unsubscribe) unsubscribe();
+      if (sandpack.status === 'timeout') {
+        state.value = 'TIMEOUT';
+      }
 
-      unsubscribe = listen((message) => {
-        if (message.type === 'start' && message.firstLoad === true) {
-          state.value = 'LOADING';
-        }
-
-        if (message.type === 'done') {
-          state.value = state.value === 'LOADING' ? 'PRE_FADING' : 'HIDDEN';
-        }
-      }, props.clientId);
+      if (sandpack.status === 'idle') {
+        handleListener();
+      }
     },
+    { immediate: true },
+  );
+
+  watch(
+    () => props.clientId,
+    handleListener,
+    { immediate: true },
+  );
+
+  watch(
+    () => props.clientId,
+    handleListener,
     { immediate: true },
   );
 
@@ -87,14 +105,6 @@ export const useLoadingOverlayState = (
     },
     { deep: true, immediate: true },
   );
-
-  if (sandpack.status === 'timeout') {
-    state.value = 'TIMEOUT';
-  }
-
-  if (sandpack.status !== 'running') {
-    state.value = 'HIDDEN';
-  }
 
   return state;
 };

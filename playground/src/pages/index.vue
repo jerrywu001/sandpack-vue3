@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {
-  Sandpack,
-  SandpackLayout,
+  // Sandpack,
+  // SandpackLayout,
+  // SandpackTranspiledCode,
+  // SandpackProvider,
+  // SandpackCodeEditor,
   SandpackPredefinedTemplate,
   SandpackPredefinedTheme,
-  SandpackTranspiledCode,
-  SandpackProvider,
-  SandpackCodeEditor,
 } from 'codesandbox-sandpack-vue3';
 
 const template = ref<SandpackPredefinedTemplate>('vue3');

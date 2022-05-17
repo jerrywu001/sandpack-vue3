@@ -55,7 +55,7 @@ const SandpackRunner = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: SandpackRunnerProps, ctx) {
+  setup(props: SandpackRunnerProps) {
     const mainFile = computed(() => (props.customSetup?.main ?? SANDBOX_TEMPLATES[props.template || 'vanilla'].main));
 
     // Override the main file of the sandbox

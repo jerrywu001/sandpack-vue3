@@ -6,7 +6,6 @@ import type { LanguageSupport } from '@codemirror/language';
 import type { Extension } from '@codemirror/state';
 import type { Text } from '@codemirror/text';
 import { EditorView } from '@codemirror/view';
-import { Ref } from 'vue';
 
 import { getSyntaxStyle } from '../../themes';
 import type { SandpackTheme } from '../../types';

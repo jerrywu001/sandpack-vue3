@@ -33,7 +33,6 @@ import type {
   SandpackContext,
   SandboxEnvironment,
   FileResolver,
-  SandpackStatus,
   EditorState,
   SandpackPredefinedTemplate,
   SandpackSetup,
@@ -59,7 +58,6 @@ export interface SandpackProviderState {
   startRoute?: string;
   bundlerState?: BundlerState;
   error: SandpackError | null;
-  sandpackStatus: SandpackStatus;
   editorState: EditorState;
   renderHiddenIframe: boolean;
   initMode: SandpackInitMode;

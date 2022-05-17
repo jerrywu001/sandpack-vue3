@@ -20,7 +20,7 @@ export const LoadingOverlay = defineComponent({
     clientId: String,
     loading: Boolean,
   },
-  setup(props: LoadingOverlayProps, { slots }) {
+  setup(props: LoadingOverlayProps) {
     const { sandpack } = useSandpack();
     const loadingOverlayState = useLoadingOverlayState(props);
     const c = useClasser('sp');

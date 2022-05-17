@@ -34,7 +34,7 @@ export const Navigator = defineComponent({
       default: undefined,
     },
   },
-  setup(props: NavigatorProps, { slots }) {
+  setup(props: NavigatorProps) {
     let unsub: UnsubscribeFunction;
     const baseUrl = ref<string>('');
     const { sandpack, dispatch, listen } = useSandpack();
