@@ -1,3 +1,4 @@
+import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
 import { bracketMatching } from '@codemirror/matchbrackets';
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
 import { CodeMirrorProps } from '..';
@@ -10,7 +11,6 @@ import { highlightDecorators } from '../highlightDecorators';
 import { highlightInlineError } from '../highlightInlineError';
 import { history, historyKeymap } from '@codemirror/history';
 import { lineNumbers } from '@codemirror/gutter';
-import { useIntersectionObserver } from '@vueuse/core';
 import { useSandpackTheme } from '../../../hooks';
 import {
   computed,

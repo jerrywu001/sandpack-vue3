@@ -134,23 +134,19 @@ const CodeMirror = defineComponent({
     );
 
     // ======= render ===========
-    if (props.readOnly) {
-      return () => (
-        <pre
-          ref={wrapperRef}
-          class={c('cm', props.editorState as SandpackEditorState, languageExtension)}
-          translate="no"
-        >
-          <code class={c('pre-placeholder')}>{props.code}</code>
+    return () => props.readOnly ? (
+      <pre
+        ref={wrapperRef}
+        class={c('cm', props.editorState as SandpackEditorState, languageExtension)}
+        translate="no"
+      >
+        <code class={c('pre-placeholder')}>{props.code}</code>
 
-          {props.readOnly && props.showReadOnly && (
-            <span class={c('read-only')}>Read-only</span>
-          )}
-        </pre>
-      );
-    }
-
-    return () => (
+        {props.readOnly && props.showReadOnly && (
+          <span class={c('read-only')}>Read-only</span>
+        )}
+      </pre>
+    ) : (
       <div
         ref={wrapperRef}
         aria-describedby={`enter-instructions-${ariaId.value}`}

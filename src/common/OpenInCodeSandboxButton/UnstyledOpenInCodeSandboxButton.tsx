@@ -73,26 +73,22 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
       sandpack.openInCSBRegisteredRef = true;
     });
 
-    if ((paramsValues.value?.get?.('parameters')?.length ?? 0) > 1500) {
-      return () => (
-        <button
-          onClick={(): void => formRef.value?.submit()}
-          title="Open in CodeSandbox"
-        >
-          <form ref={formRef} action={CSB_URL} method="POST" target="_blank">
-            {Array.from(
-              paramsValues as unknown as Array<[string, string]>,
-              ([key, value]) => (
-                <input key={key} name={key} type="hidden" value={value} />
-              ),
-            )}
-          </form>
-          { slots.default ? slots.default() : null }
-        </button>
-      );
-    }
-
-    return () => (
+    return () => (paramsValues.value?.get?.('parameters')?.length ?? 0) > 1500 ? (
+      <button
+        onClick={(): void => formRef.value?.submit()}
+        title="Open in CodeSandbox"
+      >
+        <form ref={formRef} action={CSB_URL} method="POST" target="_blank">
+          {Array.from(
+            paramsValues as unknown as Array<[string, string]>,
+            ([key, value]) => (
+              <input key={key} name={key} type="hidden" value={value} />
+            ),
+          )}
+        </form>
+        { slots.default ? slots.default() : null }
+      </button>
+    ) : (
       <a
         href={`${CSB_URL}?${paramsValues.value?.toString()}`}
         rel="noreferrer noopener"
