@@ -8,6 +8,7 @@ import {
   SandpackThemeProvider,
 } from 'codesandbox-sandpack-vue3';
 import { Story } from '@storybook/vue3';
+import { ref } from 'vue';
 
 export default {
   title: 'components/Code Editor',
@@ -58,17 +59,26 @@ export const ClosableTabs = () => (
   </SandpackProvider>
 );
 
-export const ExtensionAutocomplete = () => (
-  <SandpackProvider template="react">
-    <SandpackThemeProvider>
-      <SandpackCodeEditor
-        extensions={[autocompletion()]}
-        extensionsKeymap={[completionKeymap]}
-        id="extensions"
-      />
-    </SandpackThemeProvider>
-  </SandpackProvider>
-);
+export const ExtensionAutocomplete = () => {
+  const active = ref(false);
+
+  return () => (
+    <>
+      <button onClick={() => { active.value = !active.value; }}>
+        Toggle ({ active.value ? 'on' : 'off' })
+      </button>
+      <SandpackProvider template="react">
+        <SandpackThemeProvider>
+          <SandpackCodeEditor
+            extensions={active.value ? [autocompletion()] : []}
+            extensionsKeymap={active.value ? [completionKeymap] : []}
+            id="extensions"
+          />
+        </SandpackThemeProvider>
+      </SandpackProvider>
+    </>
+  );
+};
 
 export const ReadOnly = () => (
     <>

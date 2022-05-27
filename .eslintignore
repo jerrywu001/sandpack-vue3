@@ -15,4 +15,5 @@ tsconfig.json
 **/*.module.css
 **/*.module.scss
 **/*.module.less
+file-resolver-protocol.ts
 __unconfig_vite.config.ts

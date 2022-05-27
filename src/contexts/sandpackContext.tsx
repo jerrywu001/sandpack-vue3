@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import isEqual from 'lodash.isequal';
 import { convertedFilesToBundlerFiles, getSandpackStateFromProps } from '../utils/sandpackUtils';
-import { SandpackFiles, useContext } from '..';
+import { type SandpackFiles, useContext } from '..';
 import { extractErrorDetails, SandpackClient } from '@codesandbox/sandpack-client';
 import { generateRandomId } from '../utils/stringUtils';
 import {

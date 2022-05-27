@@ -4,7 +4,7 @@ import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
 import { CodeMirrorProps } from '..';
 import { commentKeymap } from '@codemirror/comment';
 import { defaultHighlightStyle } from '@codemirror/highlight';
-import { EditorState, Extension } from '@codemirror/state';
+import { EditorState, Extension, StateEffect } from '@codemirror/state';
 import { generateRandomId } from '../../../utils/stringUtils';
 import { getCodeMirrorLanguage, getEditorTheme, getLanguageFromFile, getSyntaxHighlight } from '../utils';
 import { highlightDecorators } from '../highlightDecorators';
@@ -220,6 +220,25 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
       shouldInitEditor.value = true;
     }
   });
+
+  watch([
+    () => props.extensions,
+    () => props.extensionsKeymap,
+  ], () => {
+    const view = cmView.value;
+
+    if (view) {
+      view.dispatch({
+        effects: StateEffect.appendConfig.of(props.extensions || []),
+      });
+
+      view.dispatch({
+        effects: StateEffect.appendConfig.of(
+          keymap.of([...props.extensionsKeymap || []] as unknown as KeyBinding[]),
+        ),
+      });
+    }
+  }, { immediate: true });
 
   // ===== life circles ========
   onMounted(() => {
