@@ -14,8 +14,8 @@ export const useActiveCode = (): {
 } => {
   const { sandpack } = useSandpack();
 
-  const code = computed(() => (sandpack?.files[sandpack.activePath]?.code));
-  const readOnly = computed(() => (sandpack?.files[sandpack.activePath]?.readOnly ?? false));
+  const code = computed(() => (sandpack?.files[sandpack.activeFile]?.code));
+  const readOnly = computed(() => (sandpack?.files[sandpack.activeFile]?.readOnly ?? false));
 
   return {
     code,

@@ -6,11 +6,28 @@ import { CodeViewerProps, SandpackCodeViewer } from '../code-viewer';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { Decorators } from '../code-editor';
 import { SandpackInitMode } from '../../types';
+import { css, THEME_PREFIX } from '../../styles';
+import { classNames } from '../../utils/classNames';
+
+const transpiledCodeClassName = css({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  position: 'relative',
+  overflow: 'auto',
+  minHeight: '160px',
+  flex: 1,
+});
 
 export const SandpackTranspiledCode = defineComponent({
   name: 'SandpackTranspiledCode',
   inheritAttrs: true,
   props: {
+    className: {
+      type: String,
+      required: false,
+      default: '',
+    },
     showTabs: {
       type: Boolean,
       required: false,
@@ -44,13 +61,13 @@ export const SandpackTranspiledCode = defineComponent({
   },
   // @ts-ignore
   setup(props: CodeViewerProps) {
-    const c = useClasser('sp');
     const { sandpack } = useSandpack();
+    const c = useClasser(THEME_PREFIX);
     const hiddenIframeRef = ref<HTMLIFrameElement | null>(null);
 
     const bundlerState = computed(() => sandpack.bundlerState);
     const transpiledCode = computed(() => {
-      const tModule = bundlerState.value?.transpiledModules[sandpack.activePath + ':'];
+      const tModule = bundlerState.value?.transpiledModules[sandpack.activeFile + ':'];
       return tModule?.source?.compiledCode ?? '';
     });
 
@@ -67,16 +84,19 @@ export const SandpackTranspiledCode = defineComponent({
     });
 
     return () => (
-      <div class={c('transpiled-code')}>
-        {
-          transpiledCode.value && (
-            <SandpackCodeViewer
-              {...props}
-              code={sandpack.status === 'running' ? transpiledCode.value : ''}
-              initMode={sandpack.initMode}
-            />
-          )
-        }
+      <div
+        class={classNames(
+          c('transpiled-code'),
+          transpiledCodeClassName,
+          props.className,
+        )}
+      >
+        <SandpackCodeViewer
+          {...props}
+          code={transpiledCode.value ?? ''}
+          initMode={sandpack.initMode}
+        />
+
         <iframe
           ref={hiddenIframeRef}
           style={{ display: 'none' }}

@@ -5,13 +5,20 @@ import { CodeMirrorProps } from '..';
 import { commentKeymap } from '@codemirror/comment';
 import { defaultHighlightStyle } from '@codemirror/highlight';
 import { EditorState, Extension, StateEffect } from '@codemirror/state';
-import { generateRandomId } from '../../../utils/stringUtils';
-import { getCodeMirrorLanguage, getEditorTheme, getLanguageFromFile, getSyntaxHighlight } from '../utils';
+import {
+  getCodeMirrorLanguage,
+  getEditorTheme,
+  getLanguageFromFile,
+  getSyntaxHighlight,
+} from '../utils';
 import { highlightDecorators } from '../highlightDecorators';
 import { highlightInlineError } from '../highlightInlineError';
 import { history, historyKeymap } from '@codemirror/history';
 import { lineNumbers } from '@codemirror/gutter';
+import { shallowEqual } from '../../../utils/array';
+import { useGeneratedId } from '../useGeneratedId';
 import { useSandpackTheme } from '../../../hooks';
+import { useSyntaxHighlight } from '../useSyntaxHighlight';
 import {
   computed,
   watch,
@@ -38,13 +45,21 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   // ===== vars & states ========
   let timer: NodeJS.Timer;
 
+  const sandpackTheme = useSandpackTheme();
   const languageExtension = getLanguageFromFile(props.filePath, props.fileType);
   const langSupport = getCodeMirrorLanguage(languageExtension);
+  const highlightTheme = getSyntaxHighlight(sandpackTheme.theme);
+
+  const syntaxHighlightRender = useSyntaxHighlight({
+    langSupport,
+    highlightTheme,
+    code: props.code,
+  });
 
   const internalCode = ref<string>(props.code);
   const wrapperRef = ref<HTMLDivElement>();
   const cmView = ref<EditorView>();
-  const ariaId = ref<string>(props.id ?? generateRandomId());
+  const ariaId = useGeneratedId(props.id);
   const isIntersecting = ref(false);
 
   const theInitMode = computed(() => props.initMode || 'lazy');
@@ -59,7 +74,10 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   });
 
   const shouldInitEditor = ref(theInitMode.value === 'immediate');
-  const sandpackTheme = useSandpackTheme();
+
+  // @ts-ignore
+  const prevExtension = ref<Extension[]>([]);
+  const prevExtensionKeymap = ref<Array<readonly KeyBinding[]>>([]);
 
   useIntersectionObserver(
     wrapperRef,
@@ -125,8 +143,8 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
 
       defaultHighlightStyle.fallback,
 
-      getEditorTheme(sandpackTheme.theme),
-      getSyntaxHighlight(sandpackTheme.theme),
+      getEditorTheme(),
+      highlightTheme,
       ...props.extensions as Extension[],
     ];
 
@@ -187,6 +205,8 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
       const attrVal = 'exit-instructions-' + ariaId.value;
       view.contentDOM.setAttribute('tabIndex', '-1');
       view.contentDOM.setAttribute('aria-describedby', attrVal);
+    } else {
+      view.contentDOM.classList.add('cm-readonly');
     }
 
     cmView.value = view;
@@ -227,7 +247,11 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   ], () => {
     const view = cmView.value;
 
-    if (view) {
+    const dependenciesAreDiff =
+      !shallowEqual(props.extensions as Extension[], prevExtension.value) ||
+      !shallowEqual(props.extensionsKeymap as (readonly KeyBinding[])[], prevExtensionKeymap.value);
+
+    if (view && dependenciesAreDiff) {
       view.dispatch({
         effects: StateEffect.appendConfig.of(props.extensions || []),
       });
@@ -237,6 +261,9 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
           keymap.of([...props.extensionsKeymap || []] as unknown as KeyBinding[]),
         ),
       });
+
+      prevExtension.value = props.extensions as Extension[];
+      prevExtensionKeymap.value = props.extensionsKeymap as (readonly KeyBinding[])[];
     }
   }, { immediate: true });
 
@@ -255,5 +282,6 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     cmView,
     ariaId,
     languageExtension,
+    syntaxHighlightRender,
   };
 }

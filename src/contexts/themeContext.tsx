@@ -1,13 +1,52 @@
-import { useClasser } from 'code-hike-classer-vue3';
-import { injectThemeStyleSheet } from '../utils/domUtils';
-import { createThemeObject, defaultLight } from '../themes';
+import { classNames } from '../utils/classNames';
+import {
+  DefineComponent,
+  defineComponent,
+  HTMLAttributes,
+  InjectionKey,
+  PropType,
+  provide,
+  reactive,
+  ref,
+  watch,
+} from 'vue';
+import {
+  createTheme,
+  css,
+  standardizeStitchesTheme,
+  standardizeTheme,
+  THEME_PREFIX,
+} from '../styles';
 import { SandpackTheme, SandpackThemeProp } from '../types';
-import { DefineComponent, defineComponent, InjectionKey, PropType, provide, reactive, watch } from 'vue';
+import { useClasser } from 'code-hike-classer-vue3';
 
 interface SandpackThemeProviderContext {
   theme: SandpackTheme;
   id: string;
 }
+
+interface IProp extends HTMLAttributes {
+  theme?: SandpackThemeProp;
+  className?: string;
+}
+
+const wrapperClassName = css({
+  all: 'initial',
+  fontSize: '$font$size',
+  fontFamily: '$font$body',
+  display: 'block',
+  boxSizing: 'border-box',
+  textRendering: 'optimizeLegibility',
+  WebkitTapHighlightColor: 'transparent',
+  WebkitFontSmoothing: 'subpixel-antialiased',
+
+  '@media screen and (min-resolution: 2dppx)': {
+    WebkitFontSmoothing: 'antialiased',
+    MozOsxFontSmoothing: 'grayscale',
+  },
+  '*': { boxSizing: 'border-box' },
+  '.sp-wrapper:focus': { outline: '0' },
+});
 
 const SandpackThemeContext: InjectionKey<SandpackThemeProviderContext> = Symbol('sandpackThemeProvider');
 
@@ -18,25 +57,31 @@ const SandpackThemeProvider = defineComponent({
     theme: {
       type: [String, Object] as PropType<SandpackThemeProp>,
       required: false,
-      default: 'default',
+      default: undefined,
+    },
+    className: {
+      type: String,
+      required: false,
+      default: '',
     },
   },
-  setup(props: { theme?: SandpackThemeProp }, { slots }) {
-    const { theme, id: defaultId } = createThemeObject(props.theme);
-    const context = reactive({ theme: theme || defaultLight, id: defaultId });
-    const c = useClasser('sp');
+  setup(props, { slots }) {
+    const { theme, id = '' } = standardizeTheme(props.theme);
+    const c = useClasser(THEME_PREFIX);
+    const themeClassName = ref({} as any);
+    const context = reactive({ theme, id });
 
     if (context.theme) {
-      injectThemeStyleSheet(context.theme, context.id);
+      themeClassName.value = createTheme(id, standardizeStitchesTheme(theme));
       provide(SandpackThemeContext, context);
     }
 
     const updateThemeState = () => {
-      const { theme: newTheme, id } = createThemeObject(props.theme);
+      const { theme: newTheme, id: newId } = standardizeTheme(props.theme);
       if (props.theme) {
-        injectThemeStyleSheet(newTheme || defaultLight, id);
-        context.id = id;
+        context.id = newId;
         context.theme = newTheme;
+        themeClassName.value = createTheme(newId, standardizeStitchesTheme(newTheme));
       }
     };
 
@@ -47,10 +92,19 @@ const SandpackThemeProvider = defineComponent({
     );
 
     return () => (
-      <div class={c('wrapper', context.id)}>{ slots.default ? slots.default() : null }</div>
+      <div
+        class={classNames(
+          c('wrapper'),
+          themeClassName.value.toString(),
+          wrapperClassName,
+          props.className,
+        )}
+      >
+        { slots.default ? slots.default() : null }
+      </div>
     );
   },
-}) as DefineComponent<{ theme?: SandpackThemeProp }>;
+}) as DefineComponent<IProp>;
 
 export { SandpackThemeProvider, SandpackThemeContext };
 

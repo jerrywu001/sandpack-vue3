@@ -27,10 +27,8 @@ const code = `export default function Kitten() {
 
 export const Component = () => (
   <SandpackProvider
-    customSetup={{
-      files: {
-        '/App.js': code,
-      },
+    files={{
+      '/App.js': code,
     }}
     template="react"
   >
@@ -42,10 +40,8 @@ export const Component = () => (
 
 export const Viewport: Story<PreviewProps> = (args) => (
   <SandpackProvider
-    customSetup={{
-      files: {
-        '/App.js': code,
-      },
+    files={{
+      '/App.js': code,
     }}
     template="react"
   >
@@ -57,28 +53,10 @@ export const Viewport: Story<PreviewProps> = (args) => (
   </SandpackProvider>
 );
 
-Viewport.argTypes = {
-  viewportSize: {
-    control: {
-      type: 'select',
-      options: [
-        'iPhone X',
-        'iPad',
-        'Pixel 2',
-        'Moto G4',
-        'Surface Duo',
-        'auto',
-      ],
-    },
-  },
-};
-
 export const WithNavigator = () => (
   <SandpackProvider
-    customSetup={{
-      files: {
-        '/App.js': code,
-      },
+    files={{
+      '/App.js': code,
     }}
     template="react"
   >
@@ -90,10 +68,8 @@ export const WithNavigator = () => (
 
 export const AutoResize = () => (
   <SandpackProvider
-    customSetup={{
-      files: {
-        '/App.js': code,
-      },
+    files={{
+      '/App.js': code,
     }}
     template="react"
   >

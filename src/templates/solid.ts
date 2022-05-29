@@ -1,12 +1,13 @@
-import type { SandboxTemplate } from '../types';
-
-export const SOLID_TEMPLATE: SandboxTemplate = {
+/**
+ * @category Template
+ */
+export const SOLID_TEMPLATE = {
   files: {
     '/App.tsx': {
       code: `import { Component } from "solid-js";
 
 const App: Component = () => {
-  return <h1>Hello Solid!</h1>;
+  return <h1>Hello World</h1>;
 };
 
 export default App;`,
@@ -14,9 +15,7 @@ export default App;`,
     '/index.tsx': {
       code: `import { render } from "solid-js/web";
 import App from "./App";
-
 import "./styles.css";
-
 render(() => <App />, document.getElementById("app"));`,
     },
     '/styles.css': {
@@ -31,7 +30,6 @@ render(() => <App />, document.getElementById("app"));`,
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
 }
-
 h1 {
   font-size: 1.5rem;
 }`,

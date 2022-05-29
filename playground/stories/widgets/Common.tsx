@@ -29,6 +29,7 @@ export const ResetButtonComp = () => {
         border: 'none',
         position: 'absolute',
         right: '1em',
+        top: '1em',
       }}
     >
       Reset all file
@@ -42,12 +43,13 @@ export const ResetCurrentFileButton = () => {
   return (
     <button
        class="sp-tab-button"
-      onClick={() => sandpack.resetFile(sandpack.activePath)}
+      onClick={() => sandpack.resetFile(sandpack.activeFile)}
       style={{
         background: 'none',
         border: 'none',
         position: 'absolute',
         right: '1em',
+        top: '1em',
       }}
     >
       Reset current files
@@ -64,6 +66,10 @@ export const CustomOpenInCSB = () => (
 export const CustomCodeEditor = () => {
   const { code, updateCode } = useActiveCode();
   const { theme } = useSandpackTheme();
+  let { size } = theme.font;
+  let { lineHeight } = theme.font;
+  size = size.includes('px') ? size : `${size}px`;
+  lineHeight = lineHeight.includes('px') ? lineHeight : `${lineHeight}px`;
 
   return (
     <textarea
@@ -72,12 +78,12 @@ export const CustomCodeEditor = () => {
         width: '400px',
         height: '200px',
         padding: '8px',
-        fontFamily: theme.typography.monoFont,
-        fontSize: theme.typography.fontSize,
-        background: theme.palette.defaultBackground,
-        border: `1px solid ${theme.palette.inactiveText}`,
-        color: theme.palette.activeText,
-        lineHeight: theme.typography.lineHeight,
+        fontFamily: theme.font.mono,
+        fontSize: size,
+        background: theme.colors.surface1,
+        border: `1px solid ${theme.colors.surface2}`,
+        color: theme.colors.base,
+        lineHeight,
       }}
     >
       {code.value}

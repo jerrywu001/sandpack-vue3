@@ -1,44 +1,66 @@
-import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
+import { classNames } from '../../utils/classNames';
+import { css, THEME_PREFIX } from '../../styles';
+import { ErrorOverlay } from '../../common/ErrorOverlay';
+import { generateRandomId } from '../../utils/stringUtils';
+import { LoadingOverlay } from '../../common/LoadingOverlay';
+import { Navigator } from '../navigator';
+import { OpenInCodeSandboxButton } from '../../common/OpenInCodeSandboxButton';
+import { RefreshButton } from './RefreshButton';
+import { SandpackStack } from '../../common/Stack';
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
-import { CSSProperties, DefineComponent, defineComponent, nextTick, onMounted, onUnmounted, PropType, ref } from 'vue';
-
-import { ErrorOverlay } from '../../common/ErrorOverlay';
-import { LoadingOverlay } from '../../common/LoadingOverlay';
-import { OpenInCodeSandboxButton } from '../../common/OpenInCodeSandboxButton';
-import { SandpackStack } from '../../common/Stack';
-import { generateRandomId } from '../../utils/stringUtils';
-import { Navigator } from '../navigator';
-
-import { RefreshButton } from './RefreshButton';
-
-export type ViewportSizePreset =
-  | 'iPhone X'
-  | 'Pixel 2'
-  | 'iPad'
-  | 'Moto G4'
-  | 'Surface Duo';
-
-export type ViewportSize =
-  | ViewportSizePreset
-  | 'auto'
-  | { width: string; height: string };
-
-export type ViewportOrientation = 'portrait' | 'landscape';
+import {
+  CSSProperties,
+  DefineComponent,
+  defineComponent,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+} from 'vue';
+import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 
 export interface PreviewProps {
-  customStyle?: CSSProperties;
-  viewportSize?: ViewportSize;
-  viewportOrientation?: ViewportOrientation;
+  className?: string;
+  style?: CSSProperties;
   showNavigator?: boolean;
   showOpenInCodeSandbox?: boolean;
   showRefreshButton?: boolean;
   showSandpackErrorOverlay?: boolean;
   actionsChildren?: JSX.Element;
-  children?: JSX.Element;
 }
 
 export { RefreshButton };
+
+const previewClassName = css({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  background: 'white',
+  overflow: 'auto',
+  position: 'relative',
+});
+
+const previewIframe = css({
+  border: '0',
+  outline: '0',
+  width: '100%',
+  height: '100%',
+  minHeight: '160px',
+  maxHeight: '2000px',
+  flex: 1,
+});
+
+const previewActionsClassName = css({
+  display: 'flex',
+  position: 'absolute',
+  bottom: '$space$2',
+  right: '$space$2',
+  zIndex: '$overlay',
+
+  '> *': { marginLeft: '$space$2' },
+});
 
 export interface SandpackPreviewRef {
   /**
@@ -56,10 +78,17 @@ export const SandpackPreview = defineComponent({
   name: 'SandpackPreview',
   inheritAttrs: true,
   props: {
-    customStyle: {
-      type: Object as PropType<PreviewProps>,
+    className: {
+      type: String,
       required: false,
-      default: undefined,
+      default: '',
+    },
+    style: {
+      type: Object as PropType<CSSProperties>,
+      required: false,
+      default() {
+        return {};
+      },
     },
     showNavigator: {
       type: Boolean,
@@ -81,16 +110,6 @@ export const SandpackPreview = defineComponent({
       required: false,
       default: true,
     },
-    viewportSize: {
-      type: String as PropType<ViewportSize>,
-      required: false,
-      default: 'auto',
-    },
-    viewportOrientation: {
-      type: String as PropType<ViewportOrientation>,
-      required: false,
-      default: 'portrait',
-    },
     actionsChildren: {
       type: Object as PropType<JSX.Element>,
       required: false,
@@ -104,7 +123,7 @@ export const SandpackPreview = defineComponent({
 
     let unsubscribe: UnsubscribeFunction;
 
-    const c = useClasser('sp');
+    const c = useClasser(THEME_PREFIX);
     const clientId = ref<string>(generateRandomId());
     const iframeRef = ref<HTMLIFrameElement | null>(null);
 
@@ -149,40 +168,38 @@ export const SandpackPreview = defineComponent({
       iframeRef.value.src = newUrl;
     };
 
-    const viewportStyle = computeViewportSize(
-      props.viewportSize as ViewportSize,
-      props.viewportOrientation as ViewportOrientation,
-    );
-
     return () => (
       <SandpackStack
-        customStyle={{
-          ...props.customStyle,
-          ...viewportStyle,
+        { ...props }
+        class={props.className}
+        style={{
+          ...(props.style || {}),
         }}
       >
         {props.showNavigator ? (
           <Navigator clientId={clientId.value} onURLChange={handleNewURL} />
         ) : null}
 
-        <div class={c('preview-container')}>
+        <div class={classNames(c('preview-container'), previewClassName)}>
           <iframe
             ref={iframeRef}
-            class={c('preview-iframe')}
+            class={classNames(c('preview-iframe'), previewIframe)}
             style={{
               // set height based on the content only in auto mode
               // and when the computed height was returned by the bundler
-              height:
-                props.viewportSize === 'auto' && iframeComputedHeight.value
-                  ? iframeComputedHeight.value
-                  : undefined,
+              height: iframeComputedHeight.value || undefined,
             }}
             title="Sandpack Preview"
           />
 
           {props.showSandpackErrorOverlay ? <ErrorOverlay /> : null}
 
-          <div class={c('preview-actions')}>
+          <div
+            class={classNames(
+              c('preview-actions'),
+              previewActionsClassName,
+            )}
+          >
             {
               slots.actionsChildren
                 ? slots.actionsChildren()
@@ -205,32 +222,3 @@ export const SandpackPreview = defineComponent({
     );
   },
 }) as DefineComponent<PreviewProps>;
-
-const VIEWPORT_SIZE_PRESET_MAP: Record<
-ViewportSizePreset,
-{ x: string; y: string }
-> = {
-  'iPhone X': { x: '375px', y: '812px' },
-  iPad: { x: '768px', y: '1024px' },
-  'Pixel 2': { x: '411px', y: '731px' },
-  'Moto G4': { x: '360px', y: '640px' },
-  'Surface Duo': { x: '540px', y: '720px' },
-};
-
-const computeViewportSize = (
-  viewport: ViewportSize,
-  orientation: ViewportOrientation,
-): { width?: string; height?: string } => {
-  if (viewport === 'auto') {
-    return {};
-  }
-
-  if (typeof viewport === 'string') {
-    const { x, y } = VIEWPORT_SIZE_PRESET_MAP[viewport];
-    return orientation === 'portrait'
-      ? { width: x, height: y }
-      : { width: y, height: x };
-  }
-
-  return viewport;
-};

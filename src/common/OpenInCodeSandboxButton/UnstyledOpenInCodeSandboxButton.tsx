@@ -49,7 +49,7 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
     const paramsValues = ref({} as URLSearchParams);
 
     watch([
-      () => sandpack.activePath,
+      () => sandpack.activeFile,
       () => sandpack.environment,
       () => sandpack.files,
     ], () => {
@@ -60,7 +60,7 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
         const searchParams = new URLSearchParams({
           parameters: params,
           query: new URLSearchParams({
-            file: sandpack.activePath,
+            file: sandpack.activeFile,
             'from-sandpack': 'true',
           }).toString(),
         });

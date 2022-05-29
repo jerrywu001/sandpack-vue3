@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import isEqual from 'lodash.isequal';
 import { ref } from 'vue';
 import {
   // Sandpack,
@@ -7,22 +8,23 @@ import {
   // SandpackProvider,
   // SandpackCodeEditor,
   SandpackPredefinedTemplate,
-  SandpackPredefinedTheme,
+  SandpackTheme,
 } from 'codesandbox-sandpack-vue3';
+import { githubLight, aquaBlue } from '@codesandbox/sandpack-themes';
 
-const template = ref<SandpackPredefinedTemplate>('vue3');
-const theme = ref<SandpackPredefinedTheme>('light');
+const template = ref<SandpackPredefinedTemplate>('react');
+const theme = ref<SandpackTheme>(aquaBlue);
 const enableClose = ref(false);
 const showLineNumbers = ref(true);
 const wrapContent = ref(true);
 const readOnly = ref(false);
 
 const toggleTheme = () => {
-  theme.value = theme.value !== 'github-light' ? 'github-light' : 'light';
+  theme.value = isEqual(theme.value, githubLight) ? aquaBlue : githubLight;
 };
 
 const toggleTemplate = () => {
-  template.value = template.value !== 'vue3' ? 'vue3' : 'vue';
+  template.value = template.value !== 'vue3' ? 'vue3' : 'react';
 };
 
 const toggleLineNumbers = () => {
@@ -55,6 +57,9 @@ const toggleReadOnly = () => {
     <Sandpack
       :theme="theme"
       :template="template"
+      :files="{
+        '/test.js': '// test',
+      }"
       :options="{
         autorun: true,
         showTabs: true,
@@ -78,7 +83,7 @@ const toggleReadOnly = () => {
   </div>
 </template>
 
-<style lang="scss">
+<style>
 .mybtn {
   @apply rounded-md border border-light-50 mr-5 p-2 bg-green-500 text-xs text-white;
 }

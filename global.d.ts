@@ -19,15 +19,15 @@ declare module '@vue/runtime-core' {
     Sandpack: typeof Sandpack;
     SandpackLayout: typeof SandpackLayout;
     SandpackProvider: typeof SandpackProvider;
-    CodeEditor: typeof CodeEditor;
     ErrorOverlay: typeof ErrorOverlay;
     LoadingOverlay: typeof LoadingOverlay;
+    CodeEditor: typeof CodeEditor;
     SandpackCodeEditor: typeof SandpackCodeEditor;
     SandpackCodeViewer: typeof SandpackCodeViewer;
     SandpackPreview: typeof SandpackPreview;
-    SandpackRunner: typeof SandpackRunner;
     SandpackStack: typeof SandpackStack;
     SandpackTranspiledCode: typeof SandpackTranspiledCode;
+    SandpackFileExplorer: typeof SandpackFileExplorer;
   }
 }
 

@@ -45,10 +45,8 @@ export const JustIframeStory = defineComponent({
 
     return () => (
       <SandpackProvider
-        customSetup={{
-          files: {
-            '/App.js': code.value,
-          },
+        files={{
+          '/App.js': code.value,
         }}
         template="react"
       >

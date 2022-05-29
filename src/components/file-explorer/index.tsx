@@ -1,22 +1,37 @@
+import { css } from '../../styles';
 import { defineComponent } from 'vue';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { Directory } from './Directory';
 import { File } from './File';
 import { ModuleList } from './ModuleList';
+import { classNames } from '../../utils/classNames';
+
+const fileExplorerClassName = css({
+  padding: '$space$3',
+  overflow: 'auto',
+  height: '100%',
+});
 
 /**
- * FileExplorer
+ * SandpackFileExplorer
  */
-export const FileExplorer = defineComponent({
-  name: 'FileExplorer',
+export const SandpackFileExplorer = defineComponent({
+  name: 'SandpackFileExplorer',
   inheritAttrs: true,
-  setup() {
+  props: {
+    className: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
+  setup(props) {
     const { sandpack } = useSandpack();
 
     return () => (
-      <div>
+      <div class={classNames(fileExplorerClassName, props.className)}>
         <ModuleList
-          activePath={sandpack.activePath}
+          activeFile={sandpack.activeFile}
           files={sandpack.files}
           prefixedPath="/"
           selectFile={sandpack.openFile}

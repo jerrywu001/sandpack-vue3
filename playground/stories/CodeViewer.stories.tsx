@@ -34,26 +34,26 @@ export const Decorators = () => (
     <SandpackProvider
       customSetup={{
         entry: '/index.js',
-        files: {
-          '/index.js': {
-            code: `const people = [{
+      }}
+      files={{
+        '/index.js': {
+          code: `const people = [{
   id: 0,
   name: 'Creola Katherine Johnson',
   profession: 'mathematician',
-}, {
+  }, {
   id: 1,
   name: 'Mario José Molina-Pasquel Henríquez',
   profession: 'chemist',
-}];
+  }];
 
-export default function List() {
+  export default function List() {
   const [text, setText] = useState("")
   const listItems = people.map(person =>
     <li>{person}</li>
   );
   return <ul>{listItems}</ul>;
-}`,
-          },
+  }`,
         },
       }}
     >
