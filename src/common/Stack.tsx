@@ -1,23 +1,34 @@
 import { useClasser } from 'code-hike-classer-vue3';
-import { CSSProperties, DefineComponent, defineComponent, PropType } from 'vue';
+import { css, THEME_PREFIX } from '../styles';
+import { defineComponent } from 'vue';
+import { classNames } from '../utils/classNames';
+
+export const stackClassName = css({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  position: 'relative',
+});
 
 export const SandpackStack = defineComponent({
   name: 'SandpackStack',
   inheritAttrs: true,
   props: {
-    customStyle: {
-      type: Object as PropType<CSSProperties>,
+    className: {
+      type: String,
       required: false,
-      default() {
-        return {};
-      },
+      default: '',
     },
   },
-  setup(props: { customStyle?: CSSProperties }, { slots }) {
-    const c = useClasser('sp');
+  setup(props, { slots }) {
+    const c = useClasser(THEME_PREFIX);
 
     return () => (
-      <div class={c('stack')} style={props.customStyle}>{ slots.default ? slots.default() : null }</div>
+      <div
+        class={classNames(c('stack'), stackClassName, props.className)}
+      >
+        { slots.default ? slots.default() : null }
+      </div>
     );
   },
-}) as DefineComponent<{ customStyle?: CSSProperties }>;
+});

@@ -4,6 +4,9 @@ import { storiesOf } from '@storybook/vue3';
 
 const stories = storiesOf('presets/Template', module);
 
-Object.keys(SANDBOX_TEMPLATES).forEach(
-  (template) => stories.add(template, () => <Sandpack template={template as SandpackPredefinedTemplate} />),
-);
+Object.keys(SANDBOX_TEMPLATES).forEach((template) => stories.add(template, () => (
+    <Sandpack
+      options={{ closableTabs: true }}
+      template={template as SandpackPredefinedTemplate}
+    />
+)));

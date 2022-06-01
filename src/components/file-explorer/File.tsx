@@ -1,5 +1,20 @@
+import { css, THEME_PREFIX } from '../../styles';
 import { computed, DefineComponent, defineComponent } from 'vue';
 import { DirectoryIcon, FileIcon } from '../../icons';
+import { classNames } from '../../utils/classNames';
+import { buttonClassName } from '../../styles/shared';
+import { useClasser } from 'code-hike-classer-vue3';
+
+const explorerClassName = css({
+  borderRadius: '0',
+  width: '100%',
+  padding: 0,
+  marginBottom: '$space$2',
+
+  svg: {
+    marginRight: '$space$1',
+  },
+});
 
 export interface Props {
   path: string;
@@ -46,26 +61,32 @@ export const File = defineComponent({
   },
   // @ts-ignore
   setup(props: Props) {
+    const c = useClasser(THEME_PREFIX);
     const fileName = computed(() => props.path.split('/').filter(Boolean).pop());
 
-    const selectFile = () => {
+    const onClickButton = (event: MouseEvent): void => {
       if (props.selectFile) {
         props.selectFile(props.path);
+      }
+      if (props.onClick) {
+        props.onClick(event);
       }
     };
 
     return () => (
       <button
-        class="sp-button sp-explorer"
+        class={classNames(
+          c('button', 'explorer'),
+          buttonClassName,
+          explorerClassName,
+        )}
         data-active={props.active}
-        onClick={props.selectFile ? selectFile : props.onClick}
-        style={{ paddingLeft: 8 * props.depth + 'px' }}
+        onClick={onClickButton}
+        style={{ paddingLeft: 9 * props.depth + 'px' }}
         type="button"
       >
-        {
-          props.selectFile ? <FileIcon /> : <DirectoryIcon isOpen={props.isDirOpen} />
-        }
-        { fileName.value }
+        {props.selectFile ? <FileIcon /> : <DirectoryIcon isOpen={props.isDirOpen} />}
+        {fileName.value}
       </button>
     );
   },

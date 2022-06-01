@@ -1,8 +1,52 @@
-import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
+import { BackwardIcon, ForwardIcon, RefreshIcon } from '../../icons';
+import { buttonClassName, iconClassName } from '../../styles/shared';
+import { classNames } from '../../utils/classNames';
+import { css, THEME_PREFIX } from '../../styles';
+import {
+  DefineComponent,
+  defineComponent,
+  PropType,
+  ref,
+  watch,
+} from 'vue';
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
-import { DefineComponent, defineComponent, PropType, ref, watch } from 'vue';
-import { BackwardIcon, ForwardIcon, RefreshIcon } from '../../icons';
+import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
+
+const navigatorClassName = css({
+  display: 'flex',
+  alignItems: 'center',
+  height: '40px',
+  borderBottom: '1px solid $colors$surface2',
+  padding: '$space$2 $space$4',
+  background: '$colors$surface1',
+});
+
+const inputClassName = css({
+  backgroundColor: '$colors$surface2',
+  color: '$colors$clickable',
+  padding: '$space$1 $space$3',
+  borderRadius: '99999px',
+  border: '1px solid $colors$surface2',
+  height: '24px',
+  lineHeight: '24px',
+  fontSize: 'inherit',
+  outline: 'none',
+  flex: 1,
+  marginLeft: '$space$4',
+  width: '0',
+  transition: 'all $transitions$default',
+
+  '&:hover': {
+    backgroundColor: '$colors$surface3',
+  },
+
+  '&:focus': {
+    backgroundColor: '$surface1',
+    border: '1px solid $colors$accent',
+    color: '$colors$base',
+  },
+});
 
 const splitUrl = (url: string): string[] => {
   const match = url.match(/(https?:\/\/.*?)\//);
@@ -15,6 +59,7 @@ const splitUrl = (url: string): string[] => {
 };
 
 interface NavigatorProps {
+  className?: string;
   clientId?: string;
   onURLChange?: (newURL: string) => void;
 }
@@ -23,6 +68,11 @@ export const Navigator = defineComponent({
   name: 'Navigator',
   inheritAttrs: true,
   props: {
+    className: {
+      type: String,
+      required: false,
+      default: '',
+    },
     clientId: {
       type: String,
       required: false,
@@ -44,7 +94,7 @@ export const Navigator = defineComponent({
     const backEnabled = ref(false);
     const forwardEnabled = ref(false);
 
-    const c = useClasser('sp');
+    const c = useClasser(THEME_PREFIX);
 
     watch(
       () => props.clientId,
@@ -100,10 +150,16 @@ export const Navigator = defineComponent({
     };
 
     return () => (
-      <div class={c('navigator')}>
+      <div
+        class={classNames(c('navigator'), navigatorClassName, props.className)}
+      >
         <button
           aria-label="Go back one page"
-          class={c('button', 'icon')}
+          class={classNames(
+            c('button', 'icon'),
+            buttonClassName,
+            iconClassName,
+          )}
           disabled={!backEnabled.value}
           onClick={handleBack}
           type="button"
@@ -112,7 +168,11 @@ export const Navigator = defineComponent({
         </button>
         <button
           aria-label="Go forward one page"
-          class={c('button', 'icon')}
+          class={classNames(
+            c('button', 'icon'),
+            buttonClassName,
+            iconClassName,
+          )}
           disabled={!forwardEnabled.value}
           onClick={handleForward}
           type="button"
@@ -121,7 +181,11 @@ export const Navigator = defineComponent({
         </button>
         <button
           aria-label="Refresh page"
-          class={c('button', 'icon')}
+          class={classNames(
+            c('button', 'icon'),
+            buttonClassName,
+            iconClassName,
+          )}
           onClick={handleRefresh}
           type="button"
         >
@@ -130,7 +194,7 @@ export const Navigator = defineComponent({
 
         <input
           aria-label="Current Sandpack URL"
-          class={c('input')}
+          class={classNames(c('input'), inputClassName)}
           name="Current Sandpack URL"
           onChange={handleInputChange}
           onKeydown={handleKeyDown}

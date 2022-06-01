@@ -1,5 +1,4 @@
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
-import '../../src/styles/index.css';
 
 const customViewports = {
   pixel2: {

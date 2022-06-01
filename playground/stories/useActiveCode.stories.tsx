@@ -8,7 +8,7 @@ const CustomEditor = () => {
   const { code, updateCode } = useActiveCode();
   return (
     <textarea
-      style={{ height: '120px', width: '300px' }}
+      style={{ height: '300px', width: '300px' }}
       onKeyup={(evt: any) => updateCode(evt.target?.value)}
     >
       {code.value}

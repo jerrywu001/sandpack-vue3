@@ -25,16 +25,4 @@ module.exports = {
     'font-family-no-missing-generic-family-keyword': null,
     'declaration-block-no-redundant-longhand-properties': null,
   },
-  overrides: [
-    // 若项目中存在scss文件，添加以下配置
-    {
-      files: '**/*.scss',
-      customSyntax: 'postcss-scss',
-    },
-    // 若项目中存在less文件，添加以下配置
-    {
-      files: '**/*.less',
-      customSyntax: 'postcss-less',
-    },
-  ]
 };

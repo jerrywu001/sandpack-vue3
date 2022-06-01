@@ -8,7 +8,7 @@ export interface Props {
   prefixedPath: string;
   files: SandpackBundlerFiles;
   selectFile: (path: string) => void;
-  activePath: string;
+  activeFile: string;
   depth?: number;
 }
 
@@ -28,7 +28,7 @@ export const ModuleList = defineComponent({
     selectFile: {
       type: Function,
     },
-    activePath: {
+    activeFile: {
       type: String,
     },
     depth: {
@@ -58,7 +58,7 @@ export const ModuleList = defineComponent({
         {Array.from(directoriesToShow.value).map((dir) => (
           <Directory
             key={dir}
-            activePath={props.activePath}
+            activeFile={props.activeFile}
             depth={props.depth as number + 1}
             files={props.files}
             prefixedPath={dir}
@@ -69,7 +69,7 @@ export const ModuleList = defineComponent({
         {filesToShow.value.map((file) => (
           <File
             key={file.path}
-            active={props.activePath === file.path}
+            active={props.activeFile === file.path}
             depth={props.depth as number + 1}
             path={file.path}
             selectFile={props.selectFile}

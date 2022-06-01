@@ -6,7 +6,6 @@ Vue3 components that give you the power of editable sandboxes that run in the br
 
 ```jsx
 import { Sandpack } from 'codesandbox-sandpack-vue3';
-import 'codesandbox-sandpack-vue3/dist/index.css';
 
 <Sandpack template="vue3" />;
 ```
@@ -17,7 +16,7 @@ import 'codesandbox-sandpack-vue3/dist/index.css';
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
 
-**This project removes devtools component**
+**This project removes [devtools component && useSandpackLint hook]**
 
 ## online demo
 
@@ -65,9 +64,9 @@ app.use(SanpackPlugin());
 - [SandpackCodeEditor](https://sandpack.codesandbox.io/docs/api/react/#sandpackcodeeditor)
 - [SandpackCodeViewer](https://sandpack.codesandbox.io/docs/api/react/#sandpackcodeviewer)
 - [SandpackPreview](https://sandpack.codesandbox.io/docs/api/react/#sandpackpreview)
-- [SandpackRunner](https://sandpack.codesandbox.io/docs/api/react/#sandpackrunner)
 - [SandpackStack](https://sandpack.codesandbox.io/docs/api/react/#sandpackstack)
 - [SandpackTranspiledCode](https://sandpack.codesandbox.io/docs/api/react/#sandpacktranspiledcode)
+- [SandpackFileExplorer](https://sandpack.codesandbox.io/docs/api/react/#sandpackfileexplorer)
 
 ## Tips ☕
 

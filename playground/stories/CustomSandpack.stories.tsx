@@ -21,6 +21,7 @@ import {
   SandpackStack,
   SandpackThemeProvider,
   SandpackTranspiledCode,
+  stackClassName,
 } from 'codesandbox-sandpack-vue3';
 import { MultiplePreviewsRandomViewportsStory } from './widgets/MultiplePreviewsRandomViewportsStory';
 
@@ -35,6 +36,7 @@ export const UsingSandpackLayout = () => (
       <SandpackStack>
         <SandpackTranspiledCode />
       </SandpackStack>
+      <SandpackCodeEditor />
       <SandpackCodeViewer />
     </SandpackLayout>
   </SandpackProvider>
@@ -42,25 +44,25 @@ export const UsingSandpackLayout = () => (
 
 /** UsingVisualElements */
 export const UsingVisualElements = () => (
-  <SandpackProvider activePath="/App.js" template="react">
+  <SandpackProvider options={{ activeFile: '/App.js' }} template="react">
     <SandpackThemeProvider>
       <SandpackCodeEditor
-        customStyle={{
+        style={{
           width: '500px',
           height: '300px',
         }}
       />
 
       <SandpackPreview
-        customStyle={{
+        showOpenInCodeSandbox={false}
+        showRefreshButton={false}
+        style={{
           border: '1px solid red',
           marginBottom: '4px',
           marginTop: '4px',
           width: '500px',
           height: '300px',
         }}
-        showOpenInCodeSandbox={false}
-        showRefreshButton={false}
       />
 
       <div
@@ -84,9 +86,9 @@ export const UsingHooks = () => (
       <CustomCodeEditor />
 
       <SandpackPreview
-        customStyle={{ border: '1px solid red', width: '400px', height: '300px' }}
         showOpenInCodeSandbox={false}
         showRefreshButton={false}
+        style={{ border: '1px solid red', width: '400px', height: '300px' }}
       />
 
       <div
@@ -150,19 +152,25 @@ export const MultiplePreviewsRandomViewports = MultiplePreviewsRandomViewportsTe
 
 /** ClosableTabs */
 export const ClosableTabs = () => (
-  <Sandpack options={{ closableTabs: true }} template="react" />
+  <Sandpack
+    files={{
+      '/test.js': '// test',
+    }}
+    options={{ closableTabs: true }}
+    template="react"
+  />
 );
 
 /** ResetButton */
 export const ResetButton = () => (
   <>
-    <SandpackProvider template="react">
+    <SandpackProvider files={{ '/test.js': '// test' }} template="react">
       <SandpackLayout>
         <div
-           class="sp-stack"
+          class={stackClassName.toString()}
           style={{ position: 'relative', width: '100%' }}
         >
-          <SandpackCodeEditor />
+          <SandpackCodeEditor closableTabs />
           <ResetButtonComp />
         </div>
         <SandpackStack>
@@ -174,7 +182,7 @@ export const ResetButton = () => (
     <SandpackProvider template="react">
       <SandpackLayout>
         <div
-           class="sp-stack"
+          class={stackClassName.toString()}
           style={{ position: 'relative', width: '100%' }}
         >
           <SandpackCodeEditor />
@@ -191,9 +199,8 @@ export const ResetButton = () => (
 /** IframeMessage */
 export const IframeMessage = () => (
   <SandpackProvider
-    customSetup={{
-      files: {
-        '/App.js': `import {useState, useEffect} from "react";
+    files={{
+      '/App.js': `import {useState, useEffect} from "react";
 
 export default function App() {
 const [message, setMessage] = useState("")
@@ -207,7 +214,6 @@ useEffect(() => {
 return <h1>{message}</h1>
 }
 `,
-      },
     }}
     template="react"
   >

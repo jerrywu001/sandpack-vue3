@@ -118,7 +118,9 @@ export const WithRouting = () => (
 export const WithStartingRoute = () => (
   <SandpackProvider
     customSetup={routingSetup}
-    startRoute={'/about'}
+    options={{
+      startRoute: '/about',
+    }}
     template="react"
   >
     <SandpackLayout>

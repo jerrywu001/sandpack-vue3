@@ -5,7 +5,6 @@ import {
   SandpackPreview,
   SandpackProvider,
   SandpackThemeProvider,
-  ViewportSize,
 } from 'codesandbox-sandpack-vue3';
 import { VIEWPORTS } from './Common';
 
@@ -35,7 +34,7 @@ export const MultiplePreviewsRandomViewportsStory = defineComponent({
                 const viewport = VIEWPORTS[index % 3];
                 return (
                   <Box key={pr} label={viewport}>
-                    <SandpackPreview viewportSize={viewport as ViewportSize} />
+                    <SandpackPreview />
                   </Box>
                 );
               })}

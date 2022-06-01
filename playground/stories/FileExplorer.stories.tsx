@@ -1,10 +1,11 @@
 import {
   Directory,
   File,
-  FileExplorer,
+  SandpackFileExplorer,
   SandpackCodeEditor,
   SandpackLayout,
   SandpackProvider,
+  SandpackPreview,
 } from 'codesandbox-sandpack-vue3';
 
 export default {
@@ -16,15 +17,15 @@ export const Component = () => (
     <SandpackProvider
       customSetup={{
         entry: '/index.tsx',
-        files: {
-          '/index.tsx': 'index',
-          '/src/app.tsx': 'app',
-          '/src/components/button.tsx': 'button',
-        },
+      }}
+      files={{
+        '/index.tsx': '',
+        '/src/app.tsx': '',
+        '/src/components/button.tsx': '',
       }}
     >
       <SandpackLayout>
-        <FileExplorer />
+        <SandpackFileExplorer />
         <SandpackCodeEditor />
       </SandpackLayout>
     </SandpackProvider>
@@ -32,34 +33,43 @@ export const Component = () => (
     <SandpackProvider
       customSetup={{
         entry: '/index.tsx',
-        files: {
-          '/index.tsx': 'index',
-          '/src/app.tsx': 'app',
-          '/src/components/button.tsx': 'button',
-        },
       }}
+      files={{
+        '/index.tsx': 'index',
+        '/src/app.tsx': 'app',
+        '/src/components/button.tsx': 'button',
+      }}
+      theme="dark"
     >
-      <SandpackLayout theme="night-owl">
-        <FileExplorer />
+      <SandpackLayout>
+        <SandpackFileExplorer />
         <SandpackCodeEditor />
       </SandpackLayout>
     </SandpackProvider>
+
+    <SandpackProvider template="react">
+      <SandpackLayout>
+        <SandpackFileExplorer />
+        <SandpackCodeEditor closableTabs />
+        <SandpackPreview />
+      </SandpackLayout>
+  </SandpackProvider>
   </>
 );
 
 export const LongFileTree = () => (
   <SandpackProvider
     customSetup={{
-      entry: '/index.tsx',
-      files: new Array(20).fill(' ').reduce((acc, _curr, index) => {
-        acc[`/src/com${index}.js`] = `${index}`;
-
-        return acc;
-      }, {}),
+      entry: '/src/com0.js',
     }}
+    files={new Array(20).fill(' ').reduce((acc, _curr, index) => {
+      acc[`/src/com${index}.js`] = '';
+
+      return acc;
+    }, {})}
   >
     <SandpackLayout>
-      <FileExplorer />
+      <SandpackFileExplorer />
     </SandpackLayout>
   </SandpackProvider>
 );
@@ -76,7 +86,7 @@ export const DirectoryIconStory = () => (
   <SandpackProvider>
     <SandpackLayout>
       <Directory
-        activePath="file.ts"
+        activeFile="file.ts"
         depth={1}
         files={{ App: { code: 'app' } }}
         prefixedPath="/src"

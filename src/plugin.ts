@@ -2,11 +2,12 @@ import {
   CodeEditor,
   SandpackCodeEditor,
   SandpackCodeViewer,
+  SandpackFileExplorer,
   SandpackPreview,
   SandpackTranspiledCode,
 } from './components';
 import { ErrorOverlay, LoadingOverlay, SandpackLayout, SandpackStack } from './common';
-import { Sandpack, SandpackRunner } from './presets';
+import { Sandpack } from './presets';
 import { SandpackProvider } from './contexts/sandpackContext';
 import type { Plugin } from 'vue';
 
@@ -22,9 +23,9 @@ export function SanpackPlugin(): Plugin {
       app.component('SandpackCodeEditor', SandpackCodeEditor);
       app.component('SandpackCodeViewer', SandpackCodeViewer);
       app.component('SandpackPreview', SandpackPreview);
-      app.component('SandpackRunner', SandpackRunner);
       app.component('SandpackStack', SandpackStack);
       app.component('SandpackTranspiledCode', SandpackTranspiledCode);
+      app.component('SandpackFileExplorer', SandpackFileExplorer);
     },
   };
 }

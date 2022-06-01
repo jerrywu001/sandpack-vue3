@@ -1,7 +1,10 @@
 import { useClasser } from 'code-hike-classer-vue3';
+import { THEME_PREFIX } from '../../styles';
 import { DefineComponent, defineComponent } from 'vue';
 import { useSandpackNavigation } from '../../hooks/useSandpackNavigation';
 import { RefreshIcon } from '../../icons';
+import { classNames } from '../../utils/classNames';
+import { actionButtonClassName, buttonClassName, iconStandaloneClassName } from '../../styles/shared';
 
 interface RefreshButtonProps {
   clientId?: string;
@@ -19,11 +22,16 @@ export const RefreshButton = defineComponent({
   },
   setup(props: RefreshButtonProps) {
     const { refresh } = useSandpackNavigation(props.clientId);
-    const c = useClasser('sp');
+    const c = useClasser(THEME_PREFIX);
 
     return () => (
       <button
-        class={c('button', 'icon-standalone')}
+        class={classNames(
+          c('button', 'icon-standalone'),
+          buttonClassName,
+          iconStandaloneClassName,
+          actionButtonClassName,
+        )}
         onClick={refresh}
         title="Refresh Sandpack"
         type="button"

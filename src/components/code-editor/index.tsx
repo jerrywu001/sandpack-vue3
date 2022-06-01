@@ -1,4 +1,13 @@
+import { classNames } from '../../utils/classNames';
 import { CodeMirror } from './CodeMirror';
+import { editorClassName } from './styles';
+import { FileTabs } from '../file-tabs';
+import { RunButton } from '../../common/RunButton';
+import { SandpackStack } from '../../common';
+import { THEME_PREFIX } from '../../styles';
+import { useActiveCode } from '../../hooks';
+import { useClasser } from 'code-hike-classer-vue3';
+import { useSandpack } from '../../contexts/sandpackContext';
 import {
   computed,
   CSSProperties,
@@ -7,16 +16,10 @@ import {
   PropType,
   ref,
 } from 'vue';
-import { FileTabs } from '../file-tabs';
-import { SandpackStack } from '../../common';
-import { useActiveCode } from '../../hooks';
-import { useClasser } from 'code-hike-classer-vue3';
 
 import type { EditorState as SandpackEditorState, SandpackInitMode } from '../../types';
 import type { Extension } from '@codemirror/state';
 import type { EditorView, KeyBinding } from '@codemirror/view';
-import { RunButton } from '../../common/RunButton';
-import { useSandpack } from '../../contexts/sandpackContext';
 
 export type Decorators = Array<{
   className?: string;
@@ -92,7 +95,7 @@ export interface CodeMirrorProps {
 }
 
 export interface CodeEditorProps {
-  customStyle?: CSSProperties;
+  style?: CSSProperties;
   showTabs?: boolean;
   showLineNumbers?: boolean;
   showInlineErrors?: boolean;
@@ -114,6 +117,10 @@ export interface CodeEditorProps {
    * Property to register CodeMirror extension keymap.
    */
   extensionsKeymap?: Array<readonly KeyBinding[]>;
+  /**
+   * By default, Sandpack generates a random value to use as an id.
+   * Use this to override this value if you need predictable values.
+   */
   id?: string;
   /**
    * This disables editing of the editor content by the user.
@@ -130,7 +137,7 @@ export const SandpackCodeEditor = defineComponent({
   name: 'SandpackCodeEditor',
   inheritAttrs: true,
   props: {
-    customStyle: {
+    style: {
       type: Object as PropType<CSSProperties>,
       required: false,
       default: undefined,
@@ -194,29 +201,29 @@ export const SandpackCodeEditor = defineComponent({
   setup(props: CodeEditorProps) {
     const { sandpack } = useSandpack();
     const { code, readOnly: readOnlyFile } = useActiveCode();
-    const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.openPaths?.length > 1));
+    const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.visibleFiles?.length > 1));
     const showRunButton = computed(() => !sandpack.autorun);
 
     const sandpackCodeEditorRef = ref<InstanceType<typeof CodeMirror> | null>(null);
-    const c = useClasser('sp');
+    const c = useClasser(THEME_PREFIX);
 
     const handleCodeUpdate = (newCode: string): void => {
       sandpack.updateCurrentFile(newCode);
     };
 
     return () => (
-      <SandpackStack customStyle={props.customStyle}>
+      <SandpackStack style={props.style}>
         {shouldShowTabs.value && <FileTabs closableTabs={props.closableTabs} />}
 
-        <div class={c('code-editor')}>
+        <div class={classNames(c('code-editor'), editorClassName)}>
           <CodeMirror
-            key={sandpack.activePath}
+            key={sandpack.activeFile}
             ref={sandpackCodeEditorRef}
             code={code.value}
             editorState={sandpack.editorState}
             extensions={props.extensions}
             extensionsKeymap={props.extensionsKeymap}
-            filePath={sandpack.activePath}
+            filePath={sandpack.activeFile}
             id={props.id}
             initMode={props.initMode || sandpack.initMode}
             onCodeUpdate={handleCodeUpdate}

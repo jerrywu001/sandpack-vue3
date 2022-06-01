@@ -1,20 +1,19 @@
-import type { SandboxTemplate } from '../types';
-
-export const VUE_TEMPLATE: SandboxTemplate = {
+/**
+ * @category Template
+ */
+export const VUE_TEMPLATE = {
   files: {
     '/src/App.vue': {
       code: `<template>
   <main id="app">
-    <h1>Hello world</h1>
+    <h1>Hello World</h1>
   </main>
 </template>
-
 <script>
 export default {
   name: "App",
 };
 </script>
-
 <style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -30,9 +29,7 @@ export default {
     '/src/main.js': {
       code: `import Vue from "vue";
 import App from "./App.vue";
-
 Vue.config.productionTip = false;
-
 new Vue({
   render: h => h(App)
 }).$mount("#app");

@@ -10,6 +10,9 @@ import { Annotation, EditorSelection } from '@codemirror/state';
 import type { SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { EditorView } from '@codemirror/view';
 import { useSandpack } from '../../contexts/sandpackContext';
+import { THEME_PREFIX } from '../../styles';
+import { classNames } from '../../utils/classNames';
+import { cmClassName, placeholderClassName, readOnlyClassName, tokensClassName } from './styles';
 
 /**
  * code area
@@ -29,9 +32,10 @@ const CodeMirror = defineComponent({
       wrapperRef,
       languageExtension,
       internalCode,
+      syntaxHighlightRender,
     } = useDelayCodeEditor(props);
 
-    const c = useClasser('sp');
+    const c = useClasser(THEME_PREFIX);
     const { listen } = useSandpack();
 
     // ======= methods ===========
@@ -133,19 +137,49 @@ const CodeMirror = defineComponent({
       { immediate: true },
     );
 
+    const gutterLineOffset = (): string => {
+      // padding-left
+      let offset = 4;
+
+      if (props.showLineNumbers) {
+        // line-number-gutter-width + gutter-padding
+        offset += 6;
+      }
+
+      // line-padding
+      if (!props.readOnly) {
+        offset += 1;
+      }
+
+      return `var(--${THEME_PREFIX}-space-${offset})`;
+    };
+
     // ======= render ===========
     return () => props.readOnly ? (
-      <pre
-        ref={wrapperRef}
-        class={c('cm', props.editorState as SandpackEditorState, languageExtension)}
-        translate="no"
-      >
-        <code class={c('pre-placeholder')}>{props.code}</code>
+      <>
+        <pre
+          ref={wrapperRef}
+          class={classNames(
+            c('cm', props.editorState as SandpackEditorState, languageExtension),
+            cmClassName,
+            tokensClassName,
+          )}
+          translate="no"
+        >
+          <code
+            class={classNames(c('pre-placeholder'), placeholderClassName)}
+            style={{ marginLeft: gutterLineOffset() }}
+          >
+            {syntaxHighlightRender}
+          </code>
+        </pre>
 
         {props.readOnly && props.showReadOnly && (
-          <span class={c('read-only')}>Read-only</span>
+          <span class={classNames(c('read-only'), readOnlyClassName)}>
+            Read-only
+          </span>
         )}
-      </pre>
+      </>
     ) : (
       <div
         ref={wrapperRef}
@@ -154,32 +188,36 @@ const CodeMirror = defineComponent({
           props.filePath ? `Code Editor for ${getFileName(props.filePath)}` : 'Code Editor'
         }
         onKeydown={handleContainerKeyDown}
-        class={c('cm', props.editorState as SandpackEditorState, languageExtension)}
+        class={classNames(
+          c('cm', props.editorState as SandpackEditorState, languageExtension),
+          cmClassName,
+          tokensClassName,
+        )}
         role="group"
         tabindex={0}
         translate="no"
       >
-        <pre
-          class={c('pre-placeholder')}
-          style={{ marginLeft: props.showLineNumbers ? '28px' : 0 }}
+       <pre
+          class={classNames(c('pre-placeholder'), placeholderClassName)}
+          style={{ marginLeft: gutterLineOffset() }}
         >
-          {props.code}
+          {syntaxHighlightRender}
         </pre>
 
         <>
-          <p
-            id={`enter-instructions-${ariaId.value}`}
-            style={{ display: 'none' }}
-          >
-            To enter the code editing mode, press Enter. To exit the edit mode,
-            press Escape
-          </p>
-          <p
-            id={`exit-instructions-${ariaId.value}`}
-            style={{ display: 'none' }}
-          >
-            You are editing the code. To exit the edit mode, press Escape
-          </p>
+        <p
+          id={`enter-instructions-${ariaId}`}
+          style={{ display: 'none' }}
+        >
+          To enter the code editing mode, press Enter. To exit the edit mode,
+          press Escape
+        </p>
+        <p
+          id={`exit-instructions-${ariaId}`}
+          style={{ display: 'none' }}
+        >
+          You are editing the code. To exit the edit mode, press Escape
+        </p>
         </>
       </div>
     );

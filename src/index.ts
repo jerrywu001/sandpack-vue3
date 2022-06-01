@@ -6,7 +6,6 @@
  *
  * ```jsx
  * import { Sandpack } from "codesandbox-sandpack-vue3";
- * import "codesandbox-sandpack-vue3/dist/index.css";
  *
  * <Sandpack template="vue3" />;
  * ```
@@ -24,3 +23,5 @@ export * from "./contexts/themeContext";
 export * from './themes';
 export * from './types';
 export * from './icons';
+export { getCssText as getSandpackCssText } from './styles';
+export * from "./templates";

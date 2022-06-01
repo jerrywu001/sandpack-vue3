@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import isEqual from 'lodash.isequal';
+import { ClasserProvider } from 'code-hike-classer-vue3';
 import { convertedFilesToBundlerFiles, getSandpackStateFromProps } from '../utils/sandpackUtils';
-import { type SandpackFiles, useContext } from '..';
 import { extractErrorDetails, SandpackClient } from '@codesandbox/sandpack-client';
 import { generateRandomId } from '../utils/stringUtils';
+import { type SandpackFiles, useContext, SandpackThemeProvider } from '..';
 import {
   DefineComponent,
   defineComponent,
@@ -27,72 +28,27 @@ import type {
   SandpackMessage,
   UnsubscribeFunction,
   ReactDevToolsMode,
-  SandpackLogLevel,
 } from '@codesandbox/sandpack-client';
 import type {
   SandpackContext,
-  SandboxEnvironment,
-  FileResolver,
-  EditorState,
   SandpackPredefinedTemplate,
   SandpackSetup,
-  SandpackInitMode,
   SandpackClientListen,
   SandpackState,
   SandpackClientDispatch,
+  SandpackProviderProps,
+  SandpackInitMode,
+  SandpackInternalOptions,
+  SandpackInternalOptionsProp,
+  SandpackThemeProp,
 } from '../types';
 
 const BUNDLER_TIMEOUT = 30000; // 30 seconds timeout for the bundler to respond.
 
-export interface UseSandpackReturnType {
+export interface UseSandpack {
   sandpack: SandpackState;
   dispatch: SandpackClientDispatch;
   listen: SandpackClientListen;
-}
-
-export interface SandpackProviderState {
-  files: SandpackBundlerFiles;
-  environment?: SandboxEnvironment;
-  activePath: string;
-  openPaths: string[];
-  startRoute?: string;
-  bundlerState?: BundlerState;
-  error: SandpackError | null;
-  editorState: EditorState;
-  renderHiddenIframe: boolean;
-  initMode: SandpackInitMode;
-  reactDevTools?: ReactDevToolsMode;
-}
-
-export interface SandpackProviderProps {
-  template?: SandpackPredefinedTemplate;
-  customSetup?: SandpackSetup;
-
-  // editor state (override values)
-  activePath?: string;
-  openPaths?: string[];
-
-  // execution and recompile
-  recompileMode?: 'immediate' | 'delayed';
-  recompileDelay?: number;
-  autorun?: boolean;
-
-  /**
-   * This provides a way to control how some components are going to
-   * be initialized on the page. The CodeEditor and the Preview components
-   * are quite expensive and might overload the memory usage, so this gives
-   * a certain control of when to initialize them.
-   */
-  initMode?: SandpackInitMode;
-  initModeObserverOptions?: IntersectionObserverInit;
-
-  // bundler options
-  bundlerURL?: string;
-  logLevel?: SandpackLogLevel;
-  startRoute?: string;
-  skipEval?: boolean;
-  fileResolver?: FileResolver;
-  externalResources?: string[];
 }
 
 const SandpackStateContext: InjectionKey<UnwrapNestedRefs<SandpackState>> = Symbol('sandpackStateContext');
@@ -104,8 +60,13 @@ const SandpackStateContext: InjectionKey<UnwrapNestedRefs<SandpackState>> = Symb
  */
 const SandpackProvider = defineComponent({
   name: 'SandpackProvider',
-  inheritAttrs: false,
+  inheritAttrs: true,
   props: {
+    files: {
+      type: Object as PropType<SandpackFiles>,
+      required: false,
+      default: undefined,
+    },
     template: {
       type: String as PropType<SandpackPredefinedTemplate>,
       required: false,
@@ -116,74 +77,14 @@ const SandpackProvider = defineComponent({
       required: false,
       default: undefined,
     },
-
-    // // editor state (override values)
-    activePath: {
-      type: String,
+    theme: {
+      type: [String, Object] as PropType<SandpackThemeProp>,
       required: false,
       default: undefined,
     },
-    openPaths: {
-      type: Array as PropType<string[]>,
-      required: false,
-      default: undefined,
-    },
-
-    // // execution and recompile
-    recompileMode: {
-      type: String as PropType<'immediate' | 'delayed'>,
-      required: false,
-      default: 'delayed',
-    },
-    recompileDelay: {
-      type: Number,
-      required: false,
-      default: 500,
-    },
-    autorun: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-    initMode: {
-      type: String as PropType<SandpackInitMode>,
-      required: false,
-      default: undefined,
-    },
-    initModeObserverOptions: {
-      type: Object as PropType<IntersectionObserverInit>,
-      required: false,
-      default: undefined,
-    },
-
-    // // bundler options
-    bundlerURL: {
-      type: String,
-      required: false,
-      default: undefined,
-    },
-    logLevel: {
-      type: Number as PropType<SandpackLogLevel>,
-      required: false,
-      default: undefined,
-    },
-    startRoute: {
-      type: String,
-      required: false,
-      default: undefined,
-    },
-    skipEval: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    fileResolver: {
-      type: Object as PropType<FileResolver>,
-      required: false,
-      default: undefined,
-    },
-    externalResources: {
-      type: Array as PropType<string[]>,
+    options: {
+      type:
+        Object as PropType<SandpackInternalOptions<SandpackFiles, SandpackPredefinedTemplate> & SandpackInternalOptionsProp>,
       required: false,
       default: undefined,
     },
@@ -201,25 +102,25 @@ const SandpackProvider = defineComponent({
 
     let unsubscribe: UnsubscribeFunction | undefined;
 
-    const { activePath, openPaths, files, environment } = getSandpackStateFromProps(props);
+    const { activeFile, visibleFiles, files, environment } = getSandpackStateFromProps(props);
 
     const data = reactive({
       renderHiddenIframe: false,
       reactDevTools: undefined,
-    } as SandpackProviderState);
+    } as any);
 
     const state: UnwrapNestedRefs<SandpackState> = reactive({
       files,
       environment,
-      openPaths,
-      activePath,
-      startRoute: props.startRoute,
+      visibleFiles,
+      activeFile,
+      startRoute: props.options?.startRoute,
       error: { message: '' } as SandpackError,
       bundlerState: { entry: '', transpiledModules: {} } as BundlerState,
-      autorun: props.autorun ?? true,
-      status: props.autorun ? 'initial' : 'idle',
+      autorun: props.options?.autorun ?? true,
+      status: props.options?.autorun ?? true ? 'initial' : 'idle',
       editorState: 'pristine',
-      initMode: props.initMode || 'lazy',
+      initMode: props.options?.initMode || 'lazy',
       clients,
       closeFile,
       deleteFile,
@@ -269,7 +170,7 @@ const SandpackProvider = defineComponent({
     }
 
     function updateCurrentFile(code: string) {
-      updateFile(state.activePath, code);
+      updateFile(state.activeFile, code);
     }
 
     function updateFile(pathOrFiles: string | SandpackFiles, code?: string) {
@@ -287,7 +188,8 @@ const SandpackProvider = defineComponent({
 
     function updateClients() {
       const { status: latestStatus } = state;
-      const { recompileMode, recompileDelay } = props;
+      const recompileMode = props.options?.recompileMode ?? 'delayed';
+      const recompileDelay = props.options?.recompileDelay ?? 500;
 
       if (latestStatus !== 'running') {
         return;
@@ -314,11 +216,12 @@ const SandpackProvider = defineComponent({
     }
 
     function initializeSandpackIframe() {
-      if (!props.autorun) {
+      const autorun = props.options?.autorun ?? true;
+      if (!autorun) {
         return;
       }
 
-      const observerOptions = props.initModeObserverOptions ?? {
+      const observerOptions = props.options?.initModeObserverOptions ?? {
         rootMargin: '1000px 0px',
       };
 
@@ -383,12 +286,12 @@ const SandpackProvider = defineComponent({
           template: state.environment,
         },
         {
-          externalResources: props.externalResources,
-          bundlerURL: props.bundlerURL,
-          logLevel: props.logLevel,
-          startRoute: props.startRoute,
-          fileResolver: props.fileResolver,
-          skipEval: props.skipEval,
+          externalResources: props.options?.externalResources,
+          bundlerURL: props.options?.bundlerURL,
+          logLevel: props.options?.logLevel,
+          startRoute: props.options?.startRoute,
+          fileResolver: props.options?.fileResolver,
+          skipEval: props.options?.skipEval,
           showOpenInCodeSandbox: !state.openInCSBRegisteredRef,
           showErrorScreen: !state.errorScreenRegisteredRef,
           showLoadingScreen: !state.loadingScreenRegisteredRef,
@@ -485,36 +388,38 @@ const SandpackProvider = defineComponent({
       }
     }
 
-    function setActiveFile(theActivePath: string) {
-      state && (state.activePath = theActivePath);
+    function setActiveFile(theActiveFile: string) {
+      if (state) {
+        state.activeFile = theActiveFile;
+      }
     }
 
     function openFile(path: string) {
-      const { openPaths: prevOpenPaths } = state;
-      const newPaths = prevOpenPaths.includes(path) ? prevOpenPaths : [...prevOpenPaths, path];
-      state.activePath = path;
-      state.openPaths = newPaths;
+      const { visibleFiles: prevVisibleFiles } = state;
+      const newPaths = prevVisibleFiles.includes(path) ? prevVisibleFiles : [...prevVisibleFiles, path];
+      state.activeFile = path;
+      state.visibleFiles = newPaths;
     }
 
     function closeFile(path: string) {
-      if (state.openPaths.length === 1 || !state) {
+      if (state.visibleFiles.length === 1 || !state) {
         return;
       }
 
-      const indexOfRemovedPath = state.openPaths.indexOf(path);
-      const newPaths = state.openPaths.filter((openPath: any) => openPath !== path);
-      state.activePath =
-          path === state.activePath
+      const indexOfRemovedPath = state.visibleFiles.indexOf(path);
+      const newPaths = state.visibleFiles.filter((openPath: any) => openPath !== path);
+      state.activeFile =
+          path === state.activeFile
             ? indexOfRemovedPath === 0
-              ? state.openPaths[1]
-              : state.openPaths[indexOfRemovedPath - 1]
-            : state.activePath;
-      state.openPaths = newPaths;
+              ? state.visibleFiles[1]
+              : state.visibleFiles[indexOfRemovedPath - 1]
+            : state.activeFile;
+      state.visibleFiles = newPaths;
     }
 
     function deleteFile(path: string) {
-      const { openPaths: prevOpenPaths, files: prevFiles } = state;
-      const newPaths = prevOpenPaths.filter((openPath) => openPath !== path);
+      const { visibleFiles: prevVisibleFiles, files: prevFiles } = state;
+      const newPaths = prevVisibleFiles.filter((openPath) => openPath !== path);
       const newFiles = Object.keys(prevFiles).reduce(
         (acc: SandpackBundlerFiles, filePath) => {
           if (filePath === path) {
@@ -525,7 +430,7 @@ const SandpackProvider = defineComponent({
         },
         {},
       );
-      state.openPaths = newPaths;
+      state.visibleFiles = newPaths;
       state.files = newFiles;
       updateClients();
     }
@@ -622,21 +527,22 @@ const SandpackProvider = defineComponent({
 
     watch(
       [
-        () => props.initMode,
+        () => props.options?.initMode,
+        () => props.options?.activeFile,
+        () => props.options?.visibleFiles,
         () => props.template,
-        () => props.activePath,
-        () => props.openPaths,
+        () => props?.files,
         () => props.customSetup,
       ],
       (
-        [newInitMode, newTemplate, newActivePath, newOpenPaths, newCustomSetup],
-        [prevInitMode, prevTemplate, prevActivePath, prevOpenPaths, prevCustomSetup],
+        [newInitMode, newActiveFile, newVisibleFiles, newTemplate, newFiles, newCustomSetup],
+        [prevInitMode, prevActiveFile, prevVisibleFiles, prevTemplate, prevFiles, prevCustomSetup],
       ) => {
         /**
          * Watch the changes on the initMode prop
          */
         if (prevInitMode !== newInitMode && newInitMode) {
-          state.initMode = newInitMode;
+          state.initMode = props.options?.initMode as SandpackInitMode;
           initializeSandpackIframe();
         }
 
@@ -650,12 +556,13 @@ const SandpackProvider = defineComponent({
          */
         if (
           prevTemplate !== newTemplate ||
-          prevActivePath !== newActivePath ||
-          !isEqual(prevOpenPaths, newOpenPaths) ||
-          !isEqual(prevCustomSetup, newCustomSetup)
+          prevActiveFile !== newActiveFile ||
+          !isEqual(prevCustomSetup, newCustomSetup) ||
+          !isEqual(prevVisibleFiles, newVisibleFiles) ||
+          !isEqual(prevFiles, newFiles)
         ) {
-          state.activePath = stateFromProps.activePath;
-          state.openPaths = stateFromProps.openPaths;
+          state.activeFile = stateFromProps.activeFile;
+          state.visibleFiles = stateFromProps.visibleFiles;
           state.files = stateFromProps.files;
           state.environment = stateFromProps.environment;
 
@@ -666,7 +573,7 @@ const SandpackProvider = defineComponent({
           Object.values(clients).forEach((client) => {
             client.updatePreview({
               files: state.files,
-              template: environment,
+              template: state.environment,
             });
           });
         }
@@ -710,19 +617,29 @@ const SandpackProvider = defineComponent({
       }
     });
 
-    return () => slots.default ? slots.default() : null;
+    return () => (
+      <ClasserProvider classes={props.options?.classes}>
+        <SandpackThemeProvider
+          style={props.style}
+          className={props.className}
+          theme={props.theme as SandpackThemeProp}
+        >
+          { slots.default ? slots.default() : null }
+        </SandpackThemeProvider>
+      </ClasserProvider>
+    );
   },
 }) as DefineComponent<SandpackProviderProps>;
 
 /**
  * useSandpack
  */
-function useSandpack(): UseSandpackReturnType {
+function useSandpack(): UseSandpack {
   const sandpack = useContext<SandpackContext>(SandpackStateContext, undefined);
 
   if (!sandpack) {
     throw new Error(
-      'useSandpack can only be used inside components wrapped by \'SandpackProvider\'',
+      '[sandpack-react]: "useSandpack" must be wrapped by a "SandpackProvider"',
     );
   }
 

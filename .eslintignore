@@ -7,7 +7,6 @@ src/index.ts
 .eslintrc.js
 .stylelintrc.js
 babel.config.js
-postcss.config.js
 tsconfig.json
 **/*.css
 **/*.scss
