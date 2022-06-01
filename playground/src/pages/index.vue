@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import isEqual from 'lodash.isequal';
 import { ref } from 'vue';
+import { githubLight, aquaBlue } from '@codesandbox/sandpack-themes';
 import {
   // Sandpack,
   // SandpackLayout,
@@ -10,7 +11,6 @@ import {
   SandpackPredefinedTemplate,
   SandpackTheme,
 } from 'codesandbox-sandpack-vue3';
-import { githubLight, aquaBlue } from '@codesandbox/sandpack-themes';
 
 const template = ref<SandpackPredefinedTemplate>('react');
 const theme = ref<SandpackTheme>(aquaBlue);
@@ -54,6 +54,7 @@ const toggleReadOnly = () => {
       <button class="mybtn" @click="toggleReadOnly">toggle readOnly</button>
       <button class="mybtn" @click="toggleClosable">toggle closable</button>
     </div>
+
     <Sandpack
       :theme="theme"
       :template="template"
@@ -80,6 +81,24 @@ const toggleReadOnly = () => {
         <SandpackTranspiledCode />
       </SandpackLayout>
     </SandpackProvider>
+
+    <Sandpack
+      template="vue3"
+      :files="{
+        '/src/main.js': {
+          code: `import { createApp } from 'vue';
+import App from './App.vue';
+
+createApp(App).mount('#app');`,
+          readOnly: true,
+        },
+      }"
+      :options="{
+        showTabs: true,
+        visibleFiles: ['/src/App.vue', '/src/main.js', '/public/index.html'],
+        activeFile: '/src/main.js',
+      }"
+    />
   </div>
 </template>
 

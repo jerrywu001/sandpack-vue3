@@ -12,15 +12,13 @@ import {
 } from 'vue';
 import {
   SandpackFiles,
+  SandpackInternal,
   SandpackInternalOptions,
-  SandpackInternalOptionsProp,
-  SandpackInternalProps,
   SandpackPredefinedTemplate,
   SandpackSetup,
   SandpackThemeProp,
   TemplateFiles,
 } from '../types';
-import type { DefineComponent } from 'vue';
 
 const SandpackPropValues = {
   files: {
@@ -44,8 +42,7 @@ const SandpackPropValues = {
     default: undefined,
   },
   options: {
-    type:
-      Object as PropType<SandpackInternalOptions<SandpackFiles, SandpackPredefinedTemplate> & SandpackInternalOptionsProp>,
+    type: Object,
     required: false,
     default: undefined,
   },
@@ -54,6 +51,7 @@ const SandpackPropValues = {
 /**
  * Sandpack component
  */
+// @ts-ignore
 const Sandpack = defineComponent({
   name: 'Sandpack',
   inheritAttrs: true,
@@ -134,9 +132,6 @@ const Sandpack = defineComponent({
       </SandpackProvider>
     );
   },
-}) as DefineComponent<SandpackInternalProps<SandpackFiles, SandpackPredefinedTemplate> & {
-  files?: SandpackFiles;
-  template?: SandpackPredefinedTemplate;
-}>;
+}) as SandpackInternal;
 
 export { Sandpack };

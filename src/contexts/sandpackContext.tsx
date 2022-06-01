@@ -38,8 +38,6 @@ import type {
   SandpackClientDispatch,
   SandpackProviderProps,
   SandpackInitMode,
-  SandpackInternalOptions,
-  SandpackInternalOptionsProp,
   SandpackThemeProp,
 } from '../types';
 
@@ -83,8 +81,7 @@ const SandpackProvider = defineComponent({
       default: undefined,
     },
     options: {
-      type:
-        Object as PropType<SandpackInternalOptions<SandpackFiles, SandpackPredefinedTemplate> & SandpackInternalOptionsProp>,
+      type: Object,
       required: false,
       default: undefined,
     },

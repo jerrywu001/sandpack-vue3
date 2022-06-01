@@ -369,8 +369,8 @@ export interface SandpackInternalProvider {
     props: SandpackProviderProps<Files, TemplateName> & {
       files?: Files;
       template?: TemplateName;
-      children: JSX.Element;
-    },
+      children?: JSX.Element;
+    }
   ): SandpackProviderProps & SandpackProviderState;
 }
 
@@ -419,48 +419,43 @@ export interface SandpackInternalOptions<
   classes?: Record<string, string>;
 }
 
-export type SandpackInternalOptionsProp = {
-  editorWidthPercentage?: number;
-  editorHeight?: CSSProperties['height'];
-
-  showNavigator?: boolean;
-  showLineNumbers?: boolean;
-  showInlineErrors?: boolean;
-  showRefreshButton?: boolean;
-  showTabs?: boolean;
-  closableTabs?: boolean;
-  wrapContent?: boolean;
-
-  codeEditor?: SandpackCodeOptions;
-
-  /**
-   * This disables editing of content by the user in all files.
-   */
-  readOnly?: boolean;
-
-  /**
-   * Controls the visibility of Read-only label, which will only
-   * appears when `readOnly` is `true`
-   */
-  showReadOnly?: boolean;
-};
-
-/**
- * @hidden
- */
 export interface SandpackInternalProps<
   Files extends SandpackFiles | any,
   TemplateName extends SandpackPredefinedTemplate,
 > extends SandpackRootProps<Files, TemplateName> {
-  options?: SandpackInternalOptions<Files, TemplateName> & SandpackInternalOptionsProp;
+  options?: SandpackInternalOptions<Files, TemplateName> & {
+    editorWidthPercentage?: number;
+    editorHeight?: CSSProperties['height'];
+
+    showNavigator?: boolean;
+    showLineNumbers?: boolean;
+    showInlineErrors?: boolean;
+    showRefreshButton?: boolean;
+    showTabs?: boolean;
+    closableTabs?: boolean;
+    wrapContent?: boolean;
+
+    codeEditor?: SandpackCodeOptions;
+
+    /**
+     * This disables editing of content by the user in all files.
+     */
+    readOnly?: boolean;
+
+    /**
+     * Controls the visibility of Read-only label, which will only
+     * appears when `readOnly` is `true`
+     */
+    showReadOnly?: boolean;
+  };
 }
 
 /**
  * @hidden
  */
 export interface SandpackProviderProps<
- Files extends SandpackFiles = SandpackFiles,
- TemplateName extends SandpackPredefinedTemplate = SandpackPredefinedTemplate,
+  Files extends SandpackFiles = SandpackFiles,
+  TemplateName extends SandpackPredefinedTemplate = SandpackPredefinedTemplate,
 > extends SandpackRootProps<Files, TemplateName>, HTMLAttributes {
   options?: SandpackInternalOptions<Files, TemplateName>;
   children?: JSX.Element;
