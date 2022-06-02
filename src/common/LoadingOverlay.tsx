@@ -16,6 +16,7 @@ export interface LoadingOverlayProps {
    * which is helpful for external loading states.
    */
   loading?: boolean;
+  showOpenInCodeSandbox: boolean;
 }
 
 const loadingClassName = css({
@@ -39,6 +40,11 @@ export const LoadingOverlay = defineComponent({
       type: String,
       required: false,
       default: '',
+    },
+    showOpenInCodeSandbox: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   setup(props: LoadingOverlayProps) {
@@ -97,7 +103,7 @@ export const LoadingOverlay = defineComponent({
           transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
         }}
       >
-        <Loading />
+        <Loading showOpenInCodeSandbox={props.showOpenInCodeSandbox} />
       </div>
     );
 

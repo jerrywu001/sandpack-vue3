@@ -176,9 +176,7 @@ export const SandpackPreview = defineComponent({
           ...(props.style || {}),
         }}
       >
-        {props.showNavigator ? (
-          <Navigator clientId={clientId.value} onURLChange={handleNewURL} />
-        ) : null}
+        { props.showNavigator && <Navigator clientId={clientId.value} onURLChange={handleNewURL} /> }
 
         <div class={classNames(c('preview-container'), previewClassName)}>
           <iframe
@@ -192,7 +190,7 @@ export const SandpackPreview = defineComponent({
             title="Sandpack Preview"
           />
 
-          {props.showSandpackErrorOverlay ? <ErrorOverlay /> : null}
+          { props.showSandpackErrorOverlay && <ErrorOverlay /> }
 
           <div
             class={classNames(
@@ -206,15 +204,18 @@ export const SandpackPreview = defineComponent({
                 : props.actionsChildren ? props.actionsChildren : null
             }
             {
-              !props.showNavigator && props.showRefreshButton && sandpack.status === 'running' ? (
+              !props.showNavigator && props.showRefreshButton && sandpack.status === 'running' && (
                 <RefreshButton clientId={clientId.value} />
-              ) : null
+              )
             }
 
-            { props.showOpenInCodeSandbox ? <OpenInCodeSandboxButton /> : null }
+            { props.showOpenInCodeSandbox && <OpenInCodeSandboxButton /> }
           </div>
 
-          <LoadingOverlay clientId={clientId.value} />
+          <LoadingOverlay
+            clientId={clientId.value}
+            showOpenInCodeSandbox={props.showOpenInCodeSandbox as boolean}
+          />
 
           {slots.default ? slots.default() : null}
         </div>
