@@ -12,6 +12,18 @@ import { Sandpack } from 'codesandbox-sandpack-vue3';
 
 [Read more](https://sandpack.codesandbox.io/)
 
+## Sandpack Themes
+
+A list of themes to customize your Sandpack components.
+
+```jsx
+import { githubLight } from "@codesandbox/sandpack-themes";
+
+<Sandpack theme={githubLight} />;
+```
+
+[Read more](https://sandpack.codesandbox.io/docs/getting-started/themes)
+
 ## Documentation
 
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
