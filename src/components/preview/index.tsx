@@ -185,7 +185,7 @@ export const SandpackPreview = defineComponent({
             style={{
               // set height based on the content only in auto mode
               // and when the computed height was returned by the bundler
-              height: iframeComputedHeight.value || undefined,
+              height: iframeComputedHeight.value ? `${iframeComputedHeight.value}px` : undefined,
             }}
             title="Sandpack Preview"
           />

@@ -87,21 +87,12 @@ app.use(SanpackPlugin());
 ```jsx
 // 💀
 <div style={{ height: 200 }}>
-
-// 💀
-<SandpackPreview
-  customStyle={{ width: 400, height: 300 }}
-/>
 ```
 
 👉🏽**Write it like this**
 
 ```jsx
 <div style={{ height: '200px' }}>
-
-<SandpackPreview
-  customStyle={{ width: '400px', height: '300px' }}
-/>
 ```
 
 ## install

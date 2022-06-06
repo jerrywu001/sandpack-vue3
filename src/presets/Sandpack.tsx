@@ -14,6 +14,7 @@ import {
   SandpackFiles,
   SandpackInternal,
   SandpackInternalOptions,
+  SandpackInternalProps,
   SandpackPredefinedTemplate,
   SandpackSetup,
   SandpackThemeProp,
@@ -56,7 +57,7 @@ const Sandpack = defineComponent({
   name: 'Sandpack',
   inheritAttrs: true,
   props: SandpackPropValues,
-  setup(props) {
+  setup(props: SandpackInternalProps<unknown, SandpackPredefinedTemplate>) {
     const codeEditorOptions = computed<CodeEditorProps>(() => ({
       showTabs: props.options?.showTabs,
       showLineNumbers: props.options?.showLineNumbers,
@@ -98,14 +99,20 @@ const Sandpack = defineComponent({
      */
     const editorPart = computed(() => props.options?.editorWidthPercentage || 50);
     const previewPart = computed(() => 100 - editorPart.value);
-    const editorHeight = computed(() => props.options?.editorHeight);
+    const editorHeight = computed(() => {
+      let height: string | number | undefined = props.options?.editorHeight;
+      if (height) {
+        height = typeof height === 'number' ? `${height}px` : height;
+      }
+      return props.options?.editorHeight ? height : undefined;
+    });
 
     return () => (
       <SandpackProvider
         customSetup={props.customSetup}
         files={props.files as TemplateFiles<SandpackPredefinedTemplate>}
         options={providerOptions.value}
-        template={props.template}
+        template={props.template as SandpackPredefinedTemplate}
         theme={props.theme}
       >
         <SandpackLayout>
@@ -115,7 +122,7 @@ const Sandpack = defineComponent({
               height: editorHeight.value,
               flexGrow: editorPart.value,
               flexShrink: editorPart.value,
-              minWidth: 700 * (editorPart.value / (previewPart.value + editorPart.value)),
+              minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
             }}
           />
           <SandpackPreview
@@ -125,7 +132,7 @@ const Sandpack = defineComponent({
               height: editorHeight.value,
               flexGrow: previewPart.value,
               flexShrink: previewPart.value,
-              minWidth: 700 * (previewPart.value / (previewPart.value + editorPart.value)),
+              minWidth: `${700 * (previewPart.value / (previewPart.value + editorPart.value))}px`,
             }}
           />
         </SandpackLayout>
