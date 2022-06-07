@@ -1,15 +1,19 @@
 import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
-import { computed, DefineComponent, defineComponent, PropType } from 'vue';
+import { SandpackOptions } from '../../types';
+import { computed, ComputedRef, DefineComponent, defineComponent, inject, PropType } from 'vue';
 
 import { Directory } from './Directory';
 import { File } from './File';
+import { SandpackFileExplorerProp, VisibleFilesContext } from '.';
+import { fromPropsToModules } from './util';
 
-export interface Props {
+export interface ModuleListProps extends SandpackFileExplorerProp {
   prefixedPath: string;
   files: SandpackBundlerFiles;
   selectFile: (path: string) => void;
-  activeFile: string;
+  activeFile: NonNullable<SandpackOptions['activeFile']>;
   depth?: number;
+  autoHiddenFiles?: boolean;
 }
 
 /**
@@ -29,53 +33,55 @@ export const ModuleList = defineComponent({
       type: Function,
     },
     activeFile: {
-      type: String,
+      type: String as PropType<NonNullable<SandpackOptions['activeFile']>>,
     },
     depth: {
       type: Number,
       required: false,
       default: 0,
     },
+    autoHiddenFiles: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   // @ts-ignore
-  setup(props: Props) {
-    const fileListWithoutPrefix = computed(() => Object.keys(props.files)
-      .filter((file) => file.startsWith(props.prefixedPath))
-      .map((file) => file.substring(props.prefixedPath.length)));
+  setup(props: ModuleListProps) {
+    const visibleFiles = inject(VisibleFilesContext, []);
 
-    const directoriesToShow = computed(() => new Set(
-      fileListWithoutPrefix.value
-        .filter((file) => file.includes('/'))
-        .map((file) => `${props.prefixedPath}${file.split('/')[0]}/`),
-    ));
-
-    const filesToShow = computed(() => fileListWithoutPrefix.value
-      .filter((file) => !file.includes('/'))
-      .map((file) => ({ path: `${props.prefixedPath}${file}` })));
+    const res = computed(() => fromPropsToModules({
+      visibleFiles,
+      autoHiddenFiles: props.autoHiddenFiles,
+      prefixedPath: props.prefixedPath,
+      files: props.files,
+    })) as ComputedRef<{ directories: string[]; modules: string[] }>;
 
     return () => (
       <div>
-        {Array.from(directoriesToShow.value).map((dir) => (
+        {Array.from(res.value.directories).map((dir) => (
           <Directory
             key={dir}
             activeFile={props.activeFile}
-            depth={props.depth as number + 1}
+            autoHiddenFiles={props.autoHiddenFiles}
+            depth={props.depth as number}
             files={props.files}
             prefixedPath={dir}
             selectFile={props.selectFile}
+            visibleFiles={visibleFiles}
           />
         ))}
 
-        {filesToShow.value.map((file) => (
+        {res.value.modules.map((path) => (
           <File
-            key={file.path}
-            active={props.activeFile === file.path}
-            depth={props.depth as number + 1}
-            path={file.path}
+            key={path}
+            active={props.activeFile === path}
+            depth={props.depth as number}
+            path={path}
             selectFile={props.selectFile}
           />
         ))}
       </div>
     );
   },
-}) as DefineComponent<Props>;
+}) as DefineComponent<ModuleListProps>;

@@ -2,17 +2,17 @@ import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 import { DefineComponent, defineComponent, PropType, ref } from 'vue';
 import { ModuleList } from './ModuleList';
 import { File } from './File';
+import { SandpackOptions } from '../../types';
+import { SandpackFileExplorerProp } from '.';
 
-export interface Props {
+export interface Props extends SandpackFileExplorerProp {
   prefixedPath: string;
   files: SandpackBundlerFiles;
   selectFile: (path: string) => void;
-  activeFile: string;
+  activeFile: NonNullable<SandpackOptions['activeFile']>;
   depth: number;
-}
-
-interface State {
-  open: boolean;
+  visibleFiles?: NonNullable<SandpackOptions['visibleFiles']>;
+  autoHiddenFiles?: boolean;
 }
 
 /**
@@ -29,15 +29,25 @@ export const Directory = defineComponent({
       type: Object as PropType<SandpackBundlerFiles>,
     },
     selectFile: {
-      type: Function,
+      type: Function as PropType<(path: string) => void>,
     },
     activeFile: {
-      type: String,
+      type: String as PropType<NonNullable<SandpackOptions['activeFile']>>,
     },
     depth: {
       type: Number,
       required: false,
       default: 0,
+    },
+    visibleFiles: {
+      type: Array as PropType<NonNullable<SandpackOptions['visibleFiles']>>,
+      required: false,
+      default: undefined,
+    },
+    autoHiddenFiles: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   // @ts-ignore
@@ -59,6 +69,7 @@ export const Directory = defineComponent({
 
         {open.value ? (
           <ModuleList
+            autoHiddenFiles={props.autoHiddenFiles}
             activeFile={props.activeFile}
             depth={props.depth + 1}
             files={props.files}
