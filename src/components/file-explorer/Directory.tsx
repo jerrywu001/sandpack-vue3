@@ -1,9 +1,14 @@
-import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
-import { DefineComponent, defineComponent, PropType, ref } from 'vue';
-import { ModuleList } from './ModuleList';
+import {
+  DefineComponent,
+  defineComponent,
+  PropType,
+  ref,
+} from 'vue';
 import { File } from './File';
-import { SandpackOptions } from '../../types';
+import { ModuleList } from './ModuleList';
 import { SandpackFileExplorerProp } from '.';
+import { SandpackOptions } from '../../types';
+import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 
 export interface Props extends SandpackFileExplorerProp {
   prefixedPath: string;

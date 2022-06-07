@@ -1,11 +1,17 @@
-import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
-import { SandpackOptions } from '../../types';
-import { computed, ComputedRef, DefineComponent, defineComponent, inject, PropType } from 'vue';
-
+import {
+  computed,
+  ComputedRef,
+  DefineComponent,
+  defineComponent,
+  inject,
+  PropType,
+} from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
-import { SandpackFileExplorerProp, VisibleFilesContext } from '.';
 import { fromPropsToModules } from './util';
+import { SandpackFileExplorerProp, VisibleFilesContext } from '.';
+import { SandpackOptions } from '../../types';
+import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 
 export interface ModuleListProps extends SandpackFileExplorerProp {
   prefixedPath: string;

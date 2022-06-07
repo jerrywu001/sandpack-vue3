@@ -1,5 +1,4 @@
 import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
-import { computed, ComputedRef } from 'vue';
 
 export const fromPropsToModules = ({
   autoHiddenFiles,

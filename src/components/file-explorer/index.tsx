@@ -1,11 +1,16 @@
+import { classNames } from '../../utils/classNames';
 import { css } from '../../styles';
-import { computed, DefineComponent, defineComponent, inject, InjectionKey, provide, ref } from 'vue';
-import { useSandpack } from '../../contexts/sandpackContext';
+import {
+  DefineComponent,
+  defineComponent,
+  InjectionKey,
+  provide,
+} from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
 import { ModuleList } from './ModuleList';
-import { classNames } from '../../utils/classNames';
 import { SandpackOptions } from '../../types';
+import { useSandpack } from '../../contexts/sandpackContext';
 
 export const VisibleFilesContext: InjectionKey<NonNullable<SandpackOptions['visibleFiles']>> = Symbol('VisibleFilesContext');
 
