@@ -19,6 +19,7 @@ import {
 } from '../styles';
 import { SandpackTheme, SandpackThemeProp } from '../types';
 import { useClasser } from 'code-hike-classer-vue3';
+import { isDarkColor } from '../utils/stringUtils';
 
 interface SandpackThemeProviderContext {
   theme: SandpackTheme;
@@ -39,6 +40,13 @@ const wrapperClassName = css({
   textRendering: 'optimizeLegibility',
   WebkitTapHighlightColor: 'transparent',
   WebkitFontSmoothing: 'subpixel-antialiased',
+
+  variants: {
+    variant: {
+      dark: { colorScheme: 'dark' },
+      light: { colorScheme: 'light' },
+    },
+  },
 
   '@media screen and (min-resolution: 2dppx)': {
     WebkitFontSmoothing: 'antialiased',
@@ -68,10 +76,12 @@ const SandpackThemeProvider = defineComponent({
   setup(props, { slots }) {
     const { theme, id = '' } = standardizeTheme(props.theme);
     const c = useClasser(THEME_PREFIX);
+    const isDarkTheme = ref(false);
     const themeClassName = ref({} as any);
     const context = reactive({ theme, id });
 
     if (context.theme) {
+      isDarkTheme.value = isDarkColor(theme.colors.surface1);
       themeClassName.value = createTheme(id, standardizeStitchesTheme(theme));
       provide(SandpackThemeContext, context);
     }
@@ -81,6 +91,7 @@ const SandpackThemeProvider = defineComponent({
       if (props.theme) {
         context.id = newId;
         context.theme = newTheme;
+        isDarkTheme.value = isDarkColor(theme.colors.surface1);
         themeClassName.value = createTheme(newId, standardizeStitchesTheme(newTheme));
       }
     };
@@ -96,7 +107,7 @@ const SandpackThemeProvider = defineComponent({
         class={classNames(
           c('wrapper'),
           themeClassName.value.toString(),
-          wrapperClassName,
+          wrapperClassName({ variant: isDarkTheme.value ? 'dark' : 'light' }),
           props.className,
         )}
       >
