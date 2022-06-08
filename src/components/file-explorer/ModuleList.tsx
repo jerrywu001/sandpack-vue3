@@ -3,13 +3,12 @@ import {
   ComputedRef,
   DefineComponent,
   defineComponent,
-  inject,
   PropType,
 } from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
 import { fromPropsToModules } from './util';
-import { SandpackFileExplorerProp, VisibleFilesContext } from '.';
+import { SandpackFileExplorerProp } from '.';
 import { SandpackOptions } from '../../types';
 import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 
@@ -18,6 +17,7 @@ export interface ModuleListProps extends SandpackFileExplorerProp {
   files: SandpackBundlerFiles;
   selectFile: (path: string) => void;
   activeFile: NonNullable<SandpackOptions['activeFile']>;
+  visibleFiles?: NonNullable<SandpackOptions['visibleFiles']>;
   depth?: number;
   autoHiddenFiles?: boolean;
 }
@@ -51,13 +51,16 @@ export const ModuleList = defineComponent({
       required: false,
       default: false,
     },
+    visibleFiles: {
+      type: Array as PropType<NonNullable<SandpackOptions['visibleFiles']>>,
+      required: false,
+      default: undefined,
+    },
   },
   // @ts-ignore
   setup(props: ModuleListProps) {
-    const visibleFiles = inject(VisibleFilesContext, []);
-
     const res = computed(() => fromPropsToModules({
-      visibleFiles,
+      visibleFiles: props.visibleFiles as string[],
       autoHiddenFiles: props.autoHiddenFiles,
       prefixedPath: props.prefixedPath,
       files: props.files,
@@ -74,7 +77,7 @@ export const ModuleList = defineComponent({
             files={props.files}
             prefixedPath={dir}
             selectFile={props.selectFile}
-            visibleFiles={visibleFiles}
+            visibleFiles={props.visibleFiles as string[]}
           />
         ))}
 

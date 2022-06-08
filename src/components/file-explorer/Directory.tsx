@@ -80,6 +80,7 @@ export const Directory = defineComponent({
             files={props.files}
             prefixedPath={props.prefixedPath}
             selectFile={props.selectFile}
+            visibleFiles={props.visibleFiles}
           />
         ) : null}
       </div>

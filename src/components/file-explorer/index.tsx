@@ -1,18 +1,10 @@
 import { classNames } from '../../utils/classNames';
 import { css } from '../../styles';
-import {
-  DefineComponent,
-  defineComponent,
-  InjectionKey,
-  provide,
-} from 'vue';
+import { DefineComponent, defineComponent } from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
 import { ModuleList } from './ModuleList';
-import { SandpackOptions } from '../../types';
 import { useSandpack } from '../../contexts/sandpackContext';
-
-export const VisibleFilesContext: InjectionKey<NonNullable<SandpackOptions['visibleFiles']>> = Symbol('VisibleFilesContext');
 
 export interface SandpackFileExplorerProp {
   /**
@@ -51,8 +43,6 @@ export const SandpackFileExplorer = defineComponent({
   setup(props) {
     const { sandpack } = useSandpack();
 
-    provide(VisibleFilesContext, sandpack.visibleFiles);
-
     return () => (
       <div class={classNames(fileExplorerClassName, props.className)}>
         <ModuleList
@@ -61,6 +51,7 @@ export const SandpackFileExplorer = defineComponent({
           files={sandpack.files}
           prefixedPath="/"
           selectFile={sandpack.openFile}
+          visibleFiles={sandpack.visibleFilesFromProps}
         />
       </div>
     );

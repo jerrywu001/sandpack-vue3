@@ -110,6 +110,7 @@ const SandpackProvider = defineComponent({
       files,
       environment,
       visibleFiles,
+      visibleFilesFromProps: visibleFiles,
       activeFile,
       startRoute: props.options?.startRoute,
       error: { message: '' } as SandpackError,
@@ -138,7 +139,7 @@ const SandpackProvider = defineComponent({
       updateCurrentFile,
       updateFile,
       registerReactDevTools,
-    });
+    } as SandpackState);
 
     provide(SandpackStateContext, state);
 
@@ -548,37 +549,27 @@ const SandpackProvider = defineComponent({
          */
         const stateFromProps = getSandpackStateFromProps(props);
 
-        /**
-         * What the changes on the customSetup props
-         */
-        if (
-          prevTemplate !== newTemplate ||
-          prevActiveFile !== newActiveFile ||
-          !isEqual(prevCustomSetup, newCustomSetup) ||
-          !isEqual(prevVisibleFiles, newVisibleFiles) ||
-          !isEqual(prevFiles, newFiles)
-        ) {
-          state.activeFile = stateFromProps.activeFile;
-          state.visibleFiles = stateFromProps.visibleFiles;
-          state.files = stateFromProps.files;
-          state.environment = stateFromProps.environment;
+        state.activeFile = stateFromProps.activeFile;
+        state.visibleFiles = stateFromProps.visibleFiles;
+        state.visibleFilesFromProps = stateFromProps.visibleFiles;
+        state.files = stateFromProps.files;
+        state.environment = stateFromProps.environment;
 
-          if (state.status !== 'running') {
-            return;
-          }
-
-          Object.values(clients).forEach((client) => {
-            client.updatePreview({
-              files: state.files,
-              template: state.environment,
-            });
-          });
+        if (state.status !== 'running') {
+          return;
         }
+
+        Object.values(clients).forEach((client) => {
+          client.updatePreview({
+            files: stateFromProps.files,
+            template: stateFromProps.environment,
+          });
+        });
 
         /**
          * Watch the changes on editorState
         */
-        const newEditorState = isEqual(files, state.files) ? 'pristine' : 'dirty';
+        const newEditorState = isEqual(stateFromProps.files, state.files) ? 'pristine' : 'dirty';
         if (newEditorState !== state.editorState) {
           state.editorState = newEditorState;
         }

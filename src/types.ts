@@ -498,6 +498,13 @@ export interface SandpackState {
   visibleFiles: string[];
 
   /**
+   * List the file path listed in the file tab,
+   *
+   * Can only be changed through the properties of sandpackprovider (files/options)
+   */
+  visibleFilesFromProps: string[];
+
+  /**
    * Path to the file will be open in the code editor
    * when the component mounts
    */
