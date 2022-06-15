@@ -525,22 +525,20 @@ const SandpackProvider = defineComponent({
 
     watch(
       [
-        () => props.options?.initMode,
-        () => props.options?.activeFile,
-        () => props.options?.visibleFiles,
+        () => props.options,
         () => props.template,
         () => props?.files,
         () => props.customSetup,
       ],
       (
-        [newInitMode, newActiveFile, newVisibleFiles, newTemplate, newFiles, newCustomSetup],
-        [prevInitMode, prevActiveFile, prevVisibleFiles, prevTemplate, prevFiles, prevCustomSetup],
+        [newOptions],
+        [prevOptions],
       ) => {
         /**
          * Watch the changes on the initMode prop
          */
-        if (prevInitMode !== newInitMode && newInitMode) {
-          state.initMode = props.options?.initMode as SandpackInitMode;
+        if (prevOptions?.initMode !== newOptions?.initMode && newOptions?.initMode) {
+          state.initMode = newOptions?.initMode as SandpackInitMode;
           initializeSandpackIframe();
         }
 

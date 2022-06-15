@@ -4,7 +4,7 @@ import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
 import { CodeMirrorProps } from '..';
 import { commentKeymap } from '@codemirror/comment';
 import { defaultHighlightStyle } from '@codemirror/highlight';
-import { EditorState, Extension, StateEffect } from '@codemirror/state';
+import { EditorState, type Extension, StateEffect } from '@codemirror/state';
 import {
   getCodeMirrorLanguage,
   getEditorTheme,
@@ -223,6 +223,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   watch([
     () => props.readOnly,
     () => props.showLineNumbers,
+    () => props.showInlineErrors,
     () => props.wrapContent,
     () => props.readOnly,
     () => sandpackTheme.id,

@@ -100,21 +100,17 @@ const CodeMirror = defineComponent({
 
           if (message.type === 'success') {
             view?.dispatch({
-              // Pass message to clean up inline error
-              annotations: [
-                {
-                  type: 'clean-error',
-                  value: null,
-                } as unknown as Annotation<unknown>,
-              ],
-
-              // Trigger a doc change to remove inline error
-              changes: {
-                from: 0,
-                to: view.state.doc.length,
-                insert: view.state.doc,
-              },
-              selection: view.state.selection,
+              // @ts-ignore
+              annotations: [new Annotation('remove-errors', true)],
+            });
+          } else if (
+            message.type === 'action' &&
+            message.action === 'show-error' &&
+            message.line
+          ) {
+            view?.dispatch({
+              // @ts-ignore
+              annotations: [new Annotation('show-error', message.line)],
             });
           }
 
