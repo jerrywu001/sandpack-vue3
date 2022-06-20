@@ -19,6 +19,7 @@ import {
   onMounted,
   UnwrapNestedRefs,
   nextTick,
+  inject,
 } from 'vue';
 import type {
   BundlerState,
@@ -621,7 +622,9 @@ const SandpackProvider = defineComponent({
  * useSandpack
  */
 function useSandpack(): UseSandpack {
-  const sandpack = useContext<SandpackContext>(SandpackStateContext, undefined);
+  const ssr = process && typeof process === 'object' && process.env ? process.env.SSR === 'true' : false;
+  const defaultValue = !ssr ? undefined : { files: {}, dispatch: () => {}, listen: () => {} };
+  const sandpack = useContext<SandpackContext>(SandpackStateContext, defaultValue);
 
   if (!sandpack) {
     throw new Error(
