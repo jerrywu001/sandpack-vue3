@@ -162,7 +162,7 @@ export const getSetup = ({
 
     if (!setup.files || Object.keys(setup.files).length === 0) {
       throw new Error(
-        '[sandpack-react]: without a template, you must pass at least one file',
+        '[sandpack-vue3]: without a template, you must pass at least one file',
       );
     }
 
@@ -173,7 +173,7 @@ export const getSetup = ({
   const baseTemplate = SANDBOX_TEMPLATES[template] as SandboxTemplate;
   if (!baseTemplate) {
     throw new Error(
-      `[sandpack-react]: invalid template "${template}" provided`,
+      `[sandpack-vue3]: invalid template "${template}" provided`,
     );
   }
 

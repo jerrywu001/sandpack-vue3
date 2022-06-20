@@ -625,7 +625,7 @@ function useSandpack(): UseSandpack {
 
   if (!sandpack) {
     throw new Error(
-      '[sandpack-react]: "useSandpack" must be wrapped by a "SandpackProvider"',
+      '[sandpack-vue3]: "useSandpack" must be wrapped by a "SandpackProvider"',
     );
   }
 
