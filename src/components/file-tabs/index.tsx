@@ -86,7 +86,7 @@ export const FileTabs = defineComponent({
     const getTriggerText = (currentPath: string): string => {
       const documentFileName = getFileName(currentPath);
 
-      const pathsWithDuplicateFileNames = sandpack.visibleFiles.reduce((prev, curr) => {
+      const pathsWithDuplicateFileNames = (sandpack.visibleFiles || []).reduce((prev, curr) => {
         if (curr === currentPath) {
           return prev;
         }
@@ -124,7 +124,7 @@ export const FileTabs = defineComponent({
           )}
           role="tablist"
         >
-          {sandpack.visibleFiles.map((filePath) => (
+          {(sandpack.visibleFiles || []).map((filePath) => (
             <button
               key={filePath}
               aria-selected={filePath === sandpack.activeFile}

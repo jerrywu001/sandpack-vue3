@@ -41,7 +41,9 @@ export const RunButton = defineComponent({
           props.className,
         )}
         onClick={(event) => {
-          sandpack.runSandpack();
+          if (sandpack && sandpack.runSandpack) {
+            sandpack.runSandpack();
+          }
           if (props.onClick) {
             props.onClick(event);
           }

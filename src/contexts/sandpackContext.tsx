@@ -100,7 +100,7 @@ const SandpackProvider = defineComponent({
 
     let unsubscribe: UnsubscribeFunction | undefined;
 
-    const { activeFile, visibleFiles, files, environment } = getSandpackStateFromProps(props);
+    const { activeFile, visibleFiles = [], files, environment } = getSandpackStateFromProps(props);
 
     const data = reactive({
       renderHiddenIframe: false,

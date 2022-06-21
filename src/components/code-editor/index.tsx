@@ -202,7 +202,7 @@ export const SandpackCodeEditor = defineComponent({
     const { sandpack } = useSandpack();
     const { code, readOnly: readOnlyFile } = useActiveCode();
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.visibleFiles?.length > 1));
-    const showRunButton = computed(() => !sandpack.autorun);
+    const showRunButton = computed(() => !sandpack?.autorun);
 
     const sandpackCodeEditorRef = ref<InstanceType<typeof CodeMirror> | null>(null);
     const c = useClasser(THEME_PREFIX);

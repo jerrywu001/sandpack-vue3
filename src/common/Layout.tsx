@@ -67,7 +67,7 @@ export const SandpackLayout = defineComponent({
     const c = useClasser(THEME_PREFIX);
 
     watch(lazyAnchorRef, () => {
-      if (lazyAnchorRef.value) {
+      if (sandpack && lazyAnchorRef.value) {
         sandpack.lazyAnchorRef = lazyAnchorRef as Ref<HTMLDivElement>;
       }
     });

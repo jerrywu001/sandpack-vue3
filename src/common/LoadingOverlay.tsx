@@ -99,7 +99,7 @@ export const LoadingOverlay = defineComponent({
         )}
         style={{
           ...(props.style || {}),
-          opacity: stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,
+          opacity: sandpack && stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,
           transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
         }}
       >

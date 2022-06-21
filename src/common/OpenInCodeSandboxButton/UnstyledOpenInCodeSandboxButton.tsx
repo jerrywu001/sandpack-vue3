@@ -70,7 +70,9 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
     }, { deep: true, immediate: true });
 
     onMounted(() => {
-      sandpack.openInCSBRegisteredRef = true;
+      if (sandpack) {
+        sandpack.openInCSBRegisteredRef = true;
+      }
     });
 
     return () => (paramsValues.value?.get?.('parameters')?.length ?? 0) > 1500 ? (

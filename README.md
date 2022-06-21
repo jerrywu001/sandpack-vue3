@@ -107,6 +107,23 @@ npm run play
 # rm -rf node_modules/@types/react
 ```
 
+## for nuxt3
+
+- nuxt.config.ts
+
+```tsx
+import { defineNuxtConfig } from 'nuxt';
+
+export default defineNuxtConfig({
+  vite: {
+    define: {
+      'process.env.LOG': {},
+    },
+  },
+});
+
+```
+
 ## Supported browsers
 
 npx browserslist
