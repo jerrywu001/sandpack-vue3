@@ -107,31 +107,6 @@ npm run play
 # rm -rf node_modules/@types/react
 ```
 
-## for nuxt3
-
-- package.json
-
-```json
-"scripts": {
-  "preview": "cross-env SSR=true nuxt preview"
-}
-```
-
-- nuxt.config.ts
-
-```ts
-import { defineNuxtConfig } from 'nuxt';
-
-export default defineNuxtConfig({
-  vite: {
-    define: {
-      'process.env.LOG': {},
-    },
-  },
-});
-
-```
-
 ## Supported browsers
 
 npx browserslist
