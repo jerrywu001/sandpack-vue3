@@ -622,12 +622,12 @@ const SandpackProvider = defineComponent({
  * useSandpack
  */
 function useSandpack(): UseSandpack {
-  const ssr = process && typeof process === 'object' && process.env ? process.env.SSR === 'true' : false;
-  const defaultValue = !ssr ? undefined : { files: {}, dispatch: () => {}, listen: () => {} };
-  const sandpack = useContext<SandpackContext>(SandpackStateContext, defaultValue);
+  let sandpack = useContext<SandpackContext>(SandpackStateContext, undefined);
 
   if (!sandpack) {
-    throw new Error(
+    // @ts-ignore
+    sandpack = { files: {}, dispatch: () => {}, listen: () => {} };
+    console.error(
       '[sandpack-vue3]: "useSandpack" must be wrapped by a "SandpackProvider"',
     );
   }
