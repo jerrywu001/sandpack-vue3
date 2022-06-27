@@ -103,7 +103,6 @@ const SandpackProvider = defineComponent({
     const { activeFile, visibleFiles = [], files, environment } = getSandpackStateFromProps(props);
 
     const data = reactive({
-      renderHiddenIframe: false,
       reactDevTools: undefined,
     } as any);
 
@@ -123,6 +122,7 @@ const SandpackProvider = defineComponent({
       clients,
       closeFile,
       deleteFile,
+      addFile: updateFile,
       dispatch: dispatchMessage,
       openInCSBRegisteredRef: false,
       errorScreenRegisteredRef: false,
@@ -418,19 +418,13 @@ const SandpackProvider = defineComponent({
 
     function deleteFile(path: string) {
       const { visibleFiles: prevVisibleFiles, files: prevFiles } = state;
-      const newPaths = prevVisibleFiles.filter((openPath) => openPath !== path);
-      const newFiles = Object.keys(prevFiles).reduce(
-        (acc: SandpackBundlerFiles, filePath) => {
-          if (filePath === path) {
-            return acc;
-          }
-          acc[filePath] = prevFiles[filePath];
-          return acc;
-        },
-        {},
-      );
-      state.visibleFiles = newPaths;
+
+      const newFiles = { ...prevFiles };
+      delete newFiles[path];
+
+      state.visibleFiles = prevVisibleFiles.filter((openPath) => openPath !== path);
       state.files = newFiles;
+
       updateClients();
     }
 
