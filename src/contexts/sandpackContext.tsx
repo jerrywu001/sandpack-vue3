@@ -95,7 +95,7 @@ const SandpackProvider = defineComponent({
     let intersectionObserver: IntersectionObserver;
     const preregisteredIframes: Record<string, HTMLIFrameElement> = {};
     const clients: Record<string, SandpackClient> = {};
-    const unsubscribeQueuedListeners: Record<string, Record<string, UnsubscribeFunction>> = {};
+    const unsubscribeClientListeners: Record<string, Record<string, UnsubscribeFunction>> = {};
     const queuedListeners: Record<string, Record<string, ListenerFunction>> = { global: {} };
 
     let unsubscribe: UnsubscribeFunction | undefined;
@@ -318,7 +318,7 @@ const SandpackProvider = defineComponent({
         Object.keys(queuedListeners[clientId]).forEach((listenerId) => {
           const listener = queuedListeners[clientId][listenerId];
           const unsubscribe_a = client.listen(listener) as () => void;
-          unsubscribeQueuedListeners[clientId][listenerId] = unsubscribe_a;
+          unsubscribeClientListeners[clientId][listenerId] = unsubscribe_a;
         });
 
         // Clear the queued listeners after they were registered
@@ -331,7 +331,7 @@ const SandpackProvider = defineComponent({
       const globalListeners = Object.entries(queuedListeners.global);
       globalListeners.forEach(([listenerId, listener]) => {
         const unsubscribe_a = client.listen(listener) as () => void;
-        unsubscribeQueuedListeners[clientId][listenerId] = unsubscribe_a;
+        unsubscribeClientListeners[clientId][listenerId] = unsubscribe_a;
 
         /**
          * Important: Do not clean the global queue
@@ -455,24 +455,27 @@ const SandpackProvider = defineComponent({
         } else {
           // When listeners are added before the client is instantiated, they are stored with an unique id
           // When the client is eventually instantiated, the listeners are registered on the spot
-          // Their unsubscribe functions are stored in unsubscribeQueuedListeners for future cleanup
+          // Their unsubscribe functions are stored in unsubscribeClientListeners for future cleanup
           const listenerId = generateRandomId();
           queuedListeners[clientId] = queuedListeners[clientId] || {};
-          unsubscribeQueuedListeners[clientId] =
-              unsubscribeQueuedListeners[clientId] || {};
+          unsubscribeClientListeners[clientId] = unsubscribeClientListeners[clientId] || {};
 
           queuedListeners[clientId][listenerId] = listener;
 
           const unsubscribeListener = () => {
             if (queuedListeners[clientId][listenerId]) {
-              // unsubscribe was called before the client was instantiated
-              // common example - a component with autorun=false that unmounted
+              /**
+               * Unsubscribe was called before the client was instantiated
+               * common example - a component with autorun=false that unmounted
+               */
               delete queuedListeners[clientId][listenerId];
-            } else if (unsubscribeQueuedListeners[clientId][listenerId]) {
-              // unsubscribe was called for a listener that got added before the client was instantiated
-              // call the unsubscribe function and remove it from memory
-              unsubscribeQueuedListeners[clientId][listenerId]();
-              delete unsubscribeQueuedListeners[clientId][listenerId];
+            } else if (unsubscribeClientListeners[clientId][listenerId]) {
+              /**
+               * unsubscribe was called for a listener that got added before the client was instantiated
+               * call the unsubscribe function and remove it from memory
+               */
+              unsubscribeClientListeners[clientId][listenerId]();
+              delete unsubscribeClientListeners[clientId][listenerId];
             }
           };
 
@@ -488,16 +491,6 @@ const SandpackProvider = defineComponent({
         const currentClientUnsubscribeListeners = latestClients.map((client) => client.listen(listener));
 
         const unsubscribeListener = () => {
-          const unsubscribeQueuedClients = Object.values(
-            unsubscribeQueuedListeners,
-          );
-
-          // Unsubscribing all listener registered
-          unsubscribeQueuedClients.forEach((listenerOfClient) => {
-            const listenerFunctions = Object.values(listenerOfClient);
-            listenerFunctions.forEach((unsubscribe_a) => unsubscribe_a());
-          });
-
           // Unsubscribing from the clients already created
           currentClientUnsubscribeListeners.forEach((unsubscribe_a) => unsubscribe_a());
         };
