@@ -16,7 +16,7 @@ export default defineConfig({
   },
   plugins: [
     Vue({
-      reactivityTransform: true,
+      // reactivityTransform: true,
     }),
 
     vueJsx(),

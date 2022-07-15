@@ -37,8 +37,8 @@ import {
 import {
   defaultKeymap,
   indentLess,
+  indentMore,
   deleteGroupBackward,
-  insertTab,
 } from '@codemirror/commands';
 
 export default function useDelayCodeEditor(props: CodeMirrorProps) {
@@ -77,7 +77,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
 
   // @ts-ignore
   const prevExtension = ref<Extension[]>([]);
-  const prevExtensionKeymap = ref<Array<readonly KeyBinding[]>>([]);
+  const prevExtensionKeymap = ref<KeyBinding[]>([]);
 
   useIntersectionObserver(
     wrapperRef,
@@ -102,11 +102,27 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     const customCommandsKeymap: KeyBinding[] = [
       {
         key: 'Tab',
-        run: insertTab,
+        run: (view): boolean => {
+          indentMore(view);
+
+          const customKey = (props.extensionsKeymap as KeyBinding[]).find(
+            ({ key }) => key === 'Tab',
+          );
+
+          return customKey?.run(view) ?? true;
+        },
       },
       {
         key: 'Shift-Tab',
-        run: indentLess,
+        run: ({ state, dispatch }): boolean => {
+          indentLess({ state, dispatch });
+
+          const customKey = (props.extensionsKeymap as KeyBinding[]).find(
+            ({ key }) => key === 'Shift-Tab',
+          );
+
+          return customKey?.run(view) ?? true;
+        },
       },
       {
         key: 'Escape',
@@ -137,7 +153,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
         ...historyKeymap,
         ...commentKeymap,
         ...customCommandsKeymap,
-        ...props.extensionsKeymap as (readonly KeyBinding[])[],
+        ...props.extensionsKeymap as KeyBinding[],
       ] as KeyBinding[]),
       langSupport,
 
@@ -250,7 +266,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
 
     const dependenciesAreDiff =
       !shallowEqual(props.extensions as Extension[], prevExtension.value) ||
-      !shallowEqual(props.extensionsKeymap as (readonly KeyBinding[])[], prevExtensionKeymap.value);
+      !shallowEqual(props.extensionsKeymap as KeyBinding[], prevExtensionKeymap.value);
 
     if (view && dependenciesAreDiff) {
       view.dispatch({
@@ -264,7 +280,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
       });
 
       prevExtension.value = props.extensions as Extension[];
-      prevExtensionKeymap.value = props.extensionsKeymap as (readonly KeyBinding[])[];
+      prevExtensionKeymap.value = props.extensionsKeymap as KeyBinding[];
     }
   }, { immediate: true });
 

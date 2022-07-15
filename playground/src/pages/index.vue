@@ -102,7 +102,7 @@ createApp(App).mount('#app');`,
   </div>
 </template>
 
-<style>
+<style lang="postcss">
 .mybtn {
   @apply rounded-md border border-light-50 mr-5 p-2 bg-green-500 text-xs text-white;
 }

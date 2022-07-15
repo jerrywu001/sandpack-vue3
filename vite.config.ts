@@ -49,7 +49,7 @@ export default defineConfig({
   },
   plugins: [
     Vue({
-      reactivityTransform: true,
+      // reactivityTransform: true,
     }),
     vueJsx(),
     // https://www.npmjs.com/package/vite-plugin-dts
