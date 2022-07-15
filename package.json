@@ -36,6 +36,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "build:storybook": "npm run build:storybook --workspace playground",
     "build:vite": "vite build",
     "dev": "tsup --watch",
     "lint": "eslint **/*.{ts,tsx,vue} --ext .ts,.tsx,.vue",

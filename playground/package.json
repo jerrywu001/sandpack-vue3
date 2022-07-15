@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vite build",
-    "build-storybook": "build-storybook",
+    "build:storybook": "build-storybook",
     "dev": "vite --port 3333 --open",
     "dev:usepack": "cross-env USEPACK=true vite --port 3100 --open",
     "preview": "vite preview",
