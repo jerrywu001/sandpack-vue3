@@ -11,18 +11,18 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
-  },
-  "paths": {
-    "~/*": [
-      "src/*"
-    ],
-    "#/*": [
-      "dist/*"
-    ],
-    "codesandbox-sandpack-vue3": [
-      "src/index.ts"
-    ]
+    "skipDefaultLibCheck": true,
+    "paths": {
+      "~/*": [
+        "src/*"
+      ],
+      "#/*": [
+        "dist/*"
+      ],
+      "codesandbox-sandpack-vue3": [
+        "src/index.ts"
+      ]
+    }
   },
   "include": [
     "**/*"
