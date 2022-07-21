@@ -2,7 +2,7 @@
   "**/*.{css,less,scss,vue}": [
     "stylelint --fix"
   ],
-  "src/**/*.{ts,tsx,js,jsx,vue}": [
+  "src/**/*.{ts,tsx}": [
     "eslint --fix"
   ]
 }

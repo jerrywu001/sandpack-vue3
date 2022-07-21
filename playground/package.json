@@ -2,11 +2,11 @@
   "name": "playground",
   "version": "1.0.0",
   "scripts": {
-    "build": "vite build",
+    "build": "tsc && vue-tsc && vite build",
     "dev": "vite --open",
-    "dev:usepack": "cross-env USEPACK=true vite --port 3100 --open",
+    "dev:usepack": "cross-env USEPACK=true vite --port 5000 --open",
     "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "tsc && vue-tsc"
   },
   "dependencies": {
     "vue-router": "^4.1.2"

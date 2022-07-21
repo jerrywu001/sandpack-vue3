@@ -29,6 +29,7 @@ module.exports = {
   },
   rules: {
     // eslint
+    'import/export': 'off',
     'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
     'no-undef': 'off',

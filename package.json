@@ -40,6 +40,7 @@
     "build:storybook": "build-storybook",
     "build:vite": "vite build && npm run build:css",
     "dev": "concurrently \"npm run build:css-watch\" \"npm run dev --workspace playground\"",
+    "dev:pack": "npm run dev:usepack --workspace playground",
     "lint": "eslint src/**/*.{ts,tsx} --ext .ts,.tsx",
     "prepare": "chmod a+x .husky/* && husky install",
     "prepublishOnly": "npm run build",
@@ -48,7 +49,7 @@
     "stylelint": "stylelint **/*.{css,less,scss,vue}",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc && vue-tsc"
   },
   "dependencies": {
     "@codemirror/closebrackets": "~0.19.2",
@@ -83,7 +84,7 @@
     "@storybook/addon-docs": "~6.4.22",
     "@storybook/addon-essentials": "~6.4.22",
     "@storybook/addon-links": "~6.4.22",
-    "@storybook/builder-vite": "0.2.0",
+    "@storybook/builder-vite": "0.1.37",
     "@storybook/vue3": "~6.4.22",
     "@swc/core": "^1.2.218",
     "@testing-library/jest-dom": "^5.16.4",
