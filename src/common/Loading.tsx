@@ -1,5 +1,5 @@
 import { useClasser } from 'code-hike-classer-vue3';
-import { defineComponent, HTMLAttributes } from 'vue';
+import { defineComponent } from 'vue';
 import { css, THEME_PREFIX, keyframes } from '../styles';
 import { buttonClassName } from '../styles/shared';
 import { classNames } from '../utils/classNames';

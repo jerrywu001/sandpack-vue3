@@ -3,23 +3,19 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vite build",
-    "build:storybook": "build-storybook",
-    "dev": "vite --port 3333 --open",
+    "dev": "vite --open",
     "dev:usepack": "cross-env USEPACK=true vite --port 3100 --open",
     "preview": "vite preview",
-    "storybook": "start-storybook -p 6006",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "vue-router": "^4.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.6",
     "@iconify-json/carbon": "^1.1.6",
-    "@unocss/reset": "^0.44.3",
-    "babel-loader": "^8.2.5",
+    "@unocss/reset": "^0.44.5",
     "cross-env": "^7.0.3",
-    "unocss": "^0.44.3",
+    "unocss": "^0.44.5",
     "vite-plugin-pages": "^0.25.0",
     "vue-loader": "^17.0.0"
   }

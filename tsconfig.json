@@ -21,6 +21,9 @@
       ],
       "codesandbox-sandpack-vue3": [
         "src/index.ts"
+      ],
+      "codesandbox-sandpack-vue3/*": [
+        "./src/*"
       ]
     }
   },
@@ -32,6 +35,7 @@
     "build",
     "dist",
     "setupTests.ts",
-    "__unconfig_vite.config.ts"
+    "__unconfig_vite.config.ts",
+    "playground"
   ]
 }

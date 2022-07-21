@@ -19,12 +19,10 @@ import {
   onMounted,
   UnwrapNestedRefs,
   nextTick,
-  inject,
 } from 'vue';
 import type {
   BundlerState,
   ListenerFunction,
-  SandpackBundlerFiles,
   SandpackError,
   SandpackMessage,
   UnsubscribeFunction,

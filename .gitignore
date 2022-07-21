@@ -9,11 +9,11 @@ node_modules
 .idea/
 *.log
 /coverage
-package-lock.json
+# package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
 playground/dist
-playground/storybook-static
+storybook-static
 
 __unconfig_vite.config.ts
