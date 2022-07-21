@@ -14,6 +14,6 @@ pnpm-lock.yaml
 yarn.lock
 
 playground/dist
-storybook-static
+playground/storybook-static
 
 __unconfig_vite.config.ts

@@ -6,6 +6,7 @@
     "dev": "vite --open",
     "dev:usepack": "cross-env USEPACK=true vite --port 5000 --open",
     "preview": "vite preview",
+    "storybook": "start-storybook -p 6006",
     "typecheck": "tsc && vue-tsc"
   },
   "dependencies": {

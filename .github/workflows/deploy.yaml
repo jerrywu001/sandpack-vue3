@@ -38,4 +38,4 @@ jobs:
           NETLIFY_DEPLOY_TO_PROD: true
           use_nvm: false
           build_command: 'npm run build:storybook'
-          build_directory: 'storybook-static'
+          build_directory: 'playground/storybook-static'
