@@ -37,7 +37,7 @@
   "scripts": {
     "build": "tsup && npm run build:css",
     "build:css": "postcss src/styles/index.css > dist/index.css",
-    "build:storybook": "npm run build-storybook -w playground",
+    "build:storybook": "npm run build:storybook -w playground",
     "build:vite": "vite build && npm run build:css",
     "dev": "concurrently \"npm run build:css-watch\" \"npm run dev -w playground\"",
     "dev:pack": "npm run dev:usepack -w playground",

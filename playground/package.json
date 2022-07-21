@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc && vue-tsc && vite build",
+    "build:storybook": "build-storybook",
     "dev": "vite --open",
     "dev:usepack": "cross-env USEPACK=true vite --port 5000 --open",
     "preview": "vite preview",
