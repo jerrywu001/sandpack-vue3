@@ -25,6 +25,9 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Remove react types
+        run: rm -rf node_modules/@types/react
+
       - name: Lint
         run: npm run lint
 
@@ -57,6 +60,9 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Remove react types
+        run: rm -rf node_modules/@types/react
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -72,6 +78,9 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      - name: Remove react types
+        run: rm -rf node_modules/@types/react
 
       - name: Unit Test
         run: npm run test
