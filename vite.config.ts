@@ -1,4 +1,5 @@
 /// <reference types="vitest" />
+/// <reference types="vite/client" />
 
 import dts from 'vite-plugin-dts';
 import path from 'path';
@@ -9,15 +10,11 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   resolve: {
     alias: {
-      '~/': `${path.resolve(__dirname, './src')}/`,
-      '#/': `${path.resolve(__dirname, './dist')}/`,
       'codesandbox-sandpack-vue3': path.resolve(__dirname, './src/index.ts'),
     },
   },
-  esbuild: {
-    minify: true,
-  },
   build: {
+    minify: true,
     lib: {
       fileName: (type) => {
         if (type === 'es') return 'esm/index.js';

@@ -114,6 +114,7 @@ export const ExtensionAutocomplete = () => {
         <SandpackThemeProvider>
           <SandpackCodeEditor
             extensions={active.value ? [autocompletion()] : []}
+            // @ts-ignore
             extensionsKeymap={active.value ? [completionKeymap] : []}
             id="extensions"
           />

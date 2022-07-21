@@ -1,0 +1,45 @@
+name: 'Deploy(main)'
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    types: [ opened, edited, synchronize, reopened ]
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - run: npm ci
+
+      - name: Remove react types
+        run: rm -rf node_modules/@types/react
+
+      - run: npm test
+      - run: npm run lint
+      - run: npm run stylelint
+      - run: npm run typecheck
+
+  deploy:
+    needs: check
+    name: 'Deploy to Netlify' # https://github.com/marketplace/actions/netlify-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jsmrcaga/action-netlify-deploy@v1.8.0
+        with:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_DEPLOY_TO_PROD: true
+          use_nvm: false
+          build_command: 'npm run build:storybook'
+          build_directory: 'playground/storybook-static'

@@ -3,24 +3,34 @@
     "baseUrl": ".",
     "target": "ES2015",
     "module": "ESNext",
-    "lib": ["esnext", "DOM"],
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "jsx": "preserve",
-    "strictNullChecks": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
+    "moduleResolution": "Node",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "skipDefaultLibCheck": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "importHelpers": false,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
     "paths": {
-      "~/*": [
-        "src/*"
-      ],
-      "#/*": [
-        "dist/*"
-      ],
       "codesandbox-sandpack-vue3": [
         "src/index.ts"
+      ],
+      "codesandbox-sandpack-vue3/*": [
+        "./src/*"
       ]
     }
   },
@@ -31,7 +41,6 @@
     "node_modules",
     "build",
     "dist",
-    "setupTests.ts",
     "__unconfig_vite.config.ts"
   ]
 }

@@ -1,6 +1,8 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import routes from 'virtual:generated-pages';
+
+// @ts-ignore
+import routes from 'virtual:generated-pages'; // 类似于router
 
 import SanpackPlugin from 'codesandbox-sandpack-vue3';
 
