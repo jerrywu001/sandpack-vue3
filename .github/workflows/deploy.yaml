@@ -31,11 +31,12 @@ jobs:
 
   deploy:
     needs: check
-    name: 'Deploy to Netlify' # https://github.com/marketplace/actions/netlify-deploy
+    name: 'Deploy to vercel'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      # https://github.com/marketplace/actions/netlify-deploy
       # - name: deploy to netlify
       #   uses: jsmrcaga/action-netlify-deploy@v1.8.0
       #   with:
