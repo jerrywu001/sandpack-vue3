@@ -37,7 +37,8 @@ export type FileType = 'js'
 | 'scss'
 | 'less'
 | 'html'
-| 'vue';
+| 'vue'
+| 'markdown';
 
 export interface CodeMirrorRef {
   getCodemirror: () => EditorView | undefined;

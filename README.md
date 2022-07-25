@@ -100,7 +100,7 @@ app.use(SanpackPlugin());
 ```bash
 npm i
 
-npm run play
+npm run storybook
 
 # If .tsx file has a type error about JSX (The storybook relies on @types/react), Please delete the @types/react.
 

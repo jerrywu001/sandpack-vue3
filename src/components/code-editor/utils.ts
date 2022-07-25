@@ -2,6 +2,7 @@ import { HighlightStyle, tags } from '@codemirror/highlight';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { javascript } from '@codemirror/lang-javascript';
+import { markdown } from '@codemirror/lang-markdown';
 import type { LanguageSupport } from '@codemirror/language';
 import type { Extension } from '@codemirror/state';
 import type { Text } from '@codemirror/text';
@@ -143,13 +144,18 @@ export const getSyntaxHighlight = (theme: SandpackTheme): HighlightStyle => High
   },
 ]);
 
-type SandpackLanguageSupport = 'javascript' | 'typescript' | 'html' | 'css';
+type SandpackLanguageSupport =
+  | 'javascript'
+  | 'typescript'
+  | 'html'
+  | 'css'
+  | 'markdown';
 
 export const getLanguageFromFile = (
   filePath?: string,
   fileType?: string,
 ): SandpackLanguageSupport => {
-  if (!filePath && !fileType) return 'javascript';
+  if (!filePath && !fileType) return 'markdown';
 
   let extension = fileType;
   if (!extension && filePath) {
@@ -172,8 +178,10 @@ export const getLanguageFromFile = (
     case 'less':
     case 'scss':
       return 'css';
+    case 'md':
+      return 'markdown';
     default:
-      return 'javascript';
+      return 'markdown';
   }
 };
 
@@ -185,6 +193,7 @@ export const getCodeMirrorLanguage = (
     typescript: javascript({ jsx: true, typescript: true }),
     html: html(),
     css: css(),
+    markdown: markdown(),
   };
 
   return options[extension];
