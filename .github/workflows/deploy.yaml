@@ -19,10 +19,7 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm ci
-
-      - name: Remove react types
-        run: rm -rf node_modules/@types/react
+      - run: npm i
 
       - run: npm test
       - run: npm run lint

@@ -15,10 +15,7 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm ci
-
-      - name: Remove react types
-        run: rm -rf node_modules/@types/react
+      - run: npm i
 
       - run: npm test
       - run: npm run lint
@@ -35,10 +32,7 @@ jobs:
           node-version: 16
 
       - name: Install
-        run: npm ci
-
-      - name: Remove react types
-        run: rm -rf node_modules/@types/react
+        run: npm i
 
       - name: Set registry
         run: |

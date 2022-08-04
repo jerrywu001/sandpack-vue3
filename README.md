@@ -101,10 +101,6 @@ app.use(SanpackPlugin());
 npm i
 
 npm run storybook
-
-# If .tsx file has a type error about JSX (The storybook relies on @types/react), Please delete the @types/react.
-
-# rm -rf node_modules/@types/react
 ```
 
 ## for nuxt3

@@ -23,10 +23,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Install
-        run: npm ci
-
-      - name: Remove react types
-        run: rm -rf node_modules/@types/react
+        run: npm i
 
       - name: Lint
         run: npm run lint
@@ -42,7 +39,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Install
-        run: npm ci
+        run: npm i
 
       - name: Stylelint
         run: npm run stylelint
@@ -58,10 +55,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Install
-        run: npm ci
-
-      - name: Remove react types
-        run: rm -rf node_modules/@types/react
+        run: npm i
 
       - name: Typecheck
         run: npm run typecheck
@@ -77,10 +71,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Install
-        run: npm ci
-
-      - name: Remove react types
-        run: rm -rf node_modules/@types/react
+        run: npm i
 
       - name: Unit Test
         run: npm run test
