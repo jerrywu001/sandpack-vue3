@@ -224,3 +224,31 @@ return <h1>{message}</h1>
     </SandpackLayout>
   </SandpackProvider>
 );
+
+export const CustomNpmRegistries = () => (
+  <Sandpack
+    customSetup={{
+      dependencies: { '@codesandbox/test-package': '1.0.5' },
+      npmRegistries: [
+        // @ts-ignore
+        {
+          enabledScopes: ['@codesandbox'],
+          limitToScopes: true,
+          registryUrl: 'https://1gemwv-4000.preview.csb.app',
+        },
+      ],
+    }}
+    files={{
+      '/App.js': `import { Button } from "@codesandbox/test-package"
+export default function App() {
+  return (
+    <div>
+      <Button>I'm a private Package</Button>
+    </div>
+  )
+}
+`,
+    }}
+    template="react"
+  />
+);

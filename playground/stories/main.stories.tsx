@@ -30,7 +30,7 @@ export const Main = () => {
       showNavigator: true,
       showRefreshButton: true,
     },
-    Template: 'react',
+    Template: 'react' as const,
     Theme: 'auto' as SandpackThemeProp,
   });
 
@@ -63,7 +63,7 @@ export const Main = () => {
             if (key === 'Template') {
               return (
                 <div>
-                  <h3>Themes</h3>
+                  <h3>Template</h3>
                   <select
                     // @ts-ignore
                     onChange={({ target }): void => update('Template', target?.value)

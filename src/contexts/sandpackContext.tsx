@@ -293,6 +293,12 @@ const SandpackProvider = defineComponent({
           showErrorScreen: !state.errorScreenRegisteredRef,
           showLoadingScreen: !state.loadingScreenRegisteredRef,
           reactDevTools: data.reactDevTools,
+          customNpmRegistries: props.customSetup?.npmRegistries?.map(
+            (config) => ({
+              ...config,
+              proxyEnabled: false, // force
+            } ?? []),
+          ),
         },
       );
 
