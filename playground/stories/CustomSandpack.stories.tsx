@@ -23,7 +23,6 @@ import {
   SandpackTranspiledCode,
   stackClassName,
 } from 'codesandbox-sandpack-vue3';
-import { MultiplePreviewsRandomViewportsStory } from './widgets/MultiplePreviewsRandomViewportsStory';
 
 export default {
   title: 'presets/Sandpack: custom',
@@ -140,16 +139,6 @@ const MultiplePreviewsAndListenersTemplate = () => ({
 });
 export const MultiplePreviewsAndListeners = MultiplePreviewsAndListenersTemplate.bind({});
 
-/** MultiplePreviewsRandomViewports */
-const MultiplePreviewsRandomViewportsTemplate = () => ({
-  components: { MultiplePreviewsRandomViewportsStory },
-  setup() {
-    return {};
-  },
-  template: '<MultiplePreviewsRandomViewportsStory />',
-});
-export const MultiplePreviewsRandomViewports = MultiplePreviewsRandomViewportsTemplate.bind({});
-
 /** ClosableTabs */
 export const ClosableTabs = () => (
   <Sandpack
@@ -230,11 +219,10 @@ export const CustomNpmRegistries = () => (
     customSetup={{
       dependencies: { '@codesandbox/test-package': '1.0.5' },
       npmRegistries: [
-        // @ts-ignore
         {
           enabledScopes: ['@codesandbox'],
           limitToScopes: true,
-          registryUrl: 'https://1gemwv-4000.preview.csb.app',
+          registryUrl: 'https://xywctu-4000.preview.csb.app',
         },
       ],
     }}

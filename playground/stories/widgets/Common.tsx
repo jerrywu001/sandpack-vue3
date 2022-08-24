@@ -116,5 +116,3 @@ export const ListenerIframeMessage = defineComponent({
     );
   },
 });
-
-export const VIEWPORTS = ['Pixel 2', 'Moto G4', 'iPhone X'];
