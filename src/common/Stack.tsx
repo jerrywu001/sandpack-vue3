@@ -8,11 +8,17 @@ export const stackClassName = css({
   flexDirection: 'column',
   width: '100%',
   position: 'relative',
+  backgroundColor: '$colors$surface1',
+  transition: 'flex $transitions$default',
+  gap: 1, // border between components
+
+  [`&:has(.${THEME_PREFIX}-stack)`]: {
+    backgroundColor: '$colors$surface2',
+  },
 });
 
 export const SandpackStack = defineComponent({
   name: 'SandpackStack',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,

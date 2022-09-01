@@ -11,6 +11,7 @@ Object.keys(SANDPACK_THEMES).forEach((themeName) => stories.add(themeName, () =>
       showNavigator: true,
       showTabs: true,
     }}
+    template="react"
     theme={themeName as keyof typeof SANDPACK_THEMES}
   />
 )));

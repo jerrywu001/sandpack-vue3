@@ -76,7 +76,6 @@ const sidesClassNames = css({
 
 export const Loading = defineComponent({
   name: 'Loading',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,

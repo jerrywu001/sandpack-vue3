@@ -5,3 +5,5 @@ export * from './code-viewer';
 export * from './navigator';
 export * from './preview';
 export * from './transpiled-code';
+export * from './console';
+export * from './tests';

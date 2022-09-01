@@ -3,7 +3,7 @@ import { useSandpack } from '../contexts/sandpackContext';
 import { defineComponent, PropType } from 'vue';
 import { RunIcon } from '../icons';
 import { classNames } from '../utils/classNames';
-import { actionButtonClassName, buttonClassName } from '../styles/shared';
+import { roundedButtonClassName, buttonClassName } from '../styles/shared';
 import { css, THEME_PREFIX } from '../styles';
 
 const runButtonClassName = css({
@@ -15,7 +15,6 @@ const runButtonClassName = css({
 
 export const RunButton = defineComponent({
   name: 'RunButton',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,
@@ -36,7 +35,7 @@ export const RunButton = defineComponent({
         class={classNames(
           c('button'),
           buttonClassName,
-          actionButtonClassName,
+          roundedButtonClassName,
           runButtonClassName,
           props.className,
         )}

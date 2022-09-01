@@ -2,7 +2,6 @@ import {
   SandpackCodeEditor,
   SandpackLayout,
   SandpackProvider,
-  SandpackStack,
   SandpackTranspiledCode,
 } from 'codesandbox-sandpack-vue3';
 
@@ -26,9 +25,7 @@ const str = \`<div>\${text}</div>\`
   >
     <SandpackLayout>
       <SandpackCodeEditor />
-      <SandpackStack>
-        <SandpackTranspiledCode />
-      </SandpackStack>
+      <SandpackTranspiledCode />
     </SandpackLayout>
   </SandpackProvider>
 );

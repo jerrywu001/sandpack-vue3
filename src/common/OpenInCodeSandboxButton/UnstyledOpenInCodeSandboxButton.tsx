@@ -41,7 +41,6 @@ const getFileParameters = (
 
 export const UnstyledOpenInCodeSandboxButton = defineComponent({
   name: 'UnstyledOpenInCodeSandboxButton',
-  inheritAttrs: true,
   setup(_, { slots }) {
     let timer: NodeJS.Timeout;
     const { sandpack } = useSandpack();
@@ -80,7 +79,13 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
         onClick={(): void => formRef.value?.submit()}
         title="Open in CodeSandbox"
       >
-        <form ref={formRef} action={CSB_URL} method="POST" target="_blank">
+        <form
+          ref={formRef}
+          action={CSB_URL}
+          method="POST"
+          style={{ visibility: 'hidden' }}
+          target="_blank"
+        >
           {Array.from(
             paramsValues as unknown as Array<[string, string]>,
             ([key, value]) => (

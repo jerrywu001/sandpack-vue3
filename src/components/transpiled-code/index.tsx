@@ -8,6 +8,7 @@ import { Decorators } from '../code-editor';
 import { SandpackInitMode } from '../../types';
 import { css, THEME_PREFIX } from '../../styles';
 import { classNames } from '../../utils/classNames';
+import { stackClassName } from '../..';
 
 const transpiledCodeClassName = css({
   display: 'flex',
@@ -21,7 +22,6 @@ const transpiledCodeClassName = css({
 
 export const SandpackTranspiledCode = defineComponent({
   name: 'SandpackTranspiledCode',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,
@@ -87,6 +87,7 @@ export const SandpackTranspiledCode = defineComponent({
       <div
         class={classNames(
           c('transpiled-code'),
+          stackClassName,
           transpiledCodeClassName,
           props.className,
         )}

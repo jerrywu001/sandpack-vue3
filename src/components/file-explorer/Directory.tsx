@@ -25,7 +25,6 @@ export interface Props extends SandpackFileExplorerProp {
  */
 export const Directory = defineComponent({
   name: 'Directory',
-  inheritAttrs: true,
   props: {
     prefixedPath: {
       type: String,

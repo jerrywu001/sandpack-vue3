@@ -19,16 +19,17 @@ import {
 } from '../styles';
 import { SandpackTheme, SandpackThemeProp } from '../types';
 import { useClasser } from 'code-hike-classer-vue3';
-import { isDarkColor } from '../utils/stringUtils';
 
 interface SandpackThemeProviderContext {
   theme: SandpackTheme;
   id: string;
+  mode: 'dark' | 'light';
 }
 
 interface IProp extends HTMLAttributes {
   theme?: SandpackThemeProp;
   className?: string;
+  mode?: 'dark' | 'light';
 }
 
 const wrapperClassName = css({
@@ -60,7 +61,6 @@ const SandpackThemeContext: InjectionKey<SandpackThemeProviderContext> = Symbol(
 
 const SandpackThemeProvider = defineComponent({
   name: 'SandpackThemeProvider',
-  inheritAttrs: true,
   props: {
     theme: {
       type: [String, Object] as PropType<SandpackThemeProp>,
@@ -72,16 +72,19 @@ const SandpackThemeProvider = defineComponent({
       required: false,
       default: '',
     },
+    mode: {
+      type: String,
+      required: false,
+      default: 'light',
+    },
   },
   setup(props, { slots }) {
-    const { theme, id = '' } = standardizeTheme(props.theme);
+    const { theme, id = '', mode = 'light' } = standardizeTheme(props.theme);
     const c = useClasser(THEME_PREFIX);
-    const isDarkTheme = ref(false);
     const themeClassName = ref({} as any);
-    const context = reactive({ theme, id });
+    const context = reactive({ theme, id, mode });
 
     if (context.theme) {
-      isDarkTheme.value = isDarkColor(theme.colors.surface1);
       themeClassName.value = createTheme(id, standardizeStitchesTheme(theme));
       provide(SandpackThemeContext, context);
     }
@@ -91,7 +94,6 @@ const SandpackThemeProvider = defineComponent({
       if (props.theme) {
         context.id = newId;
         context.theme = newTheme;
-        isDarkTheme.value = isDarkColor(theme.colors.surface1);
         themeClassName.value = createTheme(newId, standardizeStitchesTheme(newTheme));
       }
     };
@@ -107,7 +109,7 @@ const SandpackThemeProvider = defineComponent({
         class={classNames(
           c('wrapper'),
           themeClassName.value.toString(),
-          wrapperClassName({ variant: isDarkTheme.value ? 'dark' : 'light' }),
+          wrapperClassName({ variant: mode }),
           props.className,
         )}
       >

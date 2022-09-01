@@ -1,9 +1,10 @@
 import { classNames } from '../../utils/classNames';
-import { css } from '../../styles';
+import { css, THEME_PREFIX } from '../../styles';
 import { DefineComponent, defineComponent } from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
 import { ModuleList } from './ModuleList';
+import { stackClassName } from '../..';
 import { useSandpack } from '../../contexts/sandpackContext';
 
 export interface SandpackFileExplorerProp {
@@ -27,7 +28,6 @@ const fileExplorerClassName = css({
  */
 export const SandpackFileExplorer = defineComponent({
   name: 'SandpackFileExplorer',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,
@@ -44,7 +44,14 @@ export const SandpackFileExplorer = defineComponent({
     const { sandpack } = useSandpack();
 
     return () => (
-      <div class={classNames(fileExplorerClassName, props.className)}>
+      <div
+        class={classNames(
+          stackClassName,
+          fileExplorerClassName,
+          `${THEME_PREFIX}-file-explorer`,
+          props.className,
+        )}
+      >
         <ModuleList
           activeFile={sandpack.activeFile}
           autoHiddenFiles={props.autoHiddenFiles}

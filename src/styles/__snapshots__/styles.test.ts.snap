@@ -16,8 +16,8 @@ exports[`standardizeStitchesTheme > converts a theme to the stitches format 1`] 
     "surface1": "red",
     "surface2": "red",
     "surface3": "red",
-    "warning": "#6A4516",
-    "warningSurface": "#FEF2C0",
+    "warning": "#E7C400",
+    "warningSurface": "#3A3000",
   },
   "font": {
     "body": "",
@@ -26,6 +26,7 @@ exports[`standardizeStitchesTheme > converts a theme to the stitches format 1`] 
     "size": "14px",
   },
   "layout": {
+    "headerHeight": "40px",
     "height": "300px",
   },
   "space": {
@@ -67,7 +68,8 @@ exports[`standardizeStitchesTheme > converts a theme to the stitches format 1`] 
 
 exports[`standardizeTheme > should return a custom theme 1`] = `
 {
-  "id": "sp-376277195",
+  "id": "sp-634349132",
+  "mode": "dark",
   "theme": {
     "colors": {
       "accent": "red",
@@ -80,8 +82,8 @@ exports[`standardizeTheme > should return a custom theme 1`] = `
       "surface1": "red",
       "surface2": "red",
       "surface3": "red",
-      "warning": "#6A4516",
-      "warningSurface": "#FEF2C0",
+      "warning": "#E7C400",
+      "warningSurface": "#3A3000",
     },
     "font": {
       "body": "",
@@ -107,6 +109,7 @@ exports[`standardizeTheme > should return a custom theme 1`] = `
 exports[`standardizeTheme > should return a custom theme merged with the default 1`] = `
 {
   "id": "sp-1791144801",
+  "mode": "light",
   "theme": {
     "colors": {
       "accent": "blue",
@@ -149,6 +152,7 @@ exports[`standardizeTheme > should return a custom theme merged with the default
 exports[`standardizeTheme > should return the \`dark\` theme 1`] = `
 {
   "id": "dark",
+  "mode": "light",
   "theme": {
     "colors": {
       "accent": "#E5E5E5",
@@ -190,7 +194,8 @@ exports[`standardizeTheme > should return the \`dark\` theme 1`] = `
 
 exports[`standardizeTheme > should return the default theme 1`] = `
 {
-  "id": "sp-default",
+  "id": "light",
+  "mode": "light",
   "theme": {
     "colors": {
       "accent": "#3973E0",

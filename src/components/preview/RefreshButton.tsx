@@ -4,7 +4,7 @@ import { DefineComponent, defineComponent } from 'vue';
 import { useSandpackNavigation } from '../../hooks/useSandpackNavigation';
 import { RefreshIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';
-import { actionButtonClassName, buttonClassName, iconStandaloneClassName } from '../../styles/shared';
+import { roundedButtonClassName, buttonClassName, iconStandaloneClassName } from '../../styles/shared';
 
 interface RefreshButtonProps {
   clientId?: string;
@@ -12,7 +12,6 @@ interface RefreshButtonProps {
 
 export const RefreshButton = defineComponent({
   name: 'RefreshButton',
-  inheritAttrs: true,
   props: {
     clientId: {
       type: String,
@@ -30,7 +29,7 @@ export const RefreshButton = defineComponent({
           c('button', 'icon-standalone'),
           buttonClassName,
           iconStandaloneClassName,
-          actionButtonClassName,
+          roundedButtonClassName,
         )}
         onClick={refresh}
         title="Refresh Sandpack"

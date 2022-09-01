@@ -23,17 +23,24 @@ const tabsScrollableClassName = css({
 });
 
 const closeButtonClassName = css({
-  padding: '0px $space$1 2px $space$1',
-  borderRadius: '$border-radius',
+  padding: '0 $space$1 0 $space$1',
+  borderRadius: '$border$radius',
   marginLeft: '$space$1',
-  width: '20px',
+  width: '$space$5',
   visibility: 'hidden',
+
+  svg: {
+    width: '$space$3',
+    height: '$space$3',
+    display: 'block',
+    position: 'relative',
+    top: 1,
+  },
 });
 
 export const tabButton = css({
-  display: 'block',
   padding: '0 $space$2',
-  height: '40px',
+  height: '$layout$headerHeight',
   whiteSpace: 'nowrap',
 
   '&:focus': { outline: 'none' },
@@ -54,7 +61,6 @@ export interface FileTabsProps {
  */
 export const FileTabs = defineComponent({
   name: 'FileTabs',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,

@@ -1,4 +1,4 @@
-import { actionButtonClassName, buttonClassName, iconStandaloneClassName } from '../../styles/shared';
+import { roundedButtonClassName, buttonClassName, iconStandaloneClassName } from '../../styles/shared';
 import { classNames } from '../../utils/classNames';
 import { defineComponent } from 'vue';
 import { ExportIcon } from '../../icons';
@@ -8,7 +8,6 @@ import { THEME_PREFIX } from '../../styles';
 
 export const OpenInCodeSandboxButton = defineComponent({
   name: 'OpenInCodeSandboxButton',
-  inheritAttrs: true,
   setup() {
     const c = useClasser(THEME_PREFIX);
 
@@ -18,7 +17,7 @@ export const OpenInCodeSandboxButton = defineComponent({
           c('button', 'icon-standalone'),
           buttonClassName,
           iconStandaloneClassName,
-          actionButtonClassName,
+          roundedButtonClassName,
         )}
       >
         <ExportIcon />

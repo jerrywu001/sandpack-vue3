@@ -13,6 +13,7 @@ export default {
 export const Component = () => (
   <SandpackProvider template="react">
     <SandpackThemeProvider>
+      {/* @ts-ignore */}
       <Navigator />
     </SandpackThemeProvider>
   </SandpackProvider>

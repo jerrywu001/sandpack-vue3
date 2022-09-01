@@ -2,7 +2,7 @@ import { buttonClassName } from '../../styles/shared';
 import { classNames } from '../../utils/classNames';
 import { computed, DefineComponent, defineComponent } from 'vue';
 import { css, THEME_PREFIX } from '../../styles';
-import { DirectoryIcon, FileIcon } from '../../icons';
+import { DirectoryIconOpen, DirectoryIconClosed, FileIcon } from '../../icons';
 import { useClasser } from 'code-hike-classer-vue3';
 
 const explorerClassName = css({
@@ -30,7 +30,6 @@ export interface Props {
  */
 export const File = defineComponent({
   name: 'File',
-  inheritAttrs: true,
   props: {
     path: {
       type: String,
@@ -85,7 +84,11 @@ export const File = defineComponent({
         style={{ paddingLeft: 9 * props.depth + 'px' }}
         type="button"
       >
-        {props.selectFile ? <FileIcon /> : <DirectoryIcon isOpen={props.isDirOpen} />}
+        {
+          props.selectFile
+            ? <FileIcon />
+            : props.isDirOpen ? <DirectoryIconOpen /> : <DirectoryIconClosed />
+        }
         {fileName.value}
       </button>
     );

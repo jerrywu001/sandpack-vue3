@@ -142,10 +142,7 @@ export const MultiplePreviewsAndListeners = MultiplePreviewsAndListenersTemplate
 /** ClosableTabs */
 export const ClosableTabs = () => (
   <Sandpack
-    files={{
-      '/test.js': '// test',
-    }}
-    options={{ closableTabs: true }}
+    options={{ closableTabs: true, visibleFiles: ['/App.js', '/index.js'] }}
     template="react"
   />
 );

@@ -7,7 +7,6 @@ import { absoluteClassName, errorClassName, errorMessageClassName } from '../sty
 
 export const ErrorOverlay = defineComponent({
   name: 'ErrorOverlay',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,

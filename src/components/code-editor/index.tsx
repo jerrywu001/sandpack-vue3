@@ -100,6 +100,7 @@ export interface CodeEditorProps {
   showTabs?: boolean;
   showLineNumbers?: boolean;
   showInlineErrors?: boolean;
+  showRunButton?: boolean;
   wrapContent?: boolean;
   closableTabs?: boolean;
   /**
@@ -136,7 +137,6 @@ export interface CodeEditorProps {
 
 export const SandpackCodeEditor = defineComponent({
   name: 'SandpackCodeEditor',
-  inheritAttrs: true,
   props: {
     style: {
       type: Object as PropType<CSSProperties>,
@@ -213,7 +213,7 @@ export const SandpackCodeEditor = defineComponent({
     };
 
     return () => (
-      <SandpackStack style={props.style}>
+      <SandpackStack class={c('editor')} style={props.style}>
         {shouldShowTabs.value && <FileTabs closableTabs={props.closableTabs} />}
 
         <div class={classNames(c('code-editor'), editorClassName)}>

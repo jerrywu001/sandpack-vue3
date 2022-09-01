@@ -101,6 +101,8 @@ export interface SandpackOptions {
   showInlineErrors?: boolean;
   showRefreshButton?: boolean;
   showTabs?: boolean;
+  showConsoleButton?: boolean;
+  showConsole?: boolean;
   closableTabs?: boolean;
   wrapContent?: boolean;
 
@@ -230,6 +232,7 @@ export type SandpackPredefinedTemplate =
   | 'angular'
   | 'react'
   | 'react-ts'
+  | 'test-ts'
   | 'vanilla'
   | 'vanilla-ts'
   | 'vue'
@@ -448,6 +451,8 @@ export interface SandpackInternalProps<
     showInlineErrors?: boolean;
     showRefreshButton?: boolean;
     showTabs?: boolean;
+    showConsoleButton?: boolean;
+    showConsole?: boolean;
     closableTabs?: boolean;
     wrapContent?: boolean;
 

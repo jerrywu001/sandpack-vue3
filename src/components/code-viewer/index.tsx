@@ -41,7 +41,6 @@ export interface CodeViewerProps {
 
 export const SandpackCodeViewer = defineComponent({
   name: 'SandpackCodeViewer',
-  inheritAttrs: true,
   props: {
     showTabs: {
       type: Boolean,

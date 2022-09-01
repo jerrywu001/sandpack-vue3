@@ -19,7 +19,6 @@ import { cmClassName, placeholderClassName, readOnlyClassName, tokensClassName }
  */
 const CodeMirror = defineComponent({
   name: 'CodeMirror',
-  inheritAttrs: true,
   props: CodeMirrorProperties,
   // @ts-ignore
   setup(props: CodeMirrorProps, ctx) {

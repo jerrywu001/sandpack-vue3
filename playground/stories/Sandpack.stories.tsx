@@ -1,5 +1,5 @@
 /* eslint-disable no-promise-executor-return */
-import { Sandpack } from 'codesandbox-sandpack-vue3';
+import { REACT_TEMPLATE, Sandpack } from 'codesandbox-sandpack-vue3';
 
 export default {
   title: 'presets/Sandpack: options',
@@ -35,6 +35,27 @@ export default function App() {
     }}
     template="react"
   />
+);
+
+export const ShowConsoleButton = () => (
+  <div style={{ width: 800 }}>
+    <Sandpack
+      files={{
+        '/index.js': `${REACT_TEMPLATE.files['/index.js'].code};
+
+        console.error("Something went wrong");
+
+        console.log(function helloWord() {})
+        `,
+      }}
+      options={{
+        showConsoleButton: true,
+        showConsole: true,
+        // editorHeight: 350,
+      }}
+      template="react"
+    />
+  </div>
 );
 
 export const CustomSetup = () => (

@@ -57,7 +57,6 @@ const SandpackStateContext: InjectionKey<UnwrapNestedRefs<SandpackState>> = Symb
  */
 const SandpackProvider = defineComponent({
   name: 'SandpackProvider',
-  inheritAttrs: true,
   props: {
     files: {
       type: Object as PropType<SandpackFiles>,
@@ -599,7 +598,7 @@ const SandpackProvider = defineComponent({
       <ClasserProvider classes={props.options?.classes}>
         <SandpackThemeProvider
           style={props.style}
-          className={props.className}
+          class={props.className}
           theme={props.theme as SandpackThemeProp}
         >
           { slots.default ? slots.default() : null }

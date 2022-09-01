@@ -8,4 +8,5 @@ import { useContext } from './context';
 export const useSandpackTheme = (): SandpackThemeProviderContext => useContext(SandpackThemeContext, {
   theme: defaultLight,
   id: 'light',
+  mode: 'light',
 });

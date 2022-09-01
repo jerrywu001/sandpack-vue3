@@ -16,9 +16,9 @@ import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 const navigatorClassName = css({
   display: 'flex',
   alignItems: 'center',
-  height: '40px',
+  height: '$layout$headerHeight',
   borderBottom: '1px solid $colors$surface2',
-  padding: '$space$2 $space$4',
+  padding: '$space$3 $space$2',
   background: '$colors$surface1',
 });
 
@@ -35,7 +35,7 @@ const inputClassName = css({
   flex: 1,
   marginLeft: '$space$4',
   width: '0',
-  transition: 'all $transitions$default',
+  transition: 'background $transitions$default',
 
   '&:hover': {
     backgroundColor: '$colors$surface3',
@@ -60,13 +60,12 @@ const splitUrl = (url: string): string[] => {
 
 interface NavigatorProps {
   className?: string;
-  clientId?: string;
+  clientId: string;
   onURLChange?: (newURL: string) => void;
 }
 
 export const Navigator = defineComponent({
   name: 'Navigator',
-  inheritAttrs: true,
   props: {
     className: {
       type: String,
@@ -75,8 +74,7 @@ export const Navigator = defineComponent({
     },
     clientId: {
       type: String,
-      required: false,
-      default: undefined,
+      required: true,
     },
     onURLChange: {
       type: Function as PropType<(newURL: string) => void>,
@@ -149,17 +147,23 @@ export const Navigator = defineComponent({
       dispatch({ type: 'urlforward' });
     };
 
+    const buttonsClassNames = classNames(
+      c('button', 'icon'),
+      buttonClassName,
+      iconClassName,
+      css({
+        minWidth: '$space$6',
+        justifyContent: 'center',
+      }),
+    );
+
     return () => (
       <div
         class={classNames(c('navigator'), navigatorClassName, props.className)}
       >
         <button
           aria-label="Go back one page"
-          class={classNames(
-            c('button', 'icon'),
-            buttonClassName,
-            iconClassName,
-          )}
+          class={buttonsClassNames}
           disabled={!backEnabled.value}
           onClick={handleBack}
           type="button"
@@ -168,11 +172,7 @@ export const Navigator = defineComponent({
         </button>
         <button
           aria-label="Go forward one page"
-          class={classNames(
-            c('button', 'icon'),
-            buttonClassName,
-            iconClassName,
-          )}
+          class={buttonsClassNames}
           disabled={!forwardEnabled.value}
           onClick={handleForward}
           type="button"
@@ -181,11 +181,7 @@ export const Navigator = defineComponent({
         </button>
         <button
           aria-label="Refresh page"
-          class={classNames(
-            c('button', 'icon'),
-            buttonClassName,
-            iconClassName,
-          )}
+          class={buttonsClassNames}
           onClick={handleRefresh}
           type="button"
         >

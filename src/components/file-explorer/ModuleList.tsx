@@ -27,7 +27,6 @@ export interface ModuleListProps extends SandpackFileExplorerProp {
  */
 export const ModuleList = defineComponent({
   name: 'ModuleList',
-  inheritAttrs: true,
   props: {
     prefixedPath: {
       type: String,

@@ -25,7 +25,6 @@ const loadingClassName = css({
 
 export const LoadingOverlay = defineComponent({
   name: 'LoadingOverlay',
-  inheritAttrs: true,
   props: {
     clientId: String,
     loading: Boolean,

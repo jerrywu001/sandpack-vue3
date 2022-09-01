@@ -1,11 +1,15 @@
 import * as icons from 'codesandbox-sandpack-vue3/icons';
-import { storiesOf } from '@storybook/vue3';
 
-const stories = storiesOf('Components/Icons', module);
+export default {
+  title: 'components/Icons',
+};
 
-Object.keys(icons).forEach((iconName) => stories.add(iconName, () => {
-  // @ts-ignore
-  const Component = icons[iconName];
+export const all = () => (
+  <div style={{ color: 'black' }}>
+    {Object.keys(icons).map((iconName) => {
+      const Component = icons[iconName];
 
-  return <Component />;
-}));
+      return <Component key={iconName} />;
+    })}
+  </div>
+);
