@@ -7,14 +7,7 @@ import { absoluteClassName, errorClassName, errorMessageClassName } from '../sty
 
 export const ErrorOverlay = defineComponent({
   name: 'ErrorOverlay',
-  props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
-  },
-  setup(props, { slots }) {
+  setup(_, { slots, attrs }) {
     const error = useErrorMessage();
     const c = useClasser(THEME_PREFIX);
 
@@ -28,7 +21,7 @@ export const ErrorOverlay = defineComponent({
                 c('overlay', 'error'),
                 absoluteClassName,
                 errorClassName,
-                props.className,
+                attrs?.class || '',
               )}
             >
               <div class={classNames(c('error-message'), errorMessageClassName)}>

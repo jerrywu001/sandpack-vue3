@@ -1,4 +1,4 @@
-import { defineComponent, DefineComponent, Fragment, HTMLAttributes, PropType, ref, watch } from 'vue';
+import { defineComponent, DefineComponent, Fragment, PropType, ref, watch } from 'vue';
 import { SandpackStack } from '../../common';
 import { css, THEME_PREFIX } from '../../styles';
 import { classNames } from '../../utils/classNames';
@@ -10,7 +10,7 @@ import { useSandpackConsole } from './useSandpackConsole';
 import { fromConsoleToString } from './utils/fromConsoleToString';
 import { getType, type SandpackConsoleData } from './utils/getType';
 
-interface SandpackConsoleProps extends HTMLAttributes {
+interface SandpackConsoleProps {
   clientId?: string;
   showHeader?: boolean;
   showSyntaxError?: boolean;
@@ -53,7 +53,7 @@ export const SandpackConsole = defineComponent({
       default: undefined,
     },
   },
-  setup(props: SandpackConsoleProps) {
+  setup(props: SandpackConsoleProps, { attrs }) {
     const { logs, reset } = useSandpackConsole({
       clientId: props.clientId,
       maxMessageCount: props.maxMessageCount,
@@ -64,6 +64,7 @@ export const SandpackConsole = defineComponent({
     watch(
       [
         () => props.onLogsChange,
+        wrapperRef,
         logs,
       ],
       () => {
@@ -83,7 +84,7 @@ export const SandpackConsole = defineComponent({
         class={classNames(
           css({ height: '100%', background: '$surface1' }),
           `${THEME_PREFIX}-console`,
-          props.class,
+          attrs?.class || '',
         )}
       >
         {props.showHeader && <Header />}

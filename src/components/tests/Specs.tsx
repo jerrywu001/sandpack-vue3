@@ -28,10 +28,6 @@ interface Props {
   openSpec: (name: string) => void;
 }
 
-interface ISpecLabelProp {
-  class: string;
-}
-
 const fileContainer = css({
   display: 'flex',
   flexDirection: 'row',
@@ -196,23 +192,16 @@ export const Specs = defineComponent({
 
 export const SpecLabel = defineComponent({
   name: 'SpecLabel',
-  props: {
-    class: {
-      type: String,
-      required: true,
-    },
-  },
-  // @ts-ignore
-  setup(props: ISpecLabelProp, { slots }) {
+  setup(_, { slots, attrs }) {
     return () => (
-      <span class={classNames(specLabelClassName, props.class)}>
+      <span class={classNames(specLabelClassName, attrs?.class || '')}>
         {
           slots.default ? slots.default() : null
         }
       </span>
     );
   },
-}) as DefineComponent<ISpecLabelProp>;
+});
 
 export const FilePath = defineComponent({
   name: 'FilePath',

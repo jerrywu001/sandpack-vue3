@@ -15,6 +15,7 @@ import {
   defineComponent,
   PropType,
   ref,
+  StyleValue,
 } from 'vue';
 
 import type { EditorState as SandpackEditorState, SandpackInitMode } from '../../types';
@@ -199,7 +200,7 @@ export const SandpackCodeEditor = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: CodeEditorProps) {
+  setup(props: CodeEditorProps, { attrs }) {
     const { sandpack } = useSandpack();
     const { code, readOnly: readOnlyFile } = useActiveCode();
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.visibleFiles?.length > 1));
@@ -213,7 +214,7 @@ export const SandpackCodeEditor = defineComponent({
     };
 
     return () => (
-      <SandpackStack class={c('editor')} style={props.style}>
+      <SandpackStack class={c('editor')} style={(attrs?.style || {}) as StyleValue}>
         {shouldShowTabs.value && <FileTabs closableTabs={props.closableTabs} />}
 
         <div class={classNames(c('code-editor'), editorClassName)}>

@@ -1,9 +1,7 @@
 import { dracula } from '@codesandbox/sandpack-themes';
 import * as themes from '@codesandbox/sandpack-themes';
 
-import { SandpackProvider, SandpackLayout, SandpackCodeEditor } from '../..';
-
-import { SandpackTests } from '.';
+import { SandpackTests, SandpackProvider, SandpackLayout, SandpackCodeEditor } from 'codesandbox-sandpack-vue3';
 import { ref } from 'vue';
 
 export default {

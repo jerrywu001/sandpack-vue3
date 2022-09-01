@@ -8,6 +8,7 @@ import {
   // SandpackTranspiledCode,
   // SandpackProvider,
   // SandpackCodeEditor,
+  SandpackConsole,
   SandpackPredefinedTemplate,
   SandpackTheme,
 } from 'codesandbox-sandpack-vue3';
@@ -79,6 +80,9 @@ const toggleReadOnly = () => {
       <SandpackLayout>
         <SandpackCodeEditor />
         <SandpackTranspiledCode />
+      </SandpackLayout>
+      <SandpackLayout>
+        <SandpackConsole />
       </SandpackLayout>
     </SandpackProvider>
 

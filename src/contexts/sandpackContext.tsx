@@ -19,6 +19,7 @@ import {
   onMounted,
   UnwrapNestedRefs,
   nextTick,
+  StyleValue,
 } from 'vue';
 import type {
   BundlerState,
@@ -85,7 +86,7 @@ const SandpackProvider = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: SandpackProviderProps, { slots }) {
+  setup(props: SandpackProviderProps, { attrs, slots }) {
     let debounceHook: number = 0;
     let timeoutHook: NodeJS.Timer | null = null;
     let initializeSandpackIframeHook: NodeJS.Timer | null = null;
@@ -597,8 +598,8 @@ const SandpackProvider = defineComponent({
     return () => (
       <ClasserProvider classes={props.options?.classes}>
         <SandpackThemeProvider
-          style={props.style}
-          class={props.className}
+          style={(attrs?.style || {}) as StyleValue}
+          class={attrs?.class || ''}
           theme={props.theme as SandpackThemeProp}
         >
           { slots.default ? slots.default() : null }

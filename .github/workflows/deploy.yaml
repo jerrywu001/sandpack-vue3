@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      https://github.com/marketplace/actions/netlify-deploy
+      # https://github.com/marketplace/actions/netlify-deploy
       - name: deploy to netlify
         uses: jsmrcaga/action-netlify-deploy@v1.8.0
         with:

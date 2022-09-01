@@ -4,7 +4,7 @@ import { classNames } from '../utils/classNames';
 import { ConsoleIcon } from '../icons';
 import { SandpackTests } from '../components/tests';
 import { css } from '../styles';
-import { SandpackLayout, SandpackStack } from '../common';
+import { SandpackLayout } from '../common';
 import { SandpackProvider } from '../contexts/sandpackContext';
 import {
   CodeEditorProps,
@@ -16,7 +16,6 @@ import {
   computed,
   DefineComponent,
   defineComponent,
-  Fragment,
   PropType,
   ref,
 } from 'vue';
@@ -31,6 +30,7 @@ import {
   TemplateFiles,
 } from '../types';
 import { SANDBOX_TEMPLATES } from '..';
+import { SandpackRender } from './SandpackRender';
 
 const SandpackPropValues = {
   files: {
@@ -112,17 +112,6 @@ const Sandpack = defineComponent({
      */
     const editorPart = computed(() => props.options?.editorWidthPercentage || 50);
     const previewPart = computed(() => 100 - editorPart.value);
-    // const editorHeight = computed(() => {
-    //   let height: string | number | undefined = props.options?.editorHeight;
-    //   if (height) {
-    //     height = typeof height === 'number' ? `${height}px` : height;
-    //   }
-    //   return props.options?.editorHeight ? height : undefined;
-    // });
-
-    const RightColumn = computed(() => props.options?.showConsole || props.options?.showConsoleButton
-      ? SandpackStack
-      : Fragment);
 
     const rightColumnStyle = computed(() => ({
       flexGrow: previewPart.value,
@@ -162,14 +151,16 @@ const Sandpack = defineComponent({
               minWidth: 700 * (editorPart.value / (previewPart.value + editorPart.value)),
             }}
           />
-          {/* @ts-ignore */}
-          <RightColumn.value style={rightColumnStyle}>
+          <SandpackRender
+            fragment={props.options?.showConsole || props.options?.showConsoleButton}
+            style={rightColumnStyle.value}
+          >
             {mode.value === 'preview' && (
               <SandpackPreview
                 actionsChildren={actionsChildren.value}
                 showNavigator={props.options?.showNavigator}
                 showRefreshButton={props.options?.showRefreshButton}
-                style={rightColumnStyle}
+                style={rightColumnStyle.value}
               />
             )}
             {mode.value === 'tests' && (
@@ -179,7 +170,7 @@ const Sandpack = defineComponent({
               />
             )}
 
-            {(props.options?.showConsoleButton || consoleVisibility) && (
+            {(props.options?.showConsoleButton || consoleVisibility.value) && (
               <div
                 class={consoleWrapper.toString()}
                 style={{
@@ -192,7 +183,7 @@ const Sandpack = defineComponent({
                 />
               </div>
             )}
-          </RightColumn.value>
+          </SandpackRender>
         </SandpackLayout>
       </SandpackProvider>
     );

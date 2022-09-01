@@ -3,7 +3,6 @@ import { css, THEME_PREFIX } from '../../styles';
 import {
   DefineComponent,
   defineComponent,
-  HtmlHTMLAttributes,
   onBeforeUnmount,
   onUnmounted,
   PropType,
@@ -60,7 +59,7 @@ const INITIAL_STATE: State = {
   specsCount: 0,
 };
 
-interface Props extends HtmlHTMLAttributes {
+interface Props {
   verbose?: boolean;
   watchMode?: boolean;
   onComplete?: (specs: Record<string, Spec>) => void;
@@ -68,7 +67,8 @@ interface Props extends HtmlHTMLAttributes {
 }
 
 export const SandpackTests = defineComponent({
-  porps: {
+  name: 'SandpackTests',
+  props: {
     verbose: {
       type: Boolean,
       required: false,
@@ -90,7 +90,7 @@ export const SandpackTests = defineComponent({
       default: null,
     },
   },
-  setup(props: Props, { slots }) {
+  setup(props: Props, { slots, attrs }) {
     let unsunscribe: UnsubscribeFunction;
     let unsubscribe: UnsubscribeFunction;
     const testFileRegex = /.*\.(test|spec)\.[tj]sx?$/;
@@ -100,8 +100,8 @@ export const SandpackTests = defineComponent({
 
     const state = ref<State>({
       ...INITIAL_STATE,
-      verbose: props.verbose,
-      watchMode: props.watchMode,
+      verbose: props.verbose || false,
+      watchMode: props.watchMode || true,
     } as State);
 
     watch(
@@ -418,13 +418,13 @@ export const SandpackTests = defineComponent({
     const testResults = getAllTestResults(specs);
     const suiteResults = getAllSuiteResults(specs);
 
-    return (
+    return () => (
       <SandpackStack
         {...props}
-        class={classNames(`${THEME_PREFIX}-tests`, props.class)}
+        class={classNames(`${THEME_PREFIX}-tests`, attrs?.class || '')}
         style={{
           ...setTestTheme(theme.mode === 'dark'),
-          ...props.style as object,
+          ...(attrs?.style || {}) as object,
         }}
       >
         <iframe ref={iframe} style={{ display: 'none' }} title="Sandpack Tests" />

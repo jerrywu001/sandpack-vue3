@@ -1,13 +1,9 @@
 import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../contexts/sandpackContext';
-import { DefineComponent, defineComponent, HtmlHTMLAttributes, Ref, ref, watch } from 'vue';
+import { defineComponent, Ref, ref, watch } from 'vue';
 import { css, THEME_PREFIX } from '../styles';
 import { stackClassName } from './Stack';
 import { classNames } from '../utils/classNames';
-
-export interface SandpackLayoutProps extends HtmlHTMLAttributes {
-  className?: string;
-}
 
 export const layoutClassName = css({
   border: '1px solid $colors$surface2',
@@ -46,14 +42,7 @@ export const layoutClassName = css({
 
 export const SandpackLayout = defineComponent({
   name: 'SandpackLayout',
-  props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
-  },
-  setup(props, { slots }) {
+  setup(_, { slots, attrs }) {
     const lazyAnchorRef = ref<HTMLDivElement>();
     const { sandpack } = useSandpack();
     const c = useClasser(THEME_PREFIX);
@@ -67,10 +56,10 @@ export const SandpackLayout = defineComponent({
     return () => (
       <div
         ref={lazyAnchorRef}
-        class={classNames(c('layout'), layoutClassName, props.className)}
+        class={classNames(c('layout'), layoutClassName, attrs?.class || '')}
       >
         { slots.default ? slots.default() : null }
       </div>
     );
   },
-}) as DefineComponent<SandpackLayoutProps>;
+});

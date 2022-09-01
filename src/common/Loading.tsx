@@ -77,23 +77,18 @@ const sidesClassNames = css({
 export const Loading = defineComponent({
   name: 'Loading',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     showOpenInCodeSandbox: {
       type: Boolean,
       required: true,
       default: false,
     },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const c = useClasser(THEME_PREFIX);
 
     return () => (
       <div
-        class={classNames(c('cube-wrapper'), wrapperClassName, props.className)}
+        class={classNames(c('cube-wrapper'), wrapperClassName, attrs?.class || '')}
         title="Open in CodeSandbox"
       >
         { props.showOpenInCodeSandbox && <OpenInCodeSandboxButton /> }

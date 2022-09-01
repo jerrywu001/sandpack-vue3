@@ -18,6 +18,7 @@ export const REACT_TYPESCRIPT_TEMPLATE = {
     },
     '/App.tsx': {
       code: `export default function App(): JSX.Element {
+  console.log('hello');
   return <h1>Hello World</h1>
 }
 `,

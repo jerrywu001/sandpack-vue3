@@ -59,7 +59,6 @@ const splitUrl = (url: string): string[] => {
 };
 
 interface NavigatorProps {
-  className?: string;
   clientId: string;
   onURLChange?: (newURL: string) => void;
 }
@@ -67,11 +66,6 @@ interface NavigatorProps {
 export const Navigator = defineComponent({
   name: 'Navigator',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     clientId: {
       type: String,
       required: true,
@@ -82,7 +76,7 @@ export const Navigator = defineComponent({
       default: undefined,
     },
   },
-  setup(props: NavigatorProps) {
+  setup(props: NavigatorProps, { attrs }) {
     let unsub: UnsubscribeFunction;
     const baseUrl = ref<string>('');
     const { sandpack, dispatch, listen } = useSandpack();
@@ -159,7 +153,7 @@ export const Navigator = defineComponent({
 
     return () => (
       <div
-        class={classNames(c('navigator'), navigatorClassName, props.className)}
+        class={classNames(c('navigator'), navigatorClassName, attrs?.class || '')}
       >
         <button
           aria-label="Go back one page"

@@ -29,18 +29,13 @@ const fileExplorerClassName = css({
 export const SandpackFileExplorer = defineComponent({
   name: 'SandpackFileExplorer',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     autoHiddenFiles: {
       type: Boolean,
       required: false,
       default: false,
     },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const { sandpack } = useSandpack();
 
     return () => (
@@ -49,7 +44,7 @@ export const SandpackFileExplorer = defineComponent({
           stackClassName,
           fileExplorerClassName,
           `${THEME_PREFIX}-file-explorer`,
-          props.className,
+          attrs?.class || '',
         )}
       >
         <ModuleList

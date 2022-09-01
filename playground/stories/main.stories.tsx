@@ -146,7 +146,7 @@ export const Main = () => {
           <div class="playground-grid">
             {config.Components.FileExplorer && <SandpackFileExplorer />}
             {config.Components.Editor && (
-              <SandpackCodeEditor {...codeEditorOptions} />
+              <SandpackCodeEditor {...codeEditorOptions.value} />
             )}
             {config.Components.Preview && (
               <SandpackPreview

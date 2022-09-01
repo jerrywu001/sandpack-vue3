@@ -16,17 +16,12 @@ const runButtonClassName = css({
 export const RunButton = defineComponent({
   name: 'RunButton',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     onClick: {
       type: Function as PropType<((event: MouseEvent) => void) | undefined>,
       default: null,
     },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const c = useClasser(THEME_PREFIX);
     const { sandpack } = useSandpack();
 
@@ -37,7 +32,7 @@ export const RunButton = defineComponent({
           buttonClassName,
           roundedButtonClassName,
           runButtonClassName,
-          props.className,
+          attrs?.class || '',
         )}
         onClick={(event) => {
           if (sandpack && sandpack.runSandpack) {

@@ -53,7 +53,6 @@ export interface FileTabsProps {
    * This adds a close button next to each file with a unique trigger to close it.
    */
   closableTabs?: boolean;
-  className?: string;
 }
 
 /**
@@ -62,18 +61,13 @@ export interface FileTabsProps {
 export const FileTabs = defineComponent({
   name: 'FileTabs',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     closableTabs: {
       type: Boolean,
       required: false,
       default: undefined,
     },
   },
-  setup(props: FileTabsProps) {
+  setup(props: FileTabsProps, { attrs }) {
     const { sandpack } = useSandpack();
     const c = useClasser(THEME_PREFIX);
 
@@ -119,7 +113,7 @@ export const FileTabs = defineComponent({
 
     return () => (
       <div
-        class={classNames(c('tabs'), tabsClassName, props.className)}
+        class={classNames(c('tabs'), tabsClassName, attrs?.class || '')}
         translate="no"
       >
         <div

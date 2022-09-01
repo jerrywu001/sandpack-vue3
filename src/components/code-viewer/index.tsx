@@ -21,7 +21,6 @@ import { classNames } from '../../utils/classNames';
 import { editorClassName } from '../code-editor/styles';
 
 export interface CodeViewerProps {
-  className?: string;
   showTabs?: boolean;
   showLineNumbers?: boolean;
   /**

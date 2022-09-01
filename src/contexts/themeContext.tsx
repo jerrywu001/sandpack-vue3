@@ -28,7 +28,6 @@ interface SandpackThemeProviderContext {
 
 interface IProp extends HTMLAttributes {
   theme?: SandpackThemeProp;
-  className?: string;
   mode?: 'dark' | 'light';
 }
 
@@ -67,18 +66,13 @@ const SandpackThemeProvider = defineComponent({
       required: false,
       default: undefined,
     },
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     mode: {
       type: String,
       required: false,
       default: 'light',
     },
   },
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     const { theme, id = '', mode = 'light' } = standardizeTheme(props.theme);
     const c = useClasser(THEME_PREFIX);
     const themeClassName = ref({} as any);
@@ -110,7 +104,7 @@ const SandpackThemeProvider = defineComponent({
           c('wrapper'),
           themeClassName.value.toString(),
           wrapperClassName({ variant: mode }),
-          props.className,
+          attrs?.class || '',
         )}
       >
         { slots.default ? slots.default() : null }

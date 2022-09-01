@@ -1,5 +1,5 @@
 import { useClasser } from 'code-hike-classer-vue3';
-import { computed, CSSProperties, DefineComponent, defineComponent, PropType } from 'vue';
+import { computed, DefineComponent, defineComponent } from 'vue';
 import { useLoadingOverlayState, FADE_ANIMATION_DURATION } from '../hooks/useLoadingOverlayState';
 import { css, THEME_PREFIX } from '../styles';
 import { Loading } from './Loading';
@@ -8,8 +8,6 @@ import { absoluteClassName, errorClassName, errorMessageClassName } from '../sty
 import { useSandpack } from '../contexts/sandpackContext';
 
 export interface LoadingOverlayProps {
-  style?: CSSProperties;
-  className?: String;
   clientId?: string;
   /**
    * It enforces keeping the loading state visible,
@@ -28,25 +26,13 @@ export const LoadingOverlay = defineComponent({
   props: {
     clientId: String,
     loading: Boolean,
-    style: {
-      type: Object as PropType<CSSProperties>,
-      required: false,
-      default() {
-        return {};
-      },
-    },
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     showOpenInCodeSandbox: {
       type: Boolean,
       required: true,
       default: false,
     },
   },
-  setup(props: LoadingOverlayProps) {
+  setup(props: LoadingOverlayProps, { attrs }) {
     const { sandpack } = useSandpack();
     const loadingOverlayState = useLoadingOverlayState(props);
     const c = useClasser(THEME_PREFIX);
@@ -62,7 +48,7 @@ export const LoadingOverlay = defineComponent({
           c('overlay', 'error'),
           absoluteClassName,
           errorClassName,
-          props.className,
+          attrs?.class || '',
         )}
       >
         <div class={classNames(c('error-message'), errorMessageClassName)}>
@@ -94,10 +80,11 @@ export const LoadingOverlay = defineComponent({
           c('overlay', 'loading'),
           absoluteClassName,
           loadingClassName,
-          props.className,
+          attrs?.class || '',
         )}
         style={{
-          ...(props.style || {}),
+          // @ts-ignore
+          ...(attrs?.style || {}),
           opacity: sandpack && stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,
           transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
         }}

@@ -19,19 +19,12 @@ export const stackClassName = css({
 
 export const SandpackStack = defineComponent({
   name: 'SandpackStack',
-  props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
-  },
-  setup(props, { slots }) {
+  setup(_, { slots, attrs }) {
     const c = useClasser(THEME_PREFIX);
 
     return () => (
       <div
-        class={classNames(c('stack'), stackClassName, props.className)}
+        class={classNames(c('stack'), stackClassName, attrs?.class || '')}
       >
         { slots.default ? slots.default() : null }
       </div>

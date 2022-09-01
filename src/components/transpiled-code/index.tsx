@@ -23,11 +23,6 @@ const transpiledCodeClassName = css({
 export const SandpackTranspiledCode = defineComponent({
   name: 'SandpackTranspiledCode',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     showTabs: {
       type: Boolean,
       required: false,
@@ -60,7 +55,7 @@ export const SandpackTranspiledCode = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: CodeViewerProps) {
+  setup(props: CodeViewerProps, { attrs }) {
     const { sandpack } = useSandpack();
     const c = useClasser(THEME_PREFIX);
     const hiddenIframeRef = ref<HTMLIFrameElement | null>(null);
@@ -89,7 +84,7 @@ export const SandpackTranspiledCode = defineComponent({
           c('transpiled-code'),
           stackClassName,
           transpiledCodeClassName,
-          props.className,
+          attrs?.class || '',
         )}
       >
         <SandpackCodeViewer

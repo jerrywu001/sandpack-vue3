@@ -21,7 +21,6 @@ import {
 import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 
 export interface PreviewProps {
-  className?: string;
   showNavigator?: boolean;
   showOpenInCodeSandbox?: boolean;
   showRefreshButton?: boolean;
@@ -75,11 +74,6 @@ export interface SandpackPreviewRef {
 export const SandpackPreview = defineComponent({
   name: 'SandpackPreview',
   props: {
-    className: {
-      type: String,
-      required: false,
-      default: '',
-    },
     showNavigator: {
       type: Boolean,
       required: false,
@@ -107,7 +101,7 @@ export const SandpackPreview = defineComponent({
     },
   },
   // @ts-ignore
-  setup(props: PreviewProps, { slots, expose }) {
+  setup(props: PreviewProps, { slots, attrs, expose }) {
     const { sandpack, listen, iframe, getClient, clientId } = useSandpackClient();
     const iframeComputedHeight = ref<number | null>(null);
 
@@ -154,7 +148,7 @@ export const SandpackPreview = defineComponent({
     return () => (
       <SandpackStack
         { ...props }
-        class={classNames(`${THEME_PREFIX}-preview`, props.className)}
+        class={classNames(`${THEME_PREFIX}-preview`, attrs?.class || '')}
       >
         { props.showNavigator && <Navigator clientId={clientId.value} onURLChange={handleNewURL} /> }
 
