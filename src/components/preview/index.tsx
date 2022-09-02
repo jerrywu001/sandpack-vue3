@@ -116,6 +116,8 @@ export const SandpackPreview = defineComponent({
 
     onMounted(() => {
       nextTick(() => {
+        if (unsubscribe) unsubscribe();
+
         unsubscribe = listen((message: SandpackMessage) => {
           if (message.type === 'resize') {
             iframeComputedHeight.value = message.height;

@@ -1,13 +1,15 @@
 import { classNames } from '../../utils/classNames';
 import { css, THEME_PREFIX } from '../../styles';
 import {
+  computed,
   DefineComponent,
   defineComponent,
   onBeforeUnmount,
+  onMounted,
   onUnmounted,
   PropType,
   ref,
-  watch,
+  watchEffect,
 } from 'vue';
 import { failTextClassName, setTestTheme } from './style';
 import { Header } from './Header';
@@ -104,257 +106,6 @@ export const SandpackTests = defineComponent({
       watchMode: props.watchMode || true,
     } as State);
 
-    watch(
-      [
-        () => sandpack.activeFile,
-        state,
-      ],
-      () => {
-        let currentDescribeBlocks: string[] = [];
-        let currentSpec = '';
-
-        unsubscribe = listen((data) => {
-          // Note: short-circuit if message isn't for the currently active spec when `suiteOnly` is true
-          if (
-            state.value.suiteOnly &&
-            (('path' in data && data.path !== sandpack.activeFile) ||
-              ('test' in data &&
-                'path' in data.test &&
-                data.test.path !== sandpack.activeFile))
-          ) {
-            return;
-          }
-
-          if (
-            data.type === 'action' &&
-            data.action === 'clear-errors' &&
-            data.source === 'jest'
-          ) {
-            currentSpec = data.path;
-            return;
-          }
-
-          if (data.type === 'test') {
-            if (data.event === 'initialize_tests') {
-              currentDescribeBlocks = [];
-              currentSpec = '';
-              if (state.value.watchMode) {
-                return runAllTests();
-              } else {
-                state.value = {
-                  ...state.value,
-                  status: 'idle',
-                  specs: {},
-                };
-                return;
-              }
-            }
-
-            if (data.event === 'test_count') {
-              state.value = {
-                ...state.value,
-                specsCount: data.count,
-              };
-              return;
-            }
-
-            if (data.event === 'total_test_start') {
-              currentDescribeBlocks = [];
-              state.value = {
-                ...state.value,
-                status: 'running',
-              };
-              return;
-            }
-
-            if (data.event === 'total_test_end') {
-              if (props.onComplete !== undefined) {
-                props.onComplete(state.value.specs);
-              }
-              state.value = {
-                ...state.value,
-                status: 'complete',
-              };
-
-              return;
-            }
-
-            if (data.event === 'add_file') {
-              state.value = set(state.value, ['specs', data.path], {
-                describes: {},
-                tests: {},
-                name: data.path,
-              });
-              return;
-            }
-
-            if (data.event === 'remove_file') {
-              const specs = Object.entries(state.value.specs).reduce(
-                (acc, [key, value]) => {
-                  if (key === data.path) {
-                    return acc;
-                  } else {
-                    return { ...acc, [key]: value };
-                  }
-                },
-                {},
-              );
-
-              state.value = { ...state.value, specs };
-              return;
-            }
-
-            if (data.event === 'file_error') {
-              state.value = set(state.value, ['specs', data.path, 'error'], data.error);
-              return;
-            }
-
-            if (data.event === 'describe_start') {
-              currentDescribeBlocks.push(data.blockName);
-              const [describePath, currentDescribe] = splitTail(
-                currentDescribeBlocks,
-              );
-              const spec = currentSpec;
-
-              if (currentDescribe === undefined) {
-                return;
-              }
-
-              state.value = set(
-                state.value,
-                [
-                  'specs',
-                  spec,
-                  'describes',
-                  ...flatMap(describePath, (name) => [name, 'describes']),
-                  currentDescribe,
-                ],
-                {
-                  name: data.blockName,
-                  tests: {},
-                  describes: {},
-                },
-              );
-              return;
-            }
-
-            if (data.event === 'describe_end') {
-              currentDescribeBlocks.pop();
-              return;
-            }
-
-            if (data.event === 'add_test') {
-              const [describePath, currentDescribe] = splitTail(
-                currentDescribeBlocks,
-              );
-              const test: Test = {
-                status: 'idle',
-                errors: [],
-                name: data.testName,
-                blocks: [...currentDescribeBlocks],
-                path: data.path,
-              };
-              if (currentDescribe === undefined) {
-                state.value = set(
-                  state.value,
-                  ['specs', data.path, 'tests', data.testName],
-                  test,
-                );
-                return;
-              } else {
-                state.value = set(
-                  state.value,
-                  [
-                    'specs',
-                    data.path,
-                    'describes',
-                    ...flatMap(describePath, (name) => [name, 'describes']),
-                    currentDescribe,
-                    'tests',
-                    data.testName,
-                  ],
-                  test,
-                );
-                return;
-              }
-            }
-
-            if (data.event === 'test_start') {
-              const { test } = data;
-              const [describePath, currentDescribe] = splitTail(test.blocks);
-
-              const startedTest: Test = {
-                status: 'running',
-                name: test.name,
-                blocks: test.blocks,
-                path: test.path,
-                errors: [],
-              };
-
-              if (currentDescribe === undefined) {
-                state.value = set(
-                  state.value,
-                  ['specs', test.path, 'tests', test.name],
-                  startedTest,
-                );
-                return;
-              } else {
-                state.value = set(
-                  state.value,
-                  [
-                    'specs',
-                    test.path,
-                    'describes',
-                    ...flatMap(describePath, (name) => [name, 'describes']),
-                    currentDescribe,
-                    'tests',
-                    test.name,
-                  ],
-                  startedTest,
-                );
-                return;
-              }
-            }
-
-            if (data.event === 'test_end') {
-              const { test } = data;
-              const [describePath, currentDescribe] = splitTail(test.blocks);
-              const endedTest = {
-                status: test.status,
-                errors: test.errors,
-                duration: test.duration,
-                name: test.name,
-                blocks: test.blocks,
-                path: test.path,
-              };
-
-              if (currentDescribe === undefined) {
-                state.value = set(
-                  state.value,
-                  ['specs', test.path, 'tests', test.name],
-                  endedTest,
-                );
-              } else {
-                state.value = set(
-                  state.value,
-                  [
-                    'specs',
-                    test.path,
-                    'describes',
-                    ...flatMap(describePath, (name) => [name, 'describes']),
-                    currentDescribe,
-                    'tests',
-                    test.name,
-                  ],
-                  endedTest,
-                );
-              }
-            }
-          }
-        });
-      },
-    );
-
     const runAllTests = () => {
       state.value.status = 'running';
       state.value.specs = {};
@@ -378,26 +129,272 @@ export const SandpackTests = defineComponent({
       }
     };
 
-    watch(
-      [
-        () => state.value.watchMode,
-        () => sandpack.activeFile,
-        runAllTests,
-        runSpec,
-      ],
-      () => {
-        unsunscribe = listen(({ type }) => {
-          if (type === 'done' && state.value.watchMode) {
-            const isSpecOpen = sandpack.activeFile.match(testFileRegex) !== null;
-            if (isSpecOpen) {
-              runSpec();
+    const isSpecOpen = computed(() => sandpack.activeFile.match(testFileRegex) !== null);
+
+    const subscribeIFrameData = () => {
+      let currentDescribeBlocks: string[] = [];
+      let currentSpec = '';
+
+      if (unsubscribe) unsubscribe();
+      unsubscribe = listen((data) => {
+        // Note: short-circuit if message isn't for the currently active spec when `suiteOnly` is true
+        if (
+          state.value.suiteOnly &&
+          (('path' in data && data.path !== sandpack.activeFile) ||
+            ('test' in data &&
+              'path' in data.test &&
+              data.test.path !== sandpack.activeFile))
+        ) {
+          return;
+        }
+
+        if (
+          data.type === 'action' &&
+          data.action === 'clear-errors' &&
+          data.source === 'jest'
+        ) {
+          currentSpec = data.path;
+          return;
+        }
+
+        if (data.type === 'test') {
+          if (data.event === 'initialize_tests') {
+            currentDescribeBlocks = [];
+            currentSpec = '';
+            if (state.value.watchMode) {
+              return runAllTests();
             } else {
-              runAllTests();
+              state.value = {
+                ...state.value,
+                status: 'idle',
+                specs: {},
+              };
+              return;
             }
           }
-        });
-      },
-    );
+
+          if (data.event === 'test_count') {
+            state.value = {
+              ...state.value,
+              specsCount: data.count,
+            };
+            return;
+          }
+
+          if (data.event === 'total_test_start') {
+            currentDescribeBlocks = [];
+            state.value = {
+              ...state.value,
+              status: 'running',
+            };
+            return;
+          }
+
+          if (data.event === 'total_test_end') {
+            if (props.onComplete !== undefined) {
+              props.onComplete(state.value.specs);
+            }
+            state.value = {
+              ...state.value,
+              status: 'complete',
+            };
+
+            return;
+          }
+
+          if (data.event === 'add_file') {
+            state.value = set(state.value, ['specs', data.path], {
+              describes: {},
+              tests: {},
+              name: data.path,
+            });
+            return;
+          }
+
+          if (data.event === 'remove_file') {
+            const specs = Object.entries(state.value.specs).reduce(
+              (acc, [key, value]) => {
+                if (key === data.path) {
+                  return acc;
+                } else {
+                  return { ...acc, [key]: value };
+                }
+              },
+              {},
+            );
+
+            state.value = { ...state.value, specs };
+            return;
+          }
+
+          if (data.event === 'file_error') {
+            state.value = set(state.value, ['specs', data.path, 'error'], data.error);
+            return;
+          }
+
+          if (data.event === 'describe_start') {
+            currentDescribeBlocks.push(data.blockName);
+            const [describePath, currentDescribe] = splitTail(
+              currentDescribeBlocks,
+            );
+            const spec = currentSpec;
+
+            if (currentDescribe === undefined) {
+              return;
+            }
+
+            state.value = set(
+              state.value,
+              [
+                'specs',
+                spec,
+                'describes',
+                ...flatMap(describePath, (name) => [name, 'describes']),
+                currentDescribe,
+              ],
+              {
+                name: data.blockName,
+                tests: {},
+                describes: {},
+              },
+            );
+            return;
+          }
+
+          if (data.event === 'describe_end') {
+            currentDescribeBlocks.pop();
+            return;
+          }
+
+          if (data.event === 'add_test') {
+            const [describePath, currentDescribe] = splitTail(
+              currentDescribeBlocks,
+            );
+            const test: Test = {
+              status: 'idle',
+              errors: [],
+              name: data.testName,
+              blocks: [...currentDescribeBlocks],
+              path: data.path,
+            };
+            if (currentDescribe === undefined) {
+              state.value = set(
+                state.value,
+                ['specs', data.path, 'tests', data.testName],
+                test,
+              );
+              return;
+            } else {
+              state.value = set(
+                state.value,
+                [
+                  'specs',
+                  data.path,
+                  'describes',
+                  ...flatMap(describePath, (name) => [name, 'describes']),
+                  currentDescribe,
+                  'tests',
+                  data.testName,
+                ],
+                test,
+              );
+              return;
+            }
+          }
+
+          if (data.event === 'test_start') {
+            const { test } = data;
+            const [describePath, currentDescribe] = splitTail(test.blocks);
+
+            const startedTest: Test = {
+              status: 'running',
+              name: test.name,
+              blocks: test.blocks,
+              path: test.path,
+              errors: [],
+            };
+
+            if (currentDescribe === undefined) {
+              state.value = set(
+                state.value,
+                ['specs', test.path, 'tests', test.name],
+                startedTest,
+              );
+              return;
+            } else {
+              state.value = set(
+                state.value,
+                [
+                  'specs',
+                  test.path,
+                  'describes',
+                  ...flatMap(describePath, (name) => [name, 'describes']),
+                  currentDescribe,
+                  'tests',
+                  test.name,
+                ],
+                startedTest,
+              );
+              return;
+            }
+          }
+
+          if (data.event === 'test_end') {
+            const { test } = data;
+            const [describePath, currentDescribe] = splitTail(test.blocks);
+            const endedTest = {
+              status: test.status,
+              errors: test.errors,
+              duration: test.duration,
+              name: test.name,
+              blocks: test.blocks,
+              path: test.path,
+            };
+
+            if (currentDescribe === undefined) {
+              state.value = set(
+                state.value,
+                ['specs', test.path, 'tests', test.name],
+                endedTest,
+              );
+            } else {
+              state.value = set(
+                state.value,
+                [
+                  'specs',
+                  test.path,
+                  'describes',
+                  ...flatMap(describePath, (name) => [name, 'describes']),
+                  currentDescribe,
+                  'tests',
+                  test.name,
+                ],
+                endedTest,
+              );
+            }
+          }
+        }
+      });
+    };
+
+    const listenIframeAction = () => {
+      if (unsunscribe) unsunscribe();
+
+      unsunscribe = listen(({ type }) => {
+        if (type === 'done' && state.value.watchMode) {
+          if (isSpecOpen.value) {
+            runSpec();
+          } else {
+            runAllTests();
+          }
+        }
+      });
+    };
+
+    watchEffect(listenIframeAction);
+    watchEffect(subscribeIFrameData);
+
+    onMounted(listenIframeAction);
 
     onBeforeUnmount(() => {
       if (unsunscribe) unsunscribe();
@@ -413,10 +410,10 @@ export const SandpackTests = defineComponent({
       sandpack.setActiveFile(file);
     };
 
-    const specs = Object.values(state.value.specs);
-    const duration = getDuration(specs);
-    const testResults = getAllTestResults(specs);
-    const suiteResults = getAllSuiteResults(specs);
+    const specs = computed(() => Object.values(state.value.specs));
+    const duration = computed(() => getDuration(specs.value));
+    const testResults = computed(() => getAllTestResults(specs.value));
+    const suiteResults = computed(() => getAllSuiteResults(specs.value));
 
     return () => (
       <SandpackStack
@@ -464,7 +461,7 @@ export const SandpackTests = defineComponent({
         }
 
         <div class={classNames(containerClassName)}>
-          {specs.length === 0 && state.value.status === 'complete' ? (
+          {specs.value.length === 0 && state.value.status === 'complete' ? (
             <div class={classNames(fileErrorContainerClassName)}>
               <p>No test files found.</p>
               <p>
@@ -478,16 +475,16 @@ export const SandpackTests = defineComponent({
             <>
               <Specs
                 openSpec={openSpec}
-                specs={specs}
+                specs={specs.value}
                 status={state.value.status}
                 verbose={state.value.verbose}
               />
 
-              {state.value.status === 'complete' && testResults.total > 0 && (
+              {state.value.status === 'complete' && testResults.value.total > 0 && (
                 <Summary
-                  duration={duration}
-                  suites={suiteResults}
-                  tests={testResults}
+                  duration={duration.value}
+                  suites={suiteResults.value}
+                  tests={testResults.value}
                 />
               )}
             </>

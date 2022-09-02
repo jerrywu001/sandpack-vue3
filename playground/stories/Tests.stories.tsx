@@ -126,134 +126,134 @@ export const Main = () => {
 };
 
 export const VerboseMode = () => (
-    <SandpackProvider
-      customSetup={{ entry: 'add.ts' }}
-      files={{
-        '/add.test.ts': addTests,
-        '/add.ts': add,
-        '/src/app/sub.ts': sub,
-        '/src/app/sub.test.ts': subTests,
-      }}
-      theme={dracula}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests verbose />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{ entry: 'add.ts' }}
+    files={{
+      '/add.test.ts': addTests,
+      '/add.ts': add,
+      '/src/app/sub.ts': sub,
+      '/src/app/sub.test.ts': subTests,
+    }}
+    theme={dracula}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests verbose />
+    </SandpackLayout>
+  </SandpackProvider>
 );
 
 export const OneTestFile = () => (
-    <SandpackProvider
-      customSetup={{ entry: 'sub.ts' }}
-      files={{
-        '/sub.ts': sub,
-        '/sub.test.ts': subTests,
-      }}
-      theme={dracula}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests verbose />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{ entry: 'sub.ts' }}
+    files={{
+      '/sub.ts': sub,
+      '/sub.test.ts': subTests,
+    }}
+    theme={dracula}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests verbose />
+    </SandpackLayout>
+  </SandpackProvider>
 );
 
 export const FileError = () => (
-    <SandpackProvider
-      customSetup={{ entry: 'entry.ts' }}
-      files={{
-        '/error.test.ts': fileErrorTest,
-        '/entry.ts': {
-          hidden: true,
-          code: '',
-        },
-      }}
-      theme={dracula}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{ entry: 'entry.ts' }}
+    files={{
+      '/error.test.ts': fileErrorTest,
+      '/entry.ts': {
+        hidden: true,
+        code: '',
+      },
+    }}
+    theme={dracula}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests />
+    </SandpackLayout>
+  </SandpackProvider>
 );
 
 export const ExtendedExpect = () => (
-    <SandpackProvider
-      customSetup={{
-        entry: 'entry.ts',
-        dependencies: { 'jest-extended': '*' },
-      }}
-      files={{
-        '/setup.test.ts': {
-          hidden: true,
-          code: "import * as matchers from 'jest-extended';\nexpect.extend(matchers);",
-        },
-        '/extended.test.ts': extendedTest,
-        '/entry.ts': {
-          hidden: true,
-          code: '',
-        },
-      }}
-      theme={dracula}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{
+      entry: 'entry.ts',
+      dependencies: { 'jest-extended': '*' },
+    }}
+    files={{
+      '/setup.test.ts': {
+        hidden: true,
+        code: "import * as matchers from 'jest-extended';\nexpect.extend(matchers);",
+      },
+      '/extended.test.ts': extendedTest,
+      '/entry.ts': {
+        hidden: true,
+        code: '',
+      },
+    }}
+    theme={dracula}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests />
+    </SandpackLayout>
+  </SandpackProvider>
 );
 
 export const SlowTest = () => (
-    <SandpackProvider
-      customSetup={{ entry: 'add.ts' }}
-      files={{
-        '/slow.test.ts': slowTest,
-        '/add.test.ts': addTests,
-        '/slow2.test.ts': slowTest,
-        '/add.ts': add,
-        '/src/app/sub.ts': sub,
-        '/src/app/sub.test.ts': subTests,
-      }}
-      theme={dracula}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests verbose />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{ entry: 'add.ts' }}
+    files={{
+      '/slow.test.ts': slowTest,
+      '/add.test.ts': addTests,
+      '/slow2.test.ts': slowTest,
+      '/add.ts': add,
+      '/src/app/sub.ts': sub,
+      '/src/app/sub.test.ts': subTests,
+    }}
+    theme={dracula}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests verbose />
+    </SandpackLayout>
+  </SandpackProvider>
 );
 
 export const NoTests = () => (
-    <SandpackProvider
-      customSetup={{ entry: 'add.ts' }}
-      files={{
-        '/add.ts': add,
-        '/src/app/sub.ts': sub,
-      }}
-      theme={dracula}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{ entry: 'add.ts' }}
+    files={{
+      '/add.ts': add,
+      '/src/app/sub.ts': sub,
+    }}
+    theme={dracula}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests />
+    </SandpackLayout>
+  </SandpackProvider>
 );
 
 export const OnCompleteHandler = () => (
-    <SandpackProvider
-      customSetup={{ entry: 'add.ts' }}
-      files={{
-        '/add.test.ts': addTests,
-        '/add.ts': add,
-        '/src/app/sub.ts': sub,
-        '/src/app/sub.test.ts': subTests,
-        '/failing.test.ts': failingTests,
-      }}
-    >
-      <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
-        <SandpackCodeEditor showRunButton={false} showLineNumbers />
-        <SandpackTests onComplete={(specs): void => console.log(specs)} />
-      </SandpackLayout>
-    </SandpackProvider>
+  <SandpackProvider
+    customSetup={{ entry: 'add.ts' }}
+    files={{
+      '/add.test.ts': addTests,
+      '/add.ts': add,
+      '/src/app/sub.ts': sub,
+      '/src/app/sub.test.ts': subTests,
+      '/failing.test.ts': failingTests,
+    }}
+  >
+    <SandpackLayout style={{ '--sp-layout-height': '70vh' }}>
+      <SandpackCodeEditor showRunButton={false} showLineNumbers />
+      <SandpackTests onComplete={(specs): void => console.log(specs)} />
+    </SandpackLayout>
+  </SandpackProvider>
 );

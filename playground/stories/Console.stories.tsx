@@ -100,31 +100,35 @@ export const Main = () => {
 };
 
 export const Preset = () => (
-    <div style={{ width: 'auto' }}>
-      <Sandpack template="react" />
+  <div style={{ width: 'auto' }}>
+    <h3><pre>showConsoleButton: false, showConsole: false</pre></h3>
+    <Sandpack template="react" />
 
-      <br />
+    <br />
 
-      <Sandpack
-        files={files(false)}
-        options={{ showConsoleButton: true, showConsole: true }}
-        template="react"
-      />
+    <h3><pre>showConsoleButton: true, showConsole: true</pre></h3>
+    <Sandpack
+      files={files(false)}
+      options={{ showConsoleButton: true, showConsole: true }}
+      template="react"
+    />
 
-      <br />
+    <br />
 
-      <Sandpack
-        files={files(false)}
-        options={{ showConsoleButton: false, showConsole: true }}
-        template="react"
-      />
+    <h3><pre>showConsoleButton: false, showConsole: true</pre></h3>
+    <Sandpack
+      files={files(false)}
+      options={{ showConsoleButton: false, showConsole: true }}
+      template="react"
+    />
 
-      <br />
+    <br />
 
-      <Sandpack
-        files={files(false)}
-        options={{ showConsoleButton: true, showConsole: false }}
-        template="react"
-      />
-    </div>
+    <h3><pre>showConsoleButton: true, showConsole: false</pre></h3>
+    <Sandpack
+      files={files(false)}
+      options={{ showConsoleButton: true, showConsole: false }}
+      template="react"
+    />
+  </div>
 );

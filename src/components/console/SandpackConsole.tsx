@@ -1,3 +1,4 @@
+import { nextTick } from 'process';
 import { defineComponent, DefineComponent, Fragment, PropType, ref, watch } from 'vue';
 import { SandpackStack } from '../../common';
 import { css, THEME_PREFIX } from '../../styles';
@@ -72,9 +73,13 @@ export const SandpackConsole = defineComponent({
           props.onLogsChange(logs.value);
         }
 
-        if (wrapperRef.value) {
-          wrapperRef.value.scrollTop = wrapperRef.value.scrollHeight;
-        }
+        nextTick(() => {
+          setTimeout(() => {
+            if (wrapperRef.value) {
+              wrapperRef.value.scrollTop = wrapperRef.value.scrollHeight * 2;
+            }
+          });
+        });
       },
     );
 

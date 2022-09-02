@@ -3,12 +3,11 @@ import isEqual from 'lodash.isequal';
 import { ref } from 'vue';
 import { githubLight, aquaBlue } from '@codesandbox/sandpack-themes';
 import {
-  // Sandpack,
+  Sandpack,
   // SandpackLayout,
   // SandpackTranspiledCode,
   // SandpackProvider,
   // SandpackCodeEditor,
-  SandpackConsole,
   SandpackPredefinedTemplate,
   SandpackTheme,
 } from 'codesandbox-sandpack-vue3';
@@ -70,8 +69,15 @@ const toggleReadOnly = () => {
         showReadOnly: true,
         readOnly: readOnly,
         wrapContent: wrapContent,
+        showConsoleButton: true,
+        showConsole: false,
       }"
     />
+
+    <br>
+    <br>
+
+    <hr>
 
     <br>
     <br>
@@ -81,10 +87,15 @@ const toggleReadOnly = () => {
         <SandpackCodeEditor />
         <SandpackTranspiledCode />
       </SandpackLayout>
-      <SandpackLayout>
-        <SandpackConsole />
-      </SandpackLayout>
     </SandpackProvider>
+
+    <br>
+    <br>
+
+    <Sandpack template="test-ts" />
+
+    <br>
+    <br>
 
     <Sandpack
       template="vue3"

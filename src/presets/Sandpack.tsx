@@ -18,6 +18,7 @@ import {
   defineComponent,
   PropType,
   ref,
+  watch,
 } from 'vue';
 import {
   SandpackFiles,
@@ -116,6 +117,7 @@ const Sandpack = defineComponent({
     const rightColumnStyle = computed(() => ({
       flexGrow: previewPart.value,
       flexShrink: previewPart.value,
+      flexBasis: 0,
       minWidth: 700 * (previewPart.value / (previewPart.value + editorPart.value)),
       gap: consoleVisibility.value ? 1 : 0,
       height: props.options?.editorHeight, // use the original editor height
@@ -132,6 +134,16 @@ const Sandpack = defineComponent({
         onClick={() => { consoleVisibility.value = !consoleVisibility.value; }}
       />
     ) : undefined);
+
+    const hasRightColumn = computed(() => props.options?.showConsole || props.options?.showConsoleButton);
+
+    watch(
+      [() => props.options?.showConsole],
+      () => {
+        consoleVisibility.value = props.options?.showConsole ?? false;
+      },
+      { immediate: true },
+    );
 
     return () => (
       <SandpackProvider
@@ -152,8 +164,11 @@ const Sandpack = defineComponent({
             }}
           />
           <SandpackRender
-            fragment={props.options?.showConsole || props.options?.showConsoleButton}
-            style={rightColumnStyle.value}
+            fragment={!hasRightColumn.value}
+            style={{
+              ...rightColumnStyle.value,
+              flex: hasRightColumn.value ? 1 : rightColumnStyle.value.flexGrow,
+            }}
           >
             {mode.value === 'preview' && (
               <SandpackPreview
@@ -166,7 +181,10 @@ const Sandpack = defineComponent({
             {mode.value === 'tests' && (
               <SandpackTests
                 actionsChildren={actionsChildren.value}
-                style={rightColumnStyle.value}
+                style={{
+                  ...rightColumnStyle.value,
+                  flex: hasRightColumn.value ? 1 : rightColumnStyle.value.flexGrow,
+                }}
               />
             )}
 

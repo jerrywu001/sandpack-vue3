@@ -9,6 +9,7 @@ import {
   SandpackPreview,
   SandpackProvider,
   SandpackConsole,
+  Sandpack,
 } from 'codesandbox-sandpack-vue3';
 import { computed, ComputedRef, reactive } from 'vue';
 
@@ -18,7 +19,13 @@ export default {
 
 export const Main = () => {
   const config = reactive({
-    Components: { Preview: true, Editor: true, FileExplorer: true, Console: true, Tests: true },
+    Components: {
+      Preview: true,
+      Editor: true,
+      FileExplorer: true,
+      Console: true,
+      Tests: true,
+    },
     Options: {
       showTabs: true,
       showLineNumbers: true,
@@ -30,6 +37,8 @@ export const Main = () => {
       showNavigator: true,
       showRefreshButton: true,
       consoleShowHeader: true,
+      showConsoleButton: true,
+      showConsole: true,
     },
     Template: 'exhaustedFilesTests' as const,
     Theme: 'light',
@@ -127,41 +136,70 @@ export const Main = () => {
         })}
       </div>
 
-      <SandpackProvider
-        customSetup={{
-          dependencies: config.Template === 'exhaustedFilesTests'
-            ? exhaustedFilesTests.dependencies
-            : {},
-        }}
-        files={
-          config.Template === 'exhaustedFilesTests' ? exhaustedFilesTests.files : {}
-        }
-        template={
-          config.Template === 'exhaustedFilesTests' ? undefined : config.Template
-        }
-        // @ts-ignore
-        theme={themes[config.Theme] || config.Theme}
-      >
-        <SandpackLayout>
-          <div class="playground-grid">
-            {config.Components.FileExplorer && <SandpackFileExplorer />}
-            {config.Components.Editor && (
-              <SandpackCodeEditor {...codeEditorOptions.value} />
-            )}
-            {config.Components.Preview && (
-              <SandpackPreview
-                showNavigator={config.Options?.showNavigator}
-                showRefreshButton={config.Options?.showRefreshButton}
-              />
-            )}
+      <div>
+        <SandpackProvider
+          customSetup={{
+            dependencies:
+              config.Template === 'exhaustedFilesTests'
+                ? exhaustedFilesTests.dependencies
+                : {},
+          }}
+          files={
+            config.Template === 'exhaustedFilesTests'
+              ? exhaustedFilesTests.files
+              : {}
+          }
+          template={
+            config.Template === 'exhaustedFilesTests' ? undefined : config.Template
+          }
+          theme={themes[config.Theme] || config.Theme}
+        >
+          <SandpackLayout>
+            <div class="playground-grid">
+              {config.Components.FileExplorer && <SandpackFileExplorer />}
+              {config.Components.Editor && (
+                <SandpackCodeEditor {...codeEditorOptions.value} />
+              )}
+              {config.Components.Preview && (
+                <SandpackPreview
+                  showNavigator={config.Options?.showNavigator}
+                  showRefreshButton={config.Options?.showRefreshButton}
+                />
+              )}
 
-            {config.Components.Console && (
-              <SandpackConsole showHeader={config.Options.consoleShowHeader} />
-            )}
-            {config.Components.Tests && <SandpackTests />}
-          </div>
-        </SandpackLayout>
-      </SandpackProvider>
+              {config.Components.Console && (
+                <SandpackConsole
+                  showHeader={config.Options.consoleShowHeader}
+                />
+              )}
+              {config.Components.Tests && <SandpackTests />}
+            </div>
+          </SandpackLayout>
+        </SandpackProvider>
+
+        <br />
+
+        <Sandpack
+          customSetup={{
+            dependencies:
+              config.Template === 'exhaustedFilesTests'
+                ? exhaustedFilesTests.dependencies
+                : {},
+          }}
+          files={
+            config.Template === 'exhaustedFilesTests'
+              ? exhaustedFilesTests.files
+              : {}
+          }
+          options={{
+            ...config.Options,
+          }}
+          template={
+            config.Template === 'exhaustedFilesTests' ? undefined : config.Template
+          }
+          theme={themes[config.Theme] || config.Theme}
+        />
+      </div>
     </div>
   );
 };

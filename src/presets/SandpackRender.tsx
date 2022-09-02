@@ -10,11 +10,9 @@ export const SandpackRender = defineComponent({
       default: false,
     },
   },
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     return () => props.fragment ? (
-      <>
-        { slots.default ? slots.default() : null }
-      </>
+      slots.default ? slots.default() : null
     ) : (
       <SandpackStack>
         { slots.default ? slots.default() : null }

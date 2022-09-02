@@ -1,5 +1,5 @@
 import { UnsubscribeFunction } from '@codesandbox/sandpack-client';
-import { computed, onBeforeUnmount, onMounted, onUnmounted, Ref, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onUnmounted, Ref, ref, watch } from 'vue';
 import { useSandpack } from '../../contexts/sandpackContext';
 import {
   CLEAR_LOG,
@@ -26,6 +26,8 @@ export const useSandpackConsole = (props?: {
   const maxMessageCount = computed(() => props?.maxMessageCount ?? MAX_MESSAGE_COUNT);
 
   const listenMsg = () => {
+    if (unsubscribe) unsubscribe();
+
     unsubscribe = listen((message) => {
       if (message.type === 'console' && message.codesandbox) {
         if (message.log.find(({ method }) => method === 'clear')) {
@@ -74,11 +76,8 @@ export const useSandpackConsole = (props?: {
     () => {
       listenMsg();
     },
+    { immediate: true },
   );
-
-  onMounted(() => {
-    listenMsg();
-  });
 
   onBeforeUnmount(() => {
     if (unsubscribe) unsubscribe();

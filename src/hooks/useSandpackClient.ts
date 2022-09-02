@@ -1,5 +1,5 @@
 import { generateRandomId } from '../utils/stringUtils';
-import { onBeforeUnmount, onMounted, onUnmounted, ref, Ref } from 'vue';
+import { toRaw, onBeforeUnmount, onMounted, onUnmounted, ref, Ref } from 'vue';
 import { useSandpack } from '../contexts/sandpackContext';
 import type {
   ListenerFunction,
@@ -52,7 +52,10 @@ export const useSandpackClient = (): UseSandpackClient => {
     }
   });
 
-  const getClient = (): SandpackClient | null => sandpack.clients[clientId.value] || null;
+  const getClient = (): SandpackClient | null => {
+    const { clients } = sandpack;
+    return toRaw(clients[clientId.value] || null);
+  };
 
   return {
     sandpack,

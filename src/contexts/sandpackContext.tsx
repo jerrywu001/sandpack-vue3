@@ -20,6 +20,7 @@ import {
   UnwrapNestedRefs,
   nextTick,
   StyleValue,
+  toRaw,
 } from 'vue';
 import type {
   BundlerState,
@@ -195,7 +196,7 @@ const SandpackProvider = defineComponent({
       if (recompileMode === 'immediate') {
         Object.values(clients).forEach((client) => {
           client.updatePreview({
-            files: state.files,
+            files: toRaw(state.files),
           });
         });
       }
@@ -205,7 +206,7 @@ const SandpackProvider = defineComponent({
         debounceHook = window.setTimeout(() => {
           Object.values(clients).forEach((client) => {
             client.updatePreview({
-              files: state.files,
+              files: toRaw(state.files),
             });
           });
         }, recompileDelay);
@@ -551,8 +552,8 @@ const SandpackProvider = defineComponent({
 
         Object.values(clients).forEach((client) => {
           client.updatePreview({
-            files: stateFromProps.files,
-            template: stateFromProps.environment,
+            files: toRaw(stateFromProps.files),
+            template: toRaw(stateFromProps.environment),
           });
         });
 

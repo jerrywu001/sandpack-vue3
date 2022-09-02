@@ -12,6 +12,20 @@ import { Sandpack } from 'codesandbox-sandpack-vue3';
 
 [Read more](https://sandpack.codesandbox.io/)
 
+## online demo
+
+[demo](https://stackblitz.com/edit/vitejs-vite-s6jdds)
+
+[ssg demo](https://stackblitz.com/edit/vitejs-vite-ha17a9)
+
+*Here's an example of a react version for comparison*
+
+https://stackblitz.com/edit/vitejs-vite-axyaxx
+
+## releases
+
+https://github.com/jerrywu001/sandpack-vue3/releases
+
 ## Sandpack Themes
 
 A list of themes to customize your Sandpack components.
@@ -29,16 +43,6 @@ import { githubLight } from "@codesandbox/sandpack-themes";
 For full documentation, visit [https://sandpack.codesandbox.io/docs/](https://sandpack.codesandbox.io/docs/)
 
 **This project removes [devtools component && useSandpackLint hook]**
-
-## online demo
-
-[demo](https://stackblitz.com/edit/vitejs-vite-s6jdds)
-
-[ssg demo](https://stackblitz.com/edit/vitejs-vite-ha17a9)
-
-*Here's an example of a react version for comparison*
-
-https://stackblitz.com/edit/vitejs-vite-axyaxx
 
 
 ## SSG/SSR
@@ -69,6 +73,8 @@ app.use(SanpackPlugin());
 
 - [Sandpack](https://sandpack.codesandbox.io/docs/api/react/#sandpack)
 - [SandpackLayout](https://sandpack.codesandbox.io/docs/api/react/interfaces/SandpackLayoutProps)
+- [SandpackConsole](https://sandpack.codesandbox.io/docs/advanced-usage/components#console)
+- [SandpackTests](https://sandpack.codesandbox.io/docs/advanced-usage/components#tests)
 - [CodeEditor](https://sandpack.codesandbox.io/docs/api/react/#codeeditor)
 - [SandpackProvider](https://sandpack.codesandbox.io/docs/api/react/classes/SandpackProvider)
 - [ErrorOverlay](https://sandpack.codesandbox.io/docs/api/react/#erroroverlay)
