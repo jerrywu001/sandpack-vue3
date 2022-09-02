@@ -1,5 +1,4 @@
-import { nextTick } from 'process';
-import { defineComponent, DefineComponent, Fragment, PropType, ref, watch } from 'vue';
+import { nextTick, defineComponent, DefineComponent, Fragment, PropType, ref, watch } from 'vue';
 import { SandpackStack } from '../../common';
 import { css, THEME_PREFIX } from '../../styles';
 import { classNames } from '../../utils/classNames';
