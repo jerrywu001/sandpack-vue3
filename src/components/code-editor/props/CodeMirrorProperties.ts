@@ -1,8 +1,8 @@
-import { Decorators, FileType } from '..';
+import { Decorators } from '..';
 import { Extension } from '@codemirror/state';
 import { KeyBinding } from '@codemirror/view';
 import { PropType } from 'vue';
-import type { EditorState as SandpackEditorState, SandpackInitMode } from '../../../types';
+import type { CustomLanguage, EditorState as SandpackEditorState, SandpackInitMode } from '../../../types';
 
 const CodeMirrorProperties = {
   onCodeUpdate: {
@@ -19,7 +19,7 @@ const CodeMirrorProperties = {
     type: String,
   },
   fileType: {
-    type: String as PropType<FileType>,
+    type: String,
   },
   showLineNumbers: {
     type: Boolean,
@@ -63,6 +63,12 @@ const CodeMirrorProperties = {
   },
   extensionsKeymap: {
     type: Array as PropType<Array<readonly KeyBinding[]>>,
+    default() {
+      return [];
+    },
+  },
+  additionalLanguages: {
+    type: Array as PropType<Array<CustomLanguage[]>>,
     default() {
       return [];
     },

@@ -1,5 +1,8 @@
 /* eslint-disable no-promise-executor-return */
 import { REACT_TEMPLATE, Sandpack } from 'codesandbox-sandpack-vue3';
+import { LanguageSupport } from '@codemirror/language';
+import { shell } from '@codemirror/legacy-modes/mode/shell';
+import { StreamLanguage } from '@codemirror/stream-parser';
 
 export default {
   title: 'presets/Sandpack: options',
@@ -38,7 +41,7 @@ export default function App() {
 );
 
 export const ShowConsoleButton = () => (
-  <div style={{ width: 800 }}>
+  <div style={{ width: '800px' }}>
     <Sandpack
       files={{
         '/index.js': `${REACT_TEMPLATE.files['/index.js'].code};
@@ -276,4 +279,38 @@ export const FileResolver = () => (
       }}
     />
   </>
+);
+
+export const CustomLanguages = () => (
+  <Sandpack
+    customSetup={{
+      entry: '/example.sh',
+    }}
+    files={{
+      '/example.sh': `#!/bin/sh
+EXAMPLE="drawn joyed"
+# Prints the EXAMPLE variable
+function show-example() {
+  echo $EXAMPLE
+}`,
+      '/example.bat': `@echo off
+Rem Prints the "example" variable
+set example=Hello World
+echo %example%`,
+      '/example.ps1': `$example = "Hello world"
+# Prints the "example" variable
+Write-Output $example`,
+    }}
+    options={{
+      codeEditor: {
+        additionalLanguages: [
+          {
+            name: 'shell',
+            extensions: ['sh', 'bat', 'ps1'],
+            language: new LanguageSupport(StreamLanguage.define(shell)),
+          },
+        ],
+      },
+    }}
+  />
 );

@@ -40,14 +40,26 @@ import {
   indentMore,
   deleteGroupBackward,
 } from '@codemirror/commands';
+import { type CustomLanguage } from '../../../types';
 
 export default function useDelayCodeEditor(props: CodeMirrorProps) {
   // ===== vars & states ========
   let timer: NodeJS.Timer;
 
   const sandpackTheme = useSandpackTheme();
-  const languageExtension = getLanguageFromFile(props.filePath, props.fileType);
-  const langSupport = getCodeMirrorLanguage(languageExtension);
+  // const languageExtension = getLanguageFromFile(props.filePath, props.fileType);
+  // const langSupport = getCodeMirrorLanguage(languageExtension);
+
+  const languageExtension = getLanguageFromFile(
+    props.filePath,
+    props.fileType,
+    props.additionalLanguages as CustomLanguage[],
+  );
+  const langSupport = getCodeMirrorLanguage(
+    languageExtension,
+    props.additionalLanguages as CustomLanguage[],
+  );
+
   const highlightTheme = getSyntaxHighlight(sandpackTheme.theme);
 
   const syntaxHighlightRender = useSyntaxHighlight({

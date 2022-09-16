@@ -69,8 +69,8 @@ const toggleReadOnly = () => {
         showReadOnly: true,
         readOnly: readOnly,
         wrapContent: wrapContent,
-        showConsoleButton: true,
-        showConsole: false,
+        editorHeight: 280,
+        editorWidthPercentage: 40,
       }"
     />
 
@@ -112,6 +112,8 @@ createApp(App).mount('#app');`,
         showTabs: true,
         visibleFiles: ['/src/App.vue', '/src/main.js', '/public/index.html'],
         activeFile: '/src/main.js',
+        showConsoleButton: true,
+        showConsole: false,
       }"
     />
   </div>

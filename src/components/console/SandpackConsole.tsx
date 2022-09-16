@@ -1,13 +1,21 @@
-import { nextTick, defineComponent, DefineComponent, Fragment, PropType, ref, watch } from 'vue';
-import { SandpackStack } from '../../common';
-import { css, THEME_PREFIX } from '../../styles';
+import { Button } from './Button';
 import { classNames } from '../../utils/classNames';
 import { CodeEditor } from '../code-editor';
-
-import { Button } from './Button';
-import { Header } from './Header';
-import { useSandpackConsole } from './useSandpackConsole';
+import { css, THEME_PREFIX } from '../../styles';
+import {
+  defineComponent,
+  DefineComponent,
+  Fragment,
+  nextTick,
+  PropType,
+  ref,
+  watch,
+} from 'vue';
 import { fromConsoleToString } from './utils/fromConsoleToString';
+import { Header } from './Header';
+import { SandpackStack } from '../../common';
+import { useSandpackConsole } from './useSandpackConsole';
+
 import { getType, type SandpackConsoleData } from './utils/getType';
 
 interface SandpackConsoleProps {
@@ -158,7 +166,7 @@ const consoleItemClassName = css({
     top: 0,
     left: 0,
     right: 0,
-    height: 1,
+    height: '1px',
     background: '$colors$surface3',
   },
 

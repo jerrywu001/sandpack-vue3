@@ -92,7 +92,7 @@ export const Main = () => {
   const theme = ref('dark');
 
   return () => (
-    <div style={{ width: 800 }}>
+    <div style={{ width: '800px' }}>
       <SandpackProvider
         customSetup={{ entry: 'add.ts' }}
         files={{

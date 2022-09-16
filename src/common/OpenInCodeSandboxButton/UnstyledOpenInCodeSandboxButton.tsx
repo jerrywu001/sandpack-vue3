@@ -87,7 +87,7 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
           target="_blank"
         >
           {Array.from(
-            paramsValues as unknown as Array<[string, string]>,
+            paramsValues.value as unknown as Array<[string, string]>,
             ([key, value]) => (
               <input key={key} name={key} type="hidden" value={value} />
             ),

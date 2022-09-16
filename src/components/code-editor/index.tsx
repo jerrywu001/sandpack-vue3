@@ -10,7 +10,6 @@ import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import {
   computed,
-  CSSProperties,
   DefineComponent,
   defineComponent,
   PropType,
@@ -18,7 +17,7 @@ import {
   StyleValue,
 } from 'vue';
 
-import type { EditorState as SandpackEditorState, SandpackInitMode } from '../../types';
+import type { CustomLanguage, EditorState as SandpackEditorState, SandpackInitMode } from '../../types';
 import type { Extension } from '@codemirror/state';
 import type { EditorView, KeyBinding } from '@codemirror/view';
 
@@ -30,17 +29,6 @@ export type Decorators = Array<{
   elementAttributes?: Record<string, string>;
 }>;
 
-export type FileType = 'js'
-| 'jsx'
-| 'ts'
-| 'tsx'
-| 'css'
-| 'scss'
-| 'less'
-| 'html'
-| 'vue'
-| 'markdown';
-
 export interface CodeMirrorRef {
   getCodemirror: () => EditorView | undefined;
 }
@@ -50,7 +38,7 @@ export interface CodeMirrorProps {
   id?: string;
   code: string;
   filePath?: string;
-  fileType?: FileType;
+  fileType?: string;
   /**
    * @default false
    */
@@ -94,10 +82,16 @@ export interface CodeMirrorProps {
    * @default []
    */
   extensionsKeymap?: KeyBinding[];
+  /**
+   * Provides a way to add custom language modes by supplying a language
+   * type, applicable file extensions, and a LanguageSupport instance
+   * for that syntax mode
+   */
+  additionalLanguages?: CustomLanguage[];
 }
 
 export interface CodeEditorProps {
-  style?: CSSProperties;
+  // style?: CSSProperties;
   showTabs?: boolean;
   showLineNumbers?: boolean;
   showInlineErrors?: boolean;
@@ -134,16 +128,17 @@ export interface CodeEditorProps {
    * appears when `readOnly` is `true`
    */
   showReadOnly?: boolean;
+  /**
+   * Provides a way to add custom language modes by supplying a language
+   * type, applicable file extensions, and a LanguageSupport instance
+   * for that syntax mode
+   */
+  additionalLanguages?: CustomLanguage[];
 }
 
 export const SandpackCodeEditor = defineComponent({
   name: 'SandpackCodeEditor',
   props: {
-    style: {
-      type: Object as PropType<CSSProperties>,
-      required: false,
-      default: undefined,
-    },
     showTabs: {
       type: Boolean,
       required: false,
@@ -198,6 +193,11 @@ export const SandpackCodeEditor = defineComponent({
       required: false,
       default: undefined,
     },
+    additionalLanguages: {
+      type: Array as PropType<Array<CustomLanguage[]>>,
+      required: false,
+      default: undefined,
+    },
   },
   // @ts-ignore
   setup(props: CodeEditorProps, { attrs }) {
@@ -234,6 +234,7 @@ export const SandpackCodeEditor = defineComponent({
             showLineNumbers={props.showLineNumbers}
             showReadOnly={props.showReadOnly}
             wrapContent={props.wrapContent}
+            additionalLanguages={props.additionalLanguages}
           />
 
           { showRunButton.value && sandpack.status === 'idle' ? <RunButton /> : null }

@@ -81,6 +81,7 @@ const Sandpack = defineComponent({
       readOnly: props.options?.readOnly,
       showReadOnly: props.options?.showReadOnly,
       id: props.options?.id,
+      additionalLanguages: props.options?.codeEditor?.additionalLanguages,
     }));
 
     const providerOptions = computed<SandpackInternalOptions<SandpackFiles, SandpackPredefinedTemplate>>(() => ({
@@ -118,10 +119,9 @@ const Sandpack = defineComponent({
       flexGrow: previewPart.value,
       flexShrink: previewPart.value,
       flexBasis: 0,
-      minWidth: 700 * (previewPart.value / (previewPart.value + editorPart.value)),
+      minWidth: `${700 * (previewPart.value / (previewPart.value + editorPart.value))}px`,
       gap: consoleVisibility.value ? 1 : 0,
-      height: props.options?.editorHeight, // use the original editor height
-      flex: 1,
+      height: `${props.options?.editorHeight}px`, // use the original editor height
     }));
 
     /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
@@ -157,10 +157,11 @@ const Sandpack = defineComponent({
           <SandpackCodeEditor
             {...codeEditorOptions.value}
             style={{
-              height: props.options?.editorHeight, // use the original editor height
+              height: `${props.options?.editorHeight}px`, // use the original editor height
               flexGrow: editorPart.value,
               flexShrink: editorPart.value,
-              minWidth: 700 * (editorPart.value / (previewPart.value + editorPart.value)),
+              minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
+              flex: hasRightColumn.value ? 1 : editorPart.value,
             }}
           />
           <SandpackRender
@@ -249,15 +250,15 @@ const buttonCounter = css({
   span: {
     background: '$colors$clickable',
     color: '$colors$surface1',
-    minWidth: 12,
-    height: 12,
+    minWidth: '12px',
+    height: '12px',
     padding: '0 2px',
-    borderRadius: 12,
-    fontSize: 8,
+    borderRadius: '12px',
+    fontSize: '8px',
     lineHeight: '12px',
     position: 'absolute',
-    top: 0,
-    right: 0,
+    top: '0',
+    right: '0',
   },
 });
 

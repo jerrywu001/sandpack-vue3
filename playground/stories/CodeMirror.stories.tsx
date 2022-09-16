@@ -1,6 +1,10 @@
 /* eslint-disable max-len */
 import { CodeEditor, SandpackProvider } from 'codesandbox-sandpack-vue3';
 import * as mocks from 'codesandbox-sandpack-vue3/components/code-editor/languages-mocks';
+import { python } from '@codemirror/lang-python';
+import { LanguageSupport } from '@codemirror/language';
+import { shell } from '@codemirror/legacy-modes/mode/shell';
+import { StreamLanguage } from '@codemirror/stream-parser';
 
 export default {
   title: 'components/CodeMirror',
@@ -85,6 +89,44 @@ export const Markdown = () => (
       code={mocks.markdown}
       fileType="markdown"
       id="markdown"
+      initMode="immediate"
+      showLineNumbers={false}
+    />
+  </SandpackProvider>
+);
+
+export const CustomLanguageShell = () => (
+  <SandpackProvider>
+    <CodeEditor
+      additionalLanguages={[
+        {
+          name: 'shell',
+          extensions: ['sh'],
+          language: new LanguageSupport(StreamLanguage.define(shell)),
+        },
+      ]}
+      code={mocks.shell}
+      filePath="example.sh"
+      id="shell"
+      initMode="immediate"
+      showLineNumbers={false}
+    />
+  </SandpackProvider>
+);
+
+export const CustomLanguagePython = () => (
+  <SandpackProvider>
+    <CodeEditor
+      additionalLanguages={[
+        {
+          name: 'python',
+          extensions: ['py'],
+          language: python(),
+        },
+      ]}
+      code={mocks.python}
+      fileType="python"
+      id="python"
       initMode="immediate"
       showLineNumbers={false}
     />
