@@ -55,6 +55,10 @@ const toggleReadOnly = () => {
       <button class="mybtn" @click="toggleClosable">toggle closable</button>
     </div>
 
+    <Sandpack :options="{ editorHeight: 220, editorWidthPercentage: 30 }" />
+
+    <Sandpack :options="{ showConsoleButton: true }" />
+
     <Sandpack
       :theme="theme"
       :template="template"
@@ -71,6 +75,7 @@ const toggleReadOnly = () => {
         wrapContent: wrapContent,
         editorHeight: 280,
         editorWidthPercentage: 40,
+        showConsoleButton: true,
       }"
     />
 

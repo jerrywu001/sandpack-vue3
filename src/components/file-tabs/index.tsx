@@ -134,6 +134,7 @@ export const FileTabs = defineComponent({
               role="tab"
               title={filePath}
               type="button"
+              style={{ display: 'flex !important' }}
             >
               {getTriggerText(filePath)}
               {props.closableTabs && sandpack.visibleFiles.length > 1 && (

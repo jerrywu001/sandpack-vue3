@@ -36,6 +36,19 @@ export const buttonClassName = css({
   },
 });
 
+export const roundedTestButtonClassName = css({
+  backgroundColor: '$colors$surface2',
+  borderRadius: '99999px',
+  '&[data-active="true"]': {
+    color: '$colors$surface1',
+    background: '$colors$accent',
+  },
+
+  "&:hover:not(:disabled,[data-active='true'])": {
+    backgroundColor: '$colors$surface3',
+  },
+});
+
 export const roundedButtonClassName = css({
   backgroundColor: '$colors$surface2 !important',
   borderRadius: '99999px',

@@ -22,7 +22,7 @@ export const ResetButtonComp = () => {
 
   return (
     <button
-       class="sp-tab-button"
+      class="sp-tab-button"
       onClick={sandpack.resetAllFiles}
       style={{
         background: 'none',
@@ -42,7 +42,7 @@ export const ResetCurrentFileButton = () => {
 
   return (
     <button
-       class="sp-tab-button"
+      class="sp-tab-button"
       onClick={() => sandpack.resetFile(sandpack.activeFile)}
       style={{
         background: 'none',

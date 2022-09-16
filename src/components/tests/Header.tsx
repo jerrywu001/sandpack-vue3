@@ -2,7 +2,7 @@ import { DefineComponent, defineComponent, PropType } from 'vue';
 
 import { ConsoleIcon } from '../..';
 import { css } from '../../styles';
-import { roundedButtonClassName, buttonClassName } from '../../styles/shared';
+import { roundedTestButtonClassName, buttonClassName } from '../../styles/shared';
 import { classNames } from '../../utils/classNames';
 
 import type { Status } from './SandpackTests';
@@ -76,7 +76,7 @@ export const Header = defineComponent({
   setup(props: Props) {
     const buttonsClassName = classNames(
       buttonClassName,
-      roundedButtonClassName,
+      roundedTestButtonClassName,
       css({ padding: '$space$1 $space$3' }),
     );
 

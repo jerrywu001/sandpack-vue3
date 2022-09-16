@@ -10,7 +10,7 @@ export const SandpackRender = defineComponent({
       default: false,
     },
   },
-  setup(props, { slots, attrs }) {
+  setup(props, { slots }) {
     return () => props.fragment ? (
       slots.default ? slots.default() : null
     ) : (

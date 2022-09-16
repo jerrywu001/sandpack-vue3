@@ -121,7 +121,7 @@ const Sandpack = defineComponent({
       flexBasis: 0,
       minWidth: `${700 * (previewPart.value / (previewPart.value + editorPart.value))}px`,
       gap: consoleVisibility.value ? 1 : 0,
-      height: `${props.options?.editorHeight}px`, // use the original editor height
+      height: props.options?.editorHeight ? `${props.options?.editorHeight}px` : undefined, // use the original editor height
     }));
 
     /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
@@ -161,22 +161,21 @@ const Sandpack = defineComponent({
               flexGrow: editorPart.value,
               flexShrink: editorPart.value,
               minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
-              flex: hasRightColumn.value ? 1 : editorPart.value,
             }}
           />
           <SandpackRender
             fragment={!hasRightColumn.value}
-            style={{
-              ...rightColumnStyle.value,
-              flex: hasRightColumn.value ? 1 : rightColumnStyle.value.flexGrow,
-            }}
+            style={{ ...rightColumnStyle.value }}
           >
             {mode.value === 'preview' && (
               <SandpackPreview
                 actionsChildren={actionsChildren.value}
                 showNavigator={props.options?.showNavigator}
                 showRefreshButton={props.options?.showRefreshButton}
-                style={rightColumnStyle.value}
+                style={{
+                  ...rightColumnStyle.value,
+                  flex: hasRightColumn.value ? 1 : rightColumnStyle.value.flexGrow,
+                }}
               />
             )}
             {mode.value === 'tests' && (
