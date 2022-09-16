@@ -23,6 +23,12 @@ export const layoutClassName = css({
     minWidth: '350px',
     height: '$layout$height',
 
+    '> div': {
+      '@media screen and (max-width: 768px)': {
+        minWidth: '100% !important;',
+      },
+    },
+
     '@media print': {
       height: 'auto',
       display: 'block',

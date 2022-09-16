@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DefineComponent, defineComponent, PropType } from 'vue';
 
 import { ConsoleIcon } from '../..';
