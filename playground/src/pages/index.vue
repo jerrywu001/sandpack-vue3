@@ -57,7 +57,13 @@ const toggleReadOnly = () => {
 
     <Sandpack :options="{ editorHeight: 220, editorWidthPercentage: 30 }" />
 
+    <br>
+    <br>
+
     <Sandpack :options="{ showConsoleButton: true }" />
+
+    <br>
+    <br>
 
     <Sandpack
       :theme="theme"
@@ -65,6 +71,7 @@ const toggleReadOnly = () => {
       :files="{
         '/test.js': '// test',
       }"
+      :rtl="true"
       :options="{
         autorun: true,
         showTabs: true,

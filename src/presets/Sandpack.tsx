@@ -59,6 +59,11 @@ const SandpackPropValues = {
     required: false,
     default: undefined,
   },
+  rtl: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 };
 
 /**
@@ -154,15 +159,19 @@ const Sandpack = defineComponent({
         theme={props.theme}
       >
         <SandpackLayout>
-          <SandpackCodeEditor
-            {...codeEditorOptions.value}
-            style={{
-              height: `${props.options?.editorHeight}px`, // use the original editor height
-              flexGrow: editorPart.value,
-              flexShrink: editorPart.value,
-              minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
-            }}
-          />
+          {
+            !props?.rtl && (
+              <SandpackCodeEditor
+                {...codeEditorOptions.value}
+                style={{
+                  height: `${props.options?.editorHeight}px`, // use the original editor height
+                  flexGrow: editorPart.value,
+                  flexShrink: editorPart.value,
+                  minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
+                }}
+              />
+            )
+          }
           <SandpackRender
             fragment={!hasRightColumn.value}
             style={{ ...rightColumnStyle.value }}
@@ -202,6 +211,19 @@ const Sandpack = defineComponent({
               </div>
             )}
           </SandpackRender>
+          {
+            props?.rtl && (
+              <SandpackCodeEditor
+                {...codeEditorOptions.value}
+                style={{
+                  height: `${props.options?.editorHeight}px`, // use the original editor height
+                  flexGrow: editorPart.value,
+                  flexShrink: editorPart.value,
+                  minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
+                }}
+              />
+            )
+          }
         </SandpackLayout>
       </SandpackProvider>
     );

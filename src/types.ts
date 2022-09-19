@@ -415,6 +415,10 @@ interface SandpackRootProps<
   customSetup?: SandpackSetup;
   theme?: SandpackThemeProp;
   className?: string;
+  /**
+   * @default false
+   */
+  rtl?: boolean;
 }
 
 /**

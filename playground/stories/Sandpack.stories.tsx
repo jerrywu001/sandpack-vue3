@@ -40,6 +40,15 @@ export default function App() {
   />
 );
 
+export const RtlLayout = () => (
+  <div style={{ width: '800px' }}>
+    <Sandpack
+      rtl={true}
+      template="react"
+    />
+  </div>
+);
+
 export const ShowConsoleButton = () => (
   <div style={{ width: '800px' }}>
     <Sandpack
