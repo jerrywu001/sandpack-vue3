@@ -23,6 +23,7 @@ export const Component = () => (
         '/index.tsx': '',
         '/src/app.tsx': '',
         '/src/components/button.tsx': '',
+        '/src/components/really-loooooooong-naaameeee.tsx': '',
       }}
     >
       <SandpackLayout>

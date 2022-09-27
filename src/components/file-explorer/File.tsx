@@ -1,6 +1,6 @@
 import { buttonClassName } from '../../styles/shared';
 import { classNames } from '../../utils/classNames';
-import { computed, DefineComponent, defineComponent } from 'vue';
+import { computed, DefineComponent, defineComponent, StyleValue } from 'vue';
 import { css, THEME_PREFIX } from '../../styles';
 import { DirectoryIconOpen, DirectoryIconClosed, FileIcon } from '../../icons';
 import { useClasser } from 'code-hike-classer-vue3';
@@ -10,6 +10,12 @@ const explorerClassName = css({
   width: '100%',
   padding: 0,
   marginBottom: '$space$2',
+
+  span: {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+  },
 
   svg: {
     marginRight: '$space$1',
@@ -81,7 +87,7 @@ export const File = defineComponent({
         )}
         data-active={props.active}
         onClick={onClickButton}
-        style={{ paddingLeft: 9 * props.depth + 'px' }}
+        style={{ paddingLeft: 9 * props.depth + 'px' } as StyleValue}
         type="button"
       >
         {
@@ -89,7 +95,7 @@ export const File = defineComponent({
             ? <FileIcon />
             : props.isDirOpen ? <DirectoryIconOpen /> : <DirectoryIconClosed />
         }
-        {fileName.value}
+        <span>{fileName.value}</span>
       </button>
     );
   },
