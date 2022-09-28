@@ -158,7 +158,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
       highlightSpecialChars(),
       history(),
       closeBrackets(),
-
+      ...props.extensions as Extension[],
       keymap.of([
         ...closeBracketsKeymap,
         ...defaultKeymap,
@@ -173,7 +173,6 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
 
       getEditorTheme(),
       highlightTheme,
-      ...props.extensions as Extension[],
     ];
 
     if (props.readOnly) {

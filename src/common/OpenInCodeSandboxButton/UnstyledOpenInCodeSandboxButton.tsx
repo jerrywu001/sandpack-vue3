@@ -60,7 +60,7 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
           parameters: params,
           query: new URLSearchParams({
             file: sandpack.activeFile,
-            'from-sandpack': 'true',
+            utm_medium: 'sandpack',
           }).toString(),
         });
 
