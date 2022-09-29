@@ -2,7 +2,6 @@ import { HighlightStyle, tags } from '@codemirror/highlight';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { javascript } from '@codemirror/lang-javascript';
-import { markdown } from '@codemirror/lang-markdown';
 import type { LanguageSupport } from '@codemirror/language';
 import type { Extension } from '@codemirror/state';
 import type { Text } from '@codemirror/text';
@@ -148,15 +147,14 @@ type SandpackLanguageSupport =
   | 'javascript'
   | 'typescript'
   | 'html'
-  | 'css'
-  | 'markdown';
+  | 'css';
 
 export const getLanguageFromFile = (
   filePath: string | undefined,
   fileType: string | undefined,
   additionalLanguages: CustomLanguage[],
 ): string => {
-  if (!filePath && !fileType) return 'markdown';
+  if (!filePath && !fileType) return 'javascript';
 
   let extension = fileType;
   if (!extension && filePath) {
@@ -174,10 +172,6 @@ export const getLanguageFromFile = (
   }
 
   switch (extension) {
-    case 'js':
-    case 'jsx':
-    case 'json':
-      return 'javascript';
     case 'ts':
     case 'tsx':
       return 'typescript';
@@ -189,10 +183,11 @@ export const getLanguageFromFile = (
     case 'less':
     case 'scss':
       return 'css';
-    case 'md':
-    case 'markdown':
+    case 'js':
+    case 'jsx':
+    case 'json':
     default:
-      return 'markdown';
+      return 'javascript';
   }
 };
 
@@ -205,7 +200,6 @@ export const getCodeMirrorLanguage = (
     typescript: javascript({ jsx: true, typescript: true }),
     html: html(),
     css: css(),
-    markdown: markdown(),
   };
 
   for (const additionalLanguage of additionalLanguages) {

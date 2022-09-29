@@ -80,12 +80,6 @@ export const vue = `<template>
 };
 </script>`;
 
-export const markdown = `## Title
-- List item
-- List item
-- List item
-- List item`;
-
 export const shell = `#!/bin/sh
 EXAMPLE="drawn joyed"
 # Prints the EXAMPLE variable

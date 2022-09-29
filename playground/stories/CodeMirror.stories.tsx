@@ -83,18 +83,6 @@ export const Vue = () => (
   </SandpackProvider>
 );
 
-export const Markdown = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.markdown}
-      fileType="markdown"
-      id="markdown"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
-
 export const CustomLanguageShell = () => (
   <SandpackProvider>
     <CodeEditor
