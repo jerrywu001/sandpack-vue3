@@ -1,6 +1,6 @@
 {
   "name": "codesandbox-sandpack-vue3",
-  "version": "1.2.9",
+  "version": "1.2.8",
   "description": "Vue3 components that give you the power of editable sandboxes that run in the browser.",
   "keywords": [
     "vue3",
@@ -12,7 +12,7 @@
     "@codesandbox/sandpack-vue3",
     "codesandbox"
   ],
-  "homepage": "https://github.com/jerrywu001/sandpack-vue3#readme",
+  "homepage": "https://sandpack-vue3.netlify.app",
   "bugs": {
     "url": "https://github.com/jerrywu001/sandpack-vue3/issues"
   },
