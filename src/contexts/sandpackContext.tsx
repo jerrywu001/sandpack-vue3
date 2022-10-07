@@ -2,7 +2,7 @@
 import isEqual from 'lodash.isequal';
 import { ClasserProvider } from 'code-hike-classer-vue3';
 import { convertedFilesToBundlerFiles, getSandpackStateFromProps } from '../utils/sandpackUtils';
-import { extractErrorDetails, SandpackClient } from '@codesandbox/sandpack-client';
+import { extractErrorDetails, SandpackClient, normalizePath } from '@codesandbox/sandpack-client';
 import { generateRandomId } from '../utils/stringUtils';
 import { type SandpackFiles, useContext, SandpackThemeProvider } from '..';
 import {
@@ -99,7 +99,12 @@ const SandpackProvider = defineComponent({
 
     let unsubscribe: UnsubscribeFunction | undefined;
 
-    const { activeFile, visibleFiles = [], files, environment } = getSandpackStateFromProps(props);
+    const { activeFile, visibleFiles = [], files, environment } = getSandpackStateFromProps({
+      template: props.template,
+      files: props.files,
+      customSetup: props.customSetup,
+      options: props.options,
+    });
 
     const data = reactive({
       reactDevTools: undefined,
@@ -179,7 +184,7 @@ const SandpackProvider = defineComponent({
 
         state.files = { ...state.files, [pathOrFiles]: { code } };
       } else if (typeof pathOrFiles === 'object') {
-        state.files = { ...state.files, ...convertedFilesToBundlerFiles(pathOrFiles) };
+        state.files = normalizePath({ ...state.files, ...convertedFilesToBundlerFiles(pathOrFiles) });
       }
       updateClients();
     }
@@ -505,13 +510,23 @@ const SandpackProvider = defineComponent({
     }
 
     function resetFile(path: string) {
-      const { files: newFiles } = getSandpackStateFromProps(props);
+      const { files: newFiles } = getSandpackStateFromProps({
+        template: props.template,
+        files: props.files,
+        customSetup: props.customSetup,
+        options: props.options,
+      });
       state.files = { ...state.files, [path]: newFiles[path] };
       updateClients();
     }
 
     function resetAllFiles() {
-      const { files: newFiles } = getSandpackStateFromProps(props);
+      const { files: newFiles } = getSandpackStateFromProps({
+        template: props.template,
+        files: props.files,
+        customSetup: props.customSetup,
+        options: props.options,
+      });
       state.files = newFiles;
       updateClients();
     }
@@ -538,7 +553,12 @@ const SandpackProvider = defineComponent({
         /**
          * Custom setup derived from props
          */
-        const stateFromProps = getSandpackStateFromProps(props);
+        const stateFromProps = getSandpackStateFromProps({
+          template: props.template,
+          files: props.files,
+          customSetup: props.customSetup,
+          options: props.options,
+        });
 
         state.activeFile = stateFromProps.activeFile;
         state.visibleFiles = stateFromProps.visibleFiles;

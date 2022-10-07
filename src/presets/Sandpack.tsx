@@ -141,6 +141,7 @@ const Sandpack = defineComponent({
     ) : undefined);
 
     const hasRightColumn = computed(() => props.options?.showConsole || props.options?.showConsoleButton);
+    const customRightColumnStyle = computed(() => (hasRightColumn.value ? rightColumnStyle.value : {}));
 
     watch(
       [() => props.options?.showConsole],
@@ -174,7 +175,7 @@ const Sandpack = defineComponent({
           }
           <SandpackRender
             fragment={!hasRightColumn.value}
-            style={{ ...rightColumnStyle.value }}
+            style={{ ...customRightColumnStyle.value }}
           >
             {mode.value === 'preview' && (
               <SandpackPreview

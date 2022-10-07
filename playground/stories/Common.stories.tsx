@@ -44,7 +44,7 @@ export const SandpackLayoutStory = () => (
 export const LoadingOverlayStory = () => (
   <Provider>
     <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-      <LoadingOverlay showOpenInCodeSandbox={false} />
+      <LoadingOverlay showOpenInCodeSandbox />
     </div>
   </Provider>
 );

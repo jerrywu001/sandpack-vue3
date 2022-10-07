@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.8",
-    "@unocss/reset": "^0.45.25",
+    "@unocss/reset": "^0.45.26",
     "cross-env": "^7.0.3",
-    "unocss": "^0.45.25",
+    "unocss": "^0.45.26",
     "vite-plugin-pages": "^0.26.0",
     "vue-loader": "^17.0.0"
   }

@@ -2,10 +2,6 @@
  * @hidden
  */
 export const SVELTE_TEMPLATE = {
-  environment: 'svelte',
-  main: '/index.js',
-  entry: '/index.js',
-
   files: {
     '/App.svelte': {
       code: `<style>
@@ -23,11 +19,9 @@ export const SVELTE_TEMPLATE = {
     },
     '/index.js': {
       code: `import App from "./App.svelte";
-
 const app = new App({
   target: document.body
 });
-
 export default app;
       `,
     },
@@ -45,8 +39,15 @@ export default app;
   </body>
 </html>`,
     },
+    '/package.json': {
+      code: JSON.stringify({
+        dependencies: {
+          svelte: '^3.0.0',
+        },
+        main: '/index.js',
+      }),
+    },
   },
-  dependencies: {
-    svelte: '^3.0.0',
-  },
+  main: '/index.js',
+  environment: 'svelte',
 };

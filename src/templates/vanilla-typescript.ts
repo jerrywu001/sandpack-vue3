@@ -53,12 +53,16 @@ document.getElementById("app").innerHTML = \`
 </body>
 </html>`,
     },
+    '/package.json': {
+      code: JSON.stringify({
+        dependencies: {},
+        devDependencies: {
+          typescript: '^4.0.0',
+        },
+        main: '/src/index.ts',
+      }),
+    },
   },
-  dependencies: {},
-  devDependencies: {
-    typescript: '^4.0.0',
-  },
-  entry: '/src/index.ts',
   main: '/src/index.ts',
   environment: 'parcel',
 };

@@ -18,7 +18,6 @@ export const REACT_TYPESCRIPT_TEMPLATE = {
     },
     '/App.tsx': {
       code: `export default function App(): JSX.Element {
-  console.log('hello');
   return <h1>Hello World</h1>
 }
 `,
@@ -64,18 +63,22 @@ h1 {
   </body>
 </html>`,
     },
+    '/package.json': {
+      code: JSON.stringify({
+        dependencies: {
+          react: '^18.0.0',
+          'react-dom': '^18.0.0',
+          'react-scripts': '^4.0.0',
+        },
+        devDependencies: {
+          '@types/react': '^18.0.0',
+          '@types/react-dom': '^18.0.0',
+          typescript: '^4.0.0',
+        },
+        main: '/index.tsx',
+      }),
+    },
   },
-  dependencies: {
-    react: '^18.0.0',
-    'react-dom': '^18.0.0',
-    'react-scripts': '^4.0.0',
-  },
-  devDependencies: {
-    '@types/react': '^18.0.0',
-    '@types/react-dom': '^18.0.0',
-    typescript: '^4.0.0',
-  },
-  entry: '/index.tsx',
   main: '/App.tsx',
   environment: 'create-react-app',
 };

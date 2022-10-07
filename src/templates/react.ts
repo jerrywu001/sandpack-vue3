@@ -5,7 +5,6 @@ export const REACT_TEMPLATE = {
   files: {
     '/App.js': {
       code: `export default function App() {
-  console.log('hello');
   return <h1>Hello World</h1>
 }
 `,
@@ -51,13 +50,17 @@ h1 {
   </body>
 </html>`,
     },
+    '/package.json': {
+      code: JSON.stringify({
+        dependencies: {
+          react: '^18.0.0',
+          'react-dom': '^18.0.0',
+          'react-scripts': '^4.0.0',
+        },
+        main: '/index.js',
+      }),
+    },
   },
-  dependencies: {
-    react: '^18.0.0',
-    'react-dom': '^18.0.0',
-    'react-scripts': '^4.0.0',
-  },
-  entry: '/index.js',
   main: '/App.js',
   environment: 'create-react-app',
 };

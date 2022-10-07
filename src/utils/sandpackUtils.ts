@@ -1,14 +1,20 @@
-import type { SandpackBundlerFile, SandpackBundlerFiles } from '@codesandbox/sandpack-client';
-import { addPackageJSONIfNeeded } from '@codesandbox/sandpack-client';
+import type {
+  SandpackBundlerFile,
+  SandpackBundlerFiles,
+} from '@codesandbox/sandpack-client';
+import {
+  addPackageJSONIfNeeded,
+  normalizePath,
+} from '@codesandbox/sandpack-client';
 
 import { SANDBOX_TEMPLATES } from '../templates';
 import type {
-  SandboxEnvironment,
   SandboxTemplate,
-  SandpackFiles,
   SandpackPredefinedTemplate,
   SandpackProviderProps,
   SandpackSetup,
+  SandpackFiles,
+  SandboxEnvironment,
 } from '../types';
 
 export interface SandpackContextInfo {
@@ -18,26 +24,34 @@ export interface SandpackContextInfo {
   environment: SandboxEnvironment;
 }
 
+/**
+ * Creates a standard sandpack state given the setup,
+ * options, and files props. Using this function is
+ * the reliable way to ensure a consistent and predictable
+ * sandpack-content throughout application
+ */
 export const getSandpackStateFromProps = (
   props: SandpackProviderProps,
 ): SandpackContextInfo => {
+  const normalizedFilesPath = normalizePath(props.files);
+
   // Merge predefined template with custom setup
-  const projectSetup = getSetup({
+  const projectSetup = combineTemplateFilesToSetup({
     template: props.template,
     customSetup: props.customSetup,
-    files: props.files,
+    files: normalizedFilesPath,
   });
 
   // visibleFiles and activeFile override the setup flags
-  let visibleFiles = props.options?.visibleFiles ?? [];
-  let activeFile = props.options?.activeFile;
+  let visibleFiles = normalizePath(props.options?.visibleFiles ?? []);
+  let activeFile = props.options?.activeFile
+    ? resolveFile(props.options?.activeFile, normalizedFilesPath || {})
+    : undefined;
 
-  if (visibleFiles.length === 0 && props?.files) {
-    const inputFiles = props.files;
-
+  if (visibleFiles.length === 0 && normalizedFilesPath) {
     // extract open and active files from the custom input files
-    Object.keys(inputFiles).forEach((filePath) => {
-      const file = inputFiles[filePath];
+    Object.keys(normalizedFilesPath).forEach((filePath) => {
+      const file = normalizedFilesPath[filePath];
       if (typeof file === 'string') {
         visibleFiles.push(filePath);
         return;
@@ -95,37 +109,45 @@ export const getSandpackStateFromProps = (
 
   return {
     visibleFiles: existOpenPath,
-    activeFile,
+    /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+    activeFile: activeFile!,
     files,
     environment: projectSetup.environment,
   };
 };
 
+/**
+ * Given a file tree and a file, it uses a couple of rules
+ * to tweak the filename to match with one of the inside of file tree
+ *
+ * - Adds the leading slash;
+ * - Tries to find the same filename with different extensions (js only);
+ * - Returns `null` if it doesn't satisfy any rule
+ */
 export const resolveFile = (
   path: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  files: Record<string, any>,
-): string | undefined => {
-  if (!path) return undefined;
+  files: SandpackFiles,
+): string | null => {
+  const normalizedFilesPath = normalizePath(files);
+  const normalizedPath = normalizePath(path);
 
-  let resolvedPath;
+  if (normalizedPath in normalizedFilesPath) {
+    return normalizedPath;
+  }
 
+  if (!path) {
+    return null;
+  }
+
+  let resolvedPath: string | null = null;
   let index = 0;
   const strategies = ['.js', '.jsx', '.ts', '.tsx'];
-  const leadingSlash = Object.keys(files).every((file) => file.startsWith('/'));
 
   while (!resolvedPath && index < strategies.length) {
-    const slashPath = (): string => {
-      if (path.startsWith('/')) {
-        return leadingSlash ? path : path.replace(/^\/+/, '');
-      }
-
-      return leadingSlash ? `/${path}` : path;
-    };
-    const removeExtension = slashPath().split('.')[0];
+    const removeExtension = normalizedPath.split('.')[0];
     const attemptPath = `${removeExtension}${strategies[index]}`;
 
-    if (files[attemptPath] !== undefined) {
+    if (normalizedFilesPath[attemptPath] !== undefined) {
       resolvedPath = attemptPath;
     }
 
@@ -137,9 +159,10 @@ export const resolveFile = (
 
 /**
  * The template is predefined (eg: react, vue, vanilla)
- * The setup can overwrite anything from the template (eg: files, dependencies, environment, etc.)
+ * The setup can overwrite anything from the template
+ * (eg: files, dependencies, environment, etc.)
  */
-export const getSetup = ({
+const combineTemplateFilesToSetup = ({
   files,
   template,
   customSetup,
@@ -148,88 +171,81 @@ export const getSetup = ({
   template?: SandpackPredefinedTemplate;
   customSetup?: SandpackSetup;
 }): SandboxTemplate => {
-  /**
-   * The input setup might have files in the simple form Record<string, string>
-   * so we convert them to the sandbox template format
-   */
-  const setup = createSetupFromUserInput({ customSetup, files });
-
   if (!template) {
     // If not input, default to vanilla
-    if (!setup) {
-      return SANDBOX_TEMPLATES.vanilla as SandboxTemplate;
+    if (!customSetup) {
+      return SANDBOX_TEMPLATES.vanilla as unknown as SandboxTemplate;
     }
 
-    if (!setup.files || Object.keys(setup.files).length === 0) {
+    if (!files || Object.keys(files).length === 0) {
       throw new Error(
         '[sandpack-vue3]: without a template, you must pass at least one file',
       );
     }
 
     // If not template specified, use the setup entirely
-    return setup as SandboxTemplate;
+    return {
+      ...customSetup,
+      files: convertedFilesToBundlerFiles(files),
+    } as SandboxTemplate;
   }
 
-  const baseTemplate = SANDBOX_TEMPLATES[template] as SandboxTemplate;
+  const baseTemplate = SANDBOX_TEMPLATES[template] as unknown as SandboxTemplate;
   if (!baseTemplate) {
     throw new Error(
       `[sandpack-vue3]: invalid template "${template}" provided`,
     );
   }
 
-  // If no setup, the template is used entirely
-  if (!setup) {
+  // If no setup and not files, the template is used entirely
+  if (!customSetup && !files) {
     return baseTemplate;
   }
 
   // Merge the setup on top of the template
   return {
-    files: { ...baseTemplate.files, ...setup.files },
+    /**
+     * The input setup might have files in the simple form Record<string, string>
+     * so we convert them to the sandbox template format
+     */
+    files: convertedFilesToBundlerFiles({ ...baseTemplate.files, ...files }),
+    /**
+     * Merge template dependencies and user custom dependencies.
+     * As a rule, the custom dependencies must overwrite the template ones.
+     */
     dependencies: {
       ...baseTemplate.dependencies,
-      ...setup.dependencies,
+      ...customSetup?.dependencies,
     },
     devDependencies: {
       ...baseTemplate.devDependencies,
-      ...setup.devDependencies,
+      ...customSetup?.devDependencies,
     },
-    entry: setup.entry || baseTemplate.entry,
-    main: setup.main || baseTemplate.main,
-    environment: setup.environment || baseTemplate.environment,
+    entry: normalizePath(customSetup?.entry || baseTemplate.entry),
+    main: baseTemplate.main,
+    environment: customSetup?.environment || baseTemplate.environment,
   } as SandboxTemplate;
 };
 
+/**
+ * Transform an regular object, which contain files to
+ * an object that sandpack-client can understand
+ *
+ * From: Record<string, string>
+ * To: Record<string, { code: string }>
+ */
 export const convertedFilesToBundlerFiles = (
-  files: SandpackFiles,
-): SandpackBundlerFiles => Object.keys(files).reduce((acc: SandpackBundlerFiles, key) => {
-  if (typeof files[key] === 'string') {
-    acc[key] = { code: files[key] as string };
-  } else {
-    acc[key] = files[key] as SandpackBundlerFile;
-  }
+  files?: SandpackFiles,
+): SandpackBundlerFiles => {
+  if (!files) return {};
 
-  return acc;
-}, {});
+  return Object.keys(files).reduce((acc: SandpackBundlerFiles, key) => {
+    if (typeof files[key] === 'string') {
+      acc[key] = { code: files[key] as string };
+    } else {
+      acc[key] = files[key] as SandpackBundlerFile;
+    }
 
-export const createSetupFromUserInput = ({
-  files,
-  customSetup,
-}: {
-  files?: SandpackFiles;
-  customSetup?: SandpackSetup;
-}): Partial<SandboxTemplate> | null => {
-  if (!files && !customSetup) {
-    return null;
-  }
-
-  if (!files) {
-    return customSetup as Partial<SandboxTemplate>;
-  }
-
-  const convertedFiles = convertedFilesToBundlerFiles(files);
-
-  return {
-    ...customSetup,
-    files: convertedFiles,
-  };
+    return acc;
+  }, {});
 };

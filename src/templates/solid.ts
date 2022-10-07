@@ -5,11 +5,9 @@ export const SOLID_TEMPLATE = {
   files: {
     '/App.tsx': {
       code: `import { Component } from "solid-js";
-
 const App: Component = () => {
   return <h1>Hello World</h1>;
 };
-
 export default App;`,
     },
     '/index.tsx': {
@@ -46,11 +44,15 @@ h1 {
 </body>
 </html>`,
     },
+    '/package.json': {
+      code: JSON.stringify({
+        dependencies: {
+          'solid-js': '1.3.15',
+        },
+        main: '/index.tsx',
+      }),
+    },
   },
-  dependencies: {
-    'solid-js': '1.3.15',
-  },
-  entry: '/index.tsx',
   main: '/App.tsx',
   environment: 'solid',
 };
