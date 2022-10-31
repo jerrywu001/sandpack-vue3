@@ -4,6 +4,14 @@ import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
 import { CodeMirrorProps } from '..';
 import { commentKeymap } from '@codemirror/comment';
 import { defaultHighlightStyle } from '@codemirror/highlight';
+import { getFileName } from '../../../utils/stringUtils';
+import { highlightDecorators } from '../highlightDecorators';
+import { highlightInlineError } from '../highlightInlineError';
+import { history, historyKeymap } from '@codemirror/history';
+import { lineNumbers } from '@codemirror/gutter';
+import { shallowEqual } from '../../../utils/array';
+import { useSandpackTheme } from '../../../hooks';
+import { useSyntaxHighlight } from '../useSyntaxHighlight';
 import { EditorState, type Extension, StateEffect } from '@codemirror/state';
 import {
   getCodeMirrorLanguage,
@@ -11,14 +19,6 @@ import {
   getLanguageFromFile,
   getSyntaxHighlight,
 } from '../utils';
-import { highlightDecorators } from '../highlightDecorators';
-import { highlightInlineError } from '../highlightInlineError';
-import { history, historyKeymap } from '@codemirror/history';
-import { lineNumbers } from '@codemirror/gutter';
-import { shallowEqual } from '../../../utils/array';
-import { useGeneratedId } from '../useGeneratedId';
-import { useSandpackTheme } from '../../../hooks';
-import { useSyntaxHighlight } from '../useSyntaxHighlight';
 import {
   computed,
   watch,
@@ -71,7 +71,6 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   const internalCode = ref<string>(props.code);
   const wrapperRef = ref<HTMLDivElement>();
   const cmView = ref<EditorView>();
-  const ariaId = useGeneratedId(props.id);
   const isIntersecting = ref(false);
 
   const theInitMode = computed(() => props.initMode || 'lazy');
@@ -227,13 +226,15 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     });
 
     view.contentDOM.setAttribute('data-gramm', 'false');
+    view.contentDOM.setAttribute(
+      'aria-label',
+      props.filePath ? `Code Editor for ${getFileName(props.filePath)}` : 'Code Editor',
+    );
 
     if (!props.readOnly) {
-      const attrVal = 'exit-instructions-' + ariaId.value;
-      view.contentDOM.setAttribute('tabIndex', '-1');
-      view.contentDOM.setAttribute('aria-describedby', attrVal);
-    } else {
       view.contentDOM.classList.add('cm-readonly');
+    } else {
+      view.contentDOM.setAttribute('tabIndex', '-1');
     }
 
     cmView.value = view;
@@ -308,7 +309,6 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     shouldInitEditor,
     wrapperRef,
     cmView,
-    ariaId,
     languageExtension,
     syntaxHighlightRender,
   };

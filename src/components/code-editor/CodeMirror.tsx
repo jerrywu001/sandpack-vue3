@@ -26,7 +26,6 @@ const CodeMirror = defineComponent({
 
     // ======= states ===========
     const {
-      ariaId,
       cmView,
       wrapperRef,
       languageExtension,
@@ -176,19 +175,21 @@ const CodeMirror = defineComponent({
         )}
       </>
     ) : (
+      // eslint-disable-next-line jsx-a11y/role-supports-aria-props
       <div
         ref={wrapperRef}
-        aria-describedby={`enter-instructions-${ariaId.value}`}
+        aria-autocomplete="list"
         aria-label={
           props.filePath ? `Code Editor for ${getFileName(props.filePath)}` : 'Code Editor'
         }
+        aria-multiline="true"
         onKeydown={handleContainerKeyDown}
         class={classNames(
           c('cm', props.editorState as SandpackEditorState, languageExtension),
           cmClassName,
           tokensClassName,
         )}
-        role="group"
+        role="textbox"
         tabindex={0}
         translate="no"
       >
@@ -198,22 +199,6 @@ const CodeMirror = defineComponent({
         >
           {syntaxHighlightRender}
         </pre>
-
-        <>
-        <p
-          id={`enter-instructions-${ariaId}`}
-          style={{ display: 'none' }}
-        >
-          To enter the code editing mode, press Enter. To exit the edit mode,
-          press Escape
-        </p>
-        <p
-          id={`exit-instructions-${ariaId}`}
-          style={{ display: 'none' }}
-        >
-          You are editing the code. To exit the edit mode, press Escape
-        </p>
-        </>
       </div>
     );
   },
