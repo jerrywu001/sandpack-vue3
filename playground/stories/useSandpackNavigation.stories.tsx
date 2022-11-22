@@ -1,4 +1,4 @@
-import { SandpackLayout, SandpackPreview, SandpackProvider, useSandpackNavigation } from 'codesandbox-sandpack-vue3';
+import { SandpackLayout, SandpackPreview, SandpackProvider, useSandpackNavigation } from 'sandpack-vue3';
 
 export default {
   title: 'hooks/useSandpackNavigation',

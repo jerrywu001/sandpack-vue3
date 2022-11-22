@@ -1,4 +1,4 @@
-import * as icons from 'codesandbox-sandpack-vue3/icons';
+import * as icons from 'sandpack-vue3/icons';
 
 export default {
   title: 'components/Icons',

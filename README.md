@@ -5,7 +5,7 @@
 Vue3 components that give you the power of editable sandboxes that run in the browser.
 
 ```jsx
-import { Sandpack } from 'codesandbox-sandpack-vue3';
+import { Sandpack } from 'sandpack-vue3';
 
 <Sandpack template="vue3" />;
 ```
@@ -53,7 +53,7 @@ Use [vitepress](https://vitepress.vuejs.org/)/[quasar](https://quasar.dev/start/
 
 ```js
 // main.ts
-import SanpackPlugin from 'codesandbox-sandpack-vue3';
+import SanpackPlugin from 'sandpack-vue3';
 
 app.use(SanpackPlugin());
 ```
@@ -63,7 +63,7 @@ app.use(SanpackPlugin());
 {
   "compilerOptions": {
     "types": [
-      "codesandbox-sandpack-vue3/global"
+      "sandpack-vue3/global"
     ]
   }
 }

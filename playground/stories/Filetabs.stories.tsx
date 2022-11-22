@@ -1,4 +1,4 @@
-import { FileTabs, SandpackCodeViewer, SandpackLayout, SandpackProvider } from 'codesandbox-sandpack-vue3';
+import { FileTabs, SandpackCodeViewer, SandpackLayout, SandpackProvider } from 'sandpack-vue3';
 
 export default {
   title: 'components/File Tabs',

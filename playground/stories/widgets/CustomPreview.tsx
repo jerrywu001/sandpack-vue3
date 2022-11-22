@@ -1,4 +1,4 @@
-import { useSandpack } from 'codesandbox-sandpack-vue3';
+import { useSandpack } from 'sandpack-vue3';
 import { defineComponent, onMounted, ref } from 'vue';
 
 export const CustomPreview = defineComponent({

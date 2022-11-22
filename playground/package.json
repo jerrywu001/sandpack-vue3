@@ -14,10 +14,10 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.9",
-    "@unocss/reset": "^0.46.1",
+    "@iconify-json/carbon": "^1.1.10",
+    "@unocss/reset": "^0.46.5",
     "cross-env": "^7.0.3",
-    "unocss": "^0.46.1",
+    "unocss": "^0.46.5",
     "vite-plugin-pages": "^0.27.1",
     "vue-loader": "^17.0.1"
   }

@@ -6,7 +6,7 @@ import {
   SandpackPreview,
   SandpackProvider,
   SandpackThemeProvider,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 import { Story } from '@storybook/vue3';
 import { ref } from 'vue';
 import { aquaBlue, sandpackDark } from '@codesandbox/sandpack-themes';

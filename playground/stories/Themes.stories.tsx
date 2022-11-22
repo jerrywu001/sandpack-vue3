@@ -1,4 +1,4 @@
-import { Sandpack, SANDPACK_THEMES } from 'codesandbox-sandpack-vue3';
+import { Sandpack, SANDPACK_THEMES } from 'sandpack-vue3';
 import { storiesOf } from '@storybook/vue3';
 
 const stories = storiesOf('presets/Themes', module);

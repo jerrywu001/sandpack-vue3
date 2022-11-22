@@ -10,7 +10,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   resolve: {
     alias: {
-      'codesandbox-sandpack-vue3': path.resolve(__dirname, './src/index.ts'),
+      'sandpack-vue3': path.resolve(__dirname, './src/index.ts'),
     },
   },
   build: {

@@ -20,8 +20,8 @@ module.exports = {
     return mergeConfig(config, {
       resolve: {
         alias: {
-          'codesandbox-sandpack-vue3': path.resolve(__dirname, '../../src'),
-          'codesandbox-sandpack-vue3/': path.resolve(__dirname, '../../src/'),
+          'sandpack-vue3': path.resolve(__dirname, '../../src'),
+          'sandpack-vue3/': path.resolve(__dirname, '../../src/'),
         },
       },
       plugins: [

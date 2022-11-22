@@ -6,7 +6,7 @@ import {
   SandpackLayout,
   SandpackPreview,
   SandpackProvider,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 import { storiesOf } from '@storybook/vue3';
 
 const stories = storiesOf('presets/Themes (external)', module);

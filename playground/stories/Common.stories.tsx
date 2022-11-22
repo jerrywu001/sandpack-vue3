@@ -1,4 +1,4 @@
-import * as OpenOn from 'codesandbox-sandpack-vue3/common/OpenInCodeSandboxButton';
+import * as OpenOn from 'sandpack-vue3/common/OpenInCodeSandboxButton';
 import {
   ErrorOverlay,
   LoadingOverlay,
@@ -6,7 +6,7 @@ import {
   SandpackLayout,
   SandpackProvider,
   SandpackStack,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 import { Provider } from './widgets/Provider';
 
 export default {

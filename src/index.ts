@@ -5,7 +5,7 @@
  * Powered by Sandpack, the online bundler used by CodeSandbox.
  *
  * ```jsx
- * import { Sandpack } from "codesandbox-sandpack-vue3";
+ * import { Sandpack } from "sandpack-vue3";
  *
  * <Sandpack template="vue3" />;
  * ```

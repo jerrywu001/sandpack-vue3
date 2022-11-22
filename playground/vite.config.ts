@@ -13,7 +13,7 @@ export default defineConfig({
     alias: {
       '@/': `${path.resolve(__dirname, 'src')}/`,
       '#/': `${path.resolve(__dirname, '../dist')}/`,
-      'codesandbox-sandpack-vue3': path.resolve(__dirname, process.env.USEPACK === 'true' ? '../dist/esm' : '../src'),
+      'sandpack-vue3': path.resolve(__dirname, process.env.USEPACK === 'true' ? '../dist/esm' : '../src'),
     },
   },
   build: {

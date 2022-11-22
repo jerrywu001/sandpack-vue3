@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
-import { CodeEditor, SandpackProvider } from 'codesandbox-sandpack-vue3';
-import * as mocks from 'codesandbox-sandpack-vue3/components/code-editor/languages-mocks';
+import { CodeEditor, SandpackProvider } from 'sandpack-vue3';
+import * as mocks from 'sandpack-vue3/components/code-editor/languages-mocks';
 import { python } from '@codemirror/lang-python';
 import { LanguageSupport } from '@codemirror/language';
 import { shell } from '@codemirror/legacy-modes/mode/shell';

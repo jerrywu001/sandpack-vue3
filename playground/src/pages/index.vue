@@ -10,7 +10,7 @@ import {
   // SandpackCodeEditor,
   SandpackPredefinedTemplate,
   SandpackTheme,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 
 const template = ref<SandpackPredefinedTemplate>('react');
 const theme = ref<SandpackTheme>(aquaBlue);

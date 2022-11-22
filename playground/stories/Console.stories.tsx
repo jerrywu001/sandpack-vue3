@@ -5,7 +5,7 @@ import {
   SandpackLayout,
   SandpackPreview,
   SandpackProvider,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 import { ref } from 'vue';
 
 export default {

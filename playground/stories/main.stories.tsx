@@ -10,7 +10,7 @@ import {
   SandpackProvider,
   SandpackConsole,
   Sandpack,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 import { computed, ComputedRef, reactive } from 'vue';
 
 export default {

@@ -26,10 +26,10 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "paths": {
-      "codesandbox-sandpack-vue3": [
+      "sandpack-vue3": [
         "src/index.ts"
       ],
-      "codesandbox-sandpack-vue3/*": [
+      "sandpack-vue3/*": [
         "./src/*"
       ]
     }

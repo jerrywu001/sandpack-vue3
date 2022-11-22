@@ -14,7 +14,7 @@ import {
   SandpackRunner,
   SandpackStack,
   SandpackTranspiledCode,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {

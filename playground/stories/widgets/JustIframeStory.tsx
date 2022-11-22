@@ -1,4 +1,4 @@
-import { SandpackProvider } from 'codesandbox-sandpack-vue3';
+import { SandpackProvider } from 'sandpack-vue3';
 import { computed, defineComponent, ref } from 'vue';
 import { CustomOpenInCSB, CustomRefreshButton } from './Common';
 import { CustomPreview } from './CustomPreview';

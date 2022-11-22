@@ -39,10 +39,10 @@
       "#/*": [
         "../dist/*"
       ],
-      "codesandbox-sandpack-vue3": [
+      "sandpack-vue3": [
         "../src"
       ],
-      "codesandbox-sandpack-vue3/*": [
+      "sandpack-vue3/*": [
         "../src/*"
       ]
     }

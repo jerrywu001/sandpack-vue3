@@ -22,7 +22,7 @@ import {
   SandpackThemeProvider,
   SandpackTranspiledCode,
   stackClassName,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 
 export default {
   title: 'presets/Sandpack: custom',

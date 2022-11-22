@@ -3,7 +3,7 @@ import {
   SandpackLayout,
   SandpackProvider,
   SandpackTranspiledCode,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 
 export default {
   title: 'components/Transpiled Code View',

@@ -6,7 +6,7 @@ import {
   SandpackLayout,
   SandpackPreview,
   PreviewProps,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 import { Story } from '@storybook/vue3';
 import { SandpackClient } from './widgets/SandpackClient';
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-promise-executor-return */
-import { REACT_TEMPLATE, Sandpack } from 'codesandbox-sandpack-vue3';
+import { REACT_TEMPLATE, Sandpack } from 'sandpack-vue3';
 import { LanguageSupport } from '@codemirror/language';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
 import { StreamLanguage } from '@codemirror/stream-parser';

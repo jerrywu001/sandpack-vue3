@@ -1,5 +1,5 @@
 import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
-import { useSandpack } from 'codesandbox-sandpack-vue3';
+import { useSandpack } from 'sandpack-vue3';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 
 export const SandpackListener = defineComponent({

@@ -4,7 +4,7 @@ import {
   SandpackPreview,
   SandpackProvider,
   SandpackThemeProvider,
-} from 'codesandbox-sandpack-vue3';
+} from 'sandpack-vue3';
 
 export default {
   title: 'components/Navigator',
