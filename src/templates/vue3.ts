@@ -4,34 +4,22 @@
 export const VUE_TEMPLATE_3 = {
   files: {
     '/src/App.vue': {
-      code: `<template>
-  <main id="app">
-    <h1>{{ helloWorld }}</h1>
-  </main>
-</template>
+      code: `<script setup>
+import { ref } from 'vue';
 
-<script>
-import { ref } from "vue";
-export default {
-   name: "App",
-   setup() {
-      const helloWorld = ref("Hello World");
-      return { helloWorld };
-   }
+const msg = ref('world');
+const count = ref(1);
+
+const add = () => {
+  count.value += 1;
 };
 </script>
 
-<style>
-#app {
-font-family: Avenir, Helvetica, Arial, sans-serif;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-text-align: center;
-color: #2c3e50;
-margin-top: 60px;
-}
-</style>
-`,
+<template>
+  <h1>Hello {{ msg }}</h1>
+  <button @click="add">add</button>
+  <p>count: {{ count }}</p>
+</template>`,
     },
     '/src/main.js': {
       code: `import { createApp } from 'vue'
@@ -64,12 +52,22 @@ createApp(App).mount('#app')
     },
     '/package.json': {
       code: JSON.stringify({
-        dependencies: {
-          'core-js': '^3.6.5',
-          vue: '^3.0.0-0',
-          '@vue/cli-plugin-babel': '4.5.0',
-        },
+        name: 'vue3',
+        version: '0.1.0',
+        private: true,
         main: '/src/main.js',
+        scripts: {
+          serve: 'vue-cli-service serve',
+          build: 'vue-cli-service build',
+        },
+        dependencies: {
+          'core-js': '^3.26.1',
+          vue: '^3.2.45',
+        },
+        devDependencies: {
+          '@vue/cli-plugin-babel': '^5.0.8',
+          '@vue/cli-service': '^5.0.8',
+        },
       }),
     },
   },
