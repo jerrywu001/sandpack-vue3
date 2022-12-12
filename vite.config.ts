@@ -1,5 +1,4 @@
 /// <reference types="vitest" />
-/// <reference types="vite/client" />
 
 import dts from 'vite-plugin-dts';
 import path from 'path';

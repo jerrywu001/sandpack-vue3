@@ -177,12 +177,12 @@ const SandpackProvider = defineComponent({
     }
 
     function updateFile(pathOrFiles: string | SandpackFiles, code?: string) {
-      if (typeof pathOrFiles === 'string' && code) {
-        if (code === state.files[pathOrFiles]?.code) {
+      if (typeof pathOrFiles === 'string') {
+        if (state.files[pathOrFiles]?.code && code === state.files[pathOrFiles].code) {
           return;
         }
 
-        state.files = { ...state.files, [pathOrFiles]: { code } };
+        state.files = { ...state.files, [pathOrFiles]: { code: code ?? '' } };
       } else if (typeof pathOrFiles === 'object') {
         state.files = normalizePath({ ...state.files, ...convertedFilesToBundlerFiles(pathOrFiles) });
       }
