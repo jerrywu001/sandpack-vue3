@@ -1,6 +1,6 @@
 {
   "name": "sandpack-vue3",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Vue3 components that give you the power of editable sandboxes that run in the browser.",
   "keywords": [
     "vue3",
