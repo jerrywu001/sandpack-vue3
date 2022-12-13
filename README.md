@@ -51,10 +51,6 @@ Use [vitepress](https://vitepress.vuejs.org/)/[quasar](https://quasar.dev/start/
 
 ## Register Components Globally
 
-***ts work better with volar@0.40.x plugin (volar@latest has some problem ) in .vue***
-
-***is write with tsx, you can use volar@latest plugin***
-
 ```js
 // main.ts
 import SanpackPlugin from 'sandpack-vue3';
