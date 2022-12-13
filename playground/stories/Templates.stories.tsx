@@ -7,6 +7,5 @@ const stories = storiesOf('presets/Template', module);
 Object.keys(SANDBOX_TEMPLATES)
   .forEach((template) => stories.add(
     template,
-    () => (<Sandpack template={template as SandpackPredefinedTemplate} />
-    ),
+    () => (<Sandpack template={template as SandpackPredefinedTemplate} />),
   ));

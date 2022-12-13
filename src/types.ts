@@ -238,6 +238,7 @@ export type SandpackPredefinedTemplate =
   | 'vanilla-ts'
   | 'vue'
   | 'vue3'
+  | 'vue3-ts'
   | 'svelte'
   | 'solid';
 
@@ -613,7 +614,7 @@ export interface SandboxTemplate {
   files: Record<string, SandpackFile>;
   dependencies: Record<string, string>;
   devDependencies?: Record<string, string>;
-  entry: string;
+  entry?: string;
   main: string;
   environment: SandboxEnvironment;
 }

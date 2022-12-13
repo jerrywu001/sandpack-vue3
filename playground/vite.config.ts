@@ -20,12 +20,10 @@ export default defineConfig({
     sourcemap: true,
   },
   plugins: [
-    // @ts-ignore
     Vue({
       // reactivityTransform: true,
     }),
 
-    // @ts-ignore
     vueJsx(),
 
     // https://github.com/hannoeru/vite-plugin-pages
@@ -33,11 +31,9 @@ export default defineConfig({
       importMode: 'sync',
     }),
 
-    // @ts-ignore
     WindiCSS(),
 
     // https://github.com/antfu/unocss
-    // @ts-ignore
     Unocss({
       configFile: path.resolve(__dirname, 'uno.config.ts'),
     }),
