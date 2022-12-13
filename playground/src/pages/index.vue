@@ -3,7 +3,7 @@ import isEqual from 'lodash.isequal';
 import { ref } from 'vue';
 import { githubLight, aquaBlue } from '@codesandbox/sandpack-themes';
 import {
-  Sandpack,
+  // Sandpack,
   // SandpackLayout,
   // SandpackTranspiledCode,
   // SandpackProvider,

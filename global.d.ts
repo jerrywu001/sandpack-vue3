@@ -11,9 +11,9 @@ import {
   SandpackCodeEditor,
   SandpackCodeViewer,
   SandpackPreview,
-  SandpackRunner,
   SandpackStack,
   SandpackTranspiledCode,
+  SandpackFileExplorer,
 } from 'sandpack-vue3';
 
 declare module '@vue/runtime-core' {
@@ -22,11 +22,10 @@ declare module '@vue/runtime-core' {
     SandpackLayout: typeof SandpackLayout;
     SandpackConsole: typeof SandpackConsole;
     SandpackTests: typeof SandpackTests;
-    SandpackLayout: typeof SandpackLayout;
+    CodeEditor: typeof CodeEditor;
     SandpackProvider: typeof SandpackProvider;
     ErrorOverlay: typeof ErrorOverlay;
     LoadingOverlay: typeof LoadingOverlay;
-    CodeEditor: typeof CodeEditor;
     SandpackCodeEditor: typeof SandpackCodeEditor;
     SandpackCodeViewer: typeof SandpackCodeViewer;
     SandpackPreview: typeof SandpackPreview;
