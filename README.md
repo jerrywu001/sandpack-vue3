@@ -67,7 +67,7 @@ app.use(SanpackPlugin());
     ]
   }
 }
-``
+```
 
 ### registe components
 
