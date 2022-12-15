@@ -15,7 +15,6 @@ import type {
   SandpackSetup,
   SandpackFiles,
   SandboxEnvironment,
-  SandpackFile,
 } from '../types';
 
 export interface SandpackContextInfo {
@@ -24,11 +23,6 @@ export interface SandpackContextInfo {
   files: Record<string, SandpackBundlerFile>;
   environment: SandboxEnvironment;
 }
-
-const getActiveFileFromFiles = (files: SandpackFiles): string => {
-  const item = Object.entries(files || {}).find(v => !!(v[1] as SandpackFile).active);
-  return item ? item[0] : '';
-};
 
 /**
  * Creates a standard sandpack state given the setup,
@@ -49,16 +43,10 @@ export const getSandpackStateFromProps = (
   });
 
   // visibleFiles and activeFile override the setup flags
-  const activeFileFromProps = props.options?.activeFile;
-  const activeFileFromFiles = getActiveFileFromFiles(normalizedFilesPath as SandpackFiles);
   let visibleFiles = normalizePath(props.options?.visibleFiles ?? []);
-  let activeFile = activeFileFromProps
-    ? (normalizedFilesPath ? resolveFile(activeFileFromProps, normalizedFilesPath || {}) : activeFileFromProps)
+  let activeFile = props.options?.activeFile
+    ? resolveFile(props.options?.activeFile, projectSetup.files)
     : undefined;
-
-  if (!activeFile && activeFileFromFiles) {
-    activeFile = activeFileFromFiles;
-  }
 
   if (visibleFiles.length === 0 && normalizedFilesPath) {
     // extract open and active files from the custom input files

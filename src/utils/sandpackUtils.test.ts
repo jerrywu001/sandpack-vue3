@@ -6,6 +6,19 @@ import {
   convertedFilesToBundlerFiles,
 } from './sandpackUtils';
 
+const mainCode = `import { createApp } from 'vue';
+import App from './App.vue';
+createApp(App).mount('#app');
+`;
+
+const appCode = `<script setup lang="ts">
+import { ref } from 'vue';
+const msg = ref<string>('world');
+</script>
+<template>
+  <h1>Hello {{ msg }}</h1>
+</template>`;
+
 describe('resolveFile', () => {
   it('resolves the file path based on the extension', () => {
     const data = resolveFile('/file.js', { '/file.ts': '' });
@@ -134,6 +147,54 @@ describe('getSandpackStateFromProps', () => {
     });
 
     expect(setup.activeFile).toEqual('/entry.js');
+  });
+
+  test('custom active in files', () => {
+    const setup = getSandpackStateFromProps({
+      template: 'vue3-ts',
+      files: {
+        '/src/main.ts': {
+          code: mainCode,
+          active: true,
+        },
+        '/src/App.vue': {
+          code: appCode,
+        },
+      },
+    });
+
+    expect(setup.activeFile).toBe('/src/main.ts');
+  });
+
+  test('custom activeFile', () => {
+    const setup = getSandpackStateFromProps({
+      template: 'react',
+      options: {
+        activeFile: '/index.js',
+      },
+    });
+
+    expect(setup.activeFile).toBe('/index.js');
+  });
+
+  test('custom active in files & activeFile', () => {
+    const setup = getSandpackStateFromProps({
+      template: 'vue3-ts',
+      files: {
+        '/src/main.ts': {
+          code: mainCode,
+        },
+        '/src/App.vue': {
+          code: appCode,
+          active: true,
+        },
+      },
+      options: {
+        activeFile: '/src/main.ts',
+      },
+    });
+
+    expect(setup.activeFile).toBe('/src/main.ts');
   });
 
   /**
