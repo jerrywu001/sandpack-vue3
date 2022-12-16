@@ -46,7 +46,7 @@ const toggleReadOnly = () => {
 
 <template>
   <div>
-    <div py2 px6>
+    <div>
       <button class="mybtn" @click="toggleTemplate">toggle template</button>
       <button class="mybtn" @click="toggleTheme">toggle theme</button>
       <button class="mybtn" @click="toggleWrapContent">toggle wrap content</button>

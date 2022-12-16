@@ -8,9 +8,7 @@ import SanpackPlugin from 'sandpack-vue3';
 
 import App from './App.vue';
 
-import '@unocss/reset/tailwind.css';
 import 'virtual:windi.css';
-import 'uno.css';
 import './styles/main.css';
 import './index.css';
 

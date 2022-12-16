@@ -1,19 +1,26 @@
 <template>
-  <main
-    font-sans
-    text="gray-700 dark:gray-200"
-    relative
-  >
+  <main class="main">
     <RouterView v-slot="{ Component }">
       <transition name="page-fade">
         <component
           :is="Component"
-          absolute
-          left-0
-          right-0
-          top-25
+          class="component"
         />
       </transition>
     </RouterView>
   </main>
 </template>
+
+<style>
+.main {
+  color: rgba(55, 65, 81, 1);
+  position: relative;
+}
+
+.component {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 25px;
+}
+</style>
