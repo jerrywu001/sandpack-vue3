@@ -104,6 +104,7 @@ const CodeMirror = defineComponent({
           } else if (
             message.type === 'action' &&
             message.action === 'show-error' &&
+            message.path === props.filePath &&
             message.line
           ) {
             view?.dispatch({
