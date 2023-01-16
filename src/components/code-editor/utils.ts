@@ -1,10 +1,10 @@
-import { HighlightStyle, tags } from '@codemirror/highlight';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { javascript } from '@codemirror/lang-javascript';
 import type { LanguageSupport } from '@codemirror/language';
-import type { Extension } from '@codemirror/state';
-import type { Text } from '@codemirror/text';
+import { HighlightStyle } from '@codemirror/language';
+import type { Extension, Text } from '@codemirror/state';
+import { tags } from '@lezer/highlight';
 import { EditorView } from '@codemirror/view';
 
 import { THEME_PREFIX } from '../../styles';
@@ -111,18 +111,30 @@ export const getSyntaxHighlight = (theme: SandpackTheme): HighlightStyle => High
     class: classNameToken('static'),
   },
   {
-    tag: tags.tagName,
-    class: classNameToken('tag'),
+    tag: tags.variableName,
+    class: classNameToken('plain'),
   },
-  { tag: tags.variableName, class: classNameToken('plain') },
   {
     // Highlight function call
     tag: tags.function(tags.variableName),
     class: classNameToken('definition'),
   },
   {
-    // Highlight function definition differently (eg: functional component def in React)
-    tag: tags.definition(tags.function(tags.variableName)),
+    // Standard tags, e.g <h1 />
+    tag: tags.standard(tags.tagName),
+    class: classNameToken('tag'),
+  },
+  {
+    tag: [
+      // Highlight function call
+      tags.function(tags.variableName),
+
+      // Highlight function definition differently (eg: functional component def in React)
+      tags.definition(tags.function(tags.variableName)),
+
+      // "Custom tags", meaning React component
+      tags.tagName,
+    ],
     class: classNameToken('definition'),
   },
   {

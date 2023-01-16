@@ -1,6 +1,5 @@
-import type { HighlightStyle } from '@codemirror/highlight';
-import { highlightTree } from '@codemirror/highlight';
-import type { LanguageSupport } from '@codemirror/language';
+import type { HighlightStyle, LanguageSupport } from '@codemirror/language';
+import { highlightTree } from '@lezer/highlight';
 
 export const useSyntaxHighlight = ({
   langSupport,
@@ -32,7 +31,7 @@ export const useSyntaxHighlight = ({
     }
   };
 
-  highlightTree(tree, highlightTheme.match, (from, to, className) => {
+  highlightTree(tree, highlightTheme, (from, to, className) => {
     addElement(from, '');
     addElement(to, className);
   });

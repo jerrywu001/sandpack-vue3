@@ -2,86 +2,28 @@
 import { CodeEditor, SandpackProvider } from 'sandpack-vue3';
 import * as mocks from 'sandpack-vue3/components/code-editor/languages-mocks';
 import { python } from '@codemirror/lang-python';
-import { LanguageSupport } from '@codemirror/language';
+import { LanguageSupport, StreamLanguage } from '@codemirror/language';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
-import { StreamLanguage } from '@codemirror/stream-parser';
+import { storiesOf } from '@storybook/vue3';
 
 export default {
   title: 'components/CodeMirror',
   component: CodeEditor,
 };
 
-export const HTML = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.html}
-      fileType="html"
-      id="html"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
+const stories = storiesOf('components/CodeMirror', module);
 
-export const Javascript = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.js}
-      fileType="js"
-      id="js"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
-
-export const JSX = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.jsx}
-      fileType="jsx"
-      id="jsx"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
-
-export const CSS = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.css}
-      fileType="css"
-      id="css"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
-
-export const Less = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.less}
-      fileType="less"
-      id="less"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
-
-export const Vue = () => (
-  <SandpackProvider>
-    <CodeEditor
-      code={mocks.vue}
-      fileType="vue"
-      id="vue"
-      initMode="immediate"
-      showLineNumbers={false}
-    />
-  </SandpackProvider>
-);
+Object.entries(mocks).forEach(([languageName, mockFile]) => stories.add(languageName, () => (
+    <SandpackProvider>
+      <CodeEditor
+        code={mockFile}
+        fileType={languageName}
+        id={languageName}
+        initMode="immediate"
+        showLineNumbers={false}
+      />
+    </SandpackProvider>
+)));
 
 export const CustomLanguageShell = () => (
   <SandpackProvider>

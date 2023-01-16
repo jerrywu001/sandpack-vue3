@@ -418,14 +418,16 @@ export interface SandpackInternalOptions<
   Files extends SandpackFiles | any = any,
   TemplateName extends SandpackPredefinedTemplate = SandpackPredefinedTemplate,
 > {
-  visibleFiles?: Array<
-  Files extends SandpackFiles
-    ? TemplateFiles<TemplateName> | keyof Files
-    : TemplateFiles<TemplateName>
-  >;
-  activeFile?: Files extends SandpackFiles
-    ? TemplateFiles<TemplateName> | keyof Files
-    : TemplateFiles<TemplateName>;
+  // visibleFiles?: Array<
+  // Files extends SandpackFiles
+  //   ? TemplateFiles<TemplateName> | keyof Files
+  //   : TemplateFiles<TemplateName>
+  // >;
+  // activeFile?: Files extends SandpackFiles
+  //   ? TemplateFiles<TemplateName> | keyof Files
+  //   : TemplateFiles<TemplateName>;
+  visibleFiles?: string[];
+  activeFile?: string;
 
   initMode?: SandpackInitMode;
   initModeObserverOptions?: IntersectionObserverInit;

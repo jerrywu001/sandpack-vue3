@@ -1,14 +1,10 @@
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
-import { bracketMatching } from '@codemirror/matchbrackets';
-import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
+import { closeBrackets, closeBracketsKeymap } from '@codemirror/autocomplete';
+import { syntaxHighlighting, bracketMatching } from '@codemirror/language';
 import { CodeMirrorProps } from '..';
-import { commentKeymap } from '@codemirror/comment';
-import { defaultHighlightStyle } from '@codemirror/highlight';
 import { getFileName } from '../../../utils/stringUtils';
 import { highlightDecorators } from '../highlightDecorators';
 import { highlightInlineError } from '../highlightInlineError';
-import { history, historyKeymap } from '@codemirror/history';
-import { lineNumbers } from '@codemirror/gutter';
 import { shallowEqual } from '../../../utils/array';
 import { useSandpackTheme } from '../../../hooks';
 import { useSyntaxHighlight } from '../useSyntaxHighlight';
@@ -33,12 +29,15 @@ import {
   highlightActiveLine,
   keymap,
   EditorView,
+  lineNumbers,
 } from '@codemirror/view';
 import {
   defaultKeymap,
   indentLess,
   indentMore,
   deleteGroupBackward,
+  history,
+  historyKeymap,
 } from '@codemirror/commands';
 import { type CustomLanguage } from '../../../types';
 
@@ -120,7 +119,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
             ({ key }) => key === 'Tab',
           );
 
-          return customKey?.run(view) ?? true;
+          return customKey?.run?.(view) ?? true;
         },
       },
       {
@@ -132,7 +131,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
             ({ key }) => key === 'Shift-Tab',
           );
 
-          return customKey?.run(view) ?? true;
+          return customKey?.run?.(view) ?? true;
         },
       },
       {
@@ -162,16 +161,13 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
         ...closeBracketsKeymap,
         ...defaultKeymap,
         ...historyKeymap,
-        ...commentKeymap,
         ...customCommandsKeymap,
         ...props.extensionsKeymap as KeyBinding[],
       ] as KeyBinding[]),
       langSupport,
 
-      defaultHighlightStyle.fallback,
-
       getEditorTheme(),
-      highlightTheme,
+      syntaxHighlighting(highlightTheme),
     ];
 
     if (props.readOnly) {
@@ -198,11 +194,6 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
       extensionList.push(highlightInlineError());
     }
 
-    const startState = EditorState.create({
-      doc: props.code,
-      extensions: extensionList,
-    });
-
     const parentDiv = wrapperRef.value as HTMLDivElement;
     const existingPlaceholder = parentDiv.querySelector(
       '.sp-pre-placeholder',
@@ -212,7 +203,8 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     }
 
     const view = new EditorView({
-      state: startState,
+      doc: props.code,
+      extensions: extensionList,
       parent: parentDiv,
       dispatch: (tr): void => {
         view.update([tr]);
