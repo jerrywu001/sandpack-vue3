@@ -218,17 +218,21 @@ const Sandpack = defineComponent({
       () => {
         if (!resizablePanels.value) return;
 
-        document.body.removeEventListener('mousemove', onDragMove);
-        document.body.removeEventListener('mouseup', stopDragging);
-        document.body.addEventListener('mousemove', onDragMove);
-        document.body.addEventListener('mouseup', stopDragging);
+        if (typeof document !== 'undefined') {
+          document.body.removeEventListener('mousemove', onDragMove);
+          document.body.removeEventListener('mouseup', stopDragging);
+          document.body.addEventListener('mousemove', onDragMove);
+          document.body.addEventListener('mouseup', stopDragging);
+        }
       },
       { immediate: true },
     );
 
     onBeforeUnmount(() => {
-      document.body.removeEventListener('mousemove', onDragMove);
-      document.body.removeEventListener('mouseup', stopDragging);
+      if (typeof document !== 'undefined') {
+        document.body.removeEventListener('mousemove', onDragMove);
+        document.body.removeEventListener('mouseup', stopDragging);
+      }
     });
 
     return () => (
