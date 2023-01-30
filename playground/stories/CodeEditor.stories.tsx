@@ -148,7 +148,7 @@ export const ReadOnly = () => (
     <Sandpack
       files={{
         '/index.tsx': { code: '', hidden: true },
-        '/src/App.tsx': { code: '// showTabs: false', readOnly: true },
+        '/App.tsx': { code: '// showTabs: false', readOnly: true },
         '/src/components/button.tsx': { code: 'World', readOnly: false },
       }}
       options={{ showTabs: false, readOnly: true }}
@@ -159,7 +159,7 @@ export const ReadOnly = () => (
     <Sandpack
       files={{
         '/index.tsx': { code: '', hidden: true },
-        '/src/App.tsx': { code: '// showTabs: false', readOnly: true },
+        '/App.tsx': { code: '// showTabs: false', readOnly: true },
         '/src/components/button.tsx': { code: 'World', readOnly: false },
       }}
       options={{ showTabs: false, readOnly: true, showReadOnly: false }}
@@ -170,7 +170,7 @@ export const ReadOnly = () => (
     <Sandpack
       files={{
         '/index.tsx': { code: '', hidden: true },
-        '/src/App.tsx': { code: 'Hello', readOnly: true, active: true },
+        '/App.tsx': { code: 'Hello', readOnly: true, active: true },
         '/src/components/button.tsx': { code: 'World', readOnly: false },
       }}
       options={{ showTabs: true, readOnly: false, showReadOnly: false }}

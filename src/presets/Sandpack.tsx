@@ -3,7 +3,7 @@ import { roundedButtonClassName, buttonClassName, iconStandaloneClassName } from
 import { classNames } from '../utils/classNames';
 import { ConsoleIcon } from '../icons';
 import { SandpackTests } from '../components/tests';
-import { css } from '../styles';
+import { css, THEME_PREFIX } from '../styles';
 import { SandpackLayout } from '../common';
 import { SandpackProvider } from '../contexts/sandpackContext';
 import {
@@ -19,6 +19,8 @@ import {
   PropType,
   ref,
   watch,
+  onBeforeUnmount,
+  type StyleValue,
 } from 'vue';
 import {
   SandpackFiles,
@@ -74,6 +76,14 @@ const Sandpack = defineComponent({
   name: 'Sandpack',
   props: SandpackPropValues,
   setup(props: SandpackInternalProps<unknown, SandpackPredefinedTemplate>) {
+    const counter = ref(0);
+    const dragEventTargetRef = ref<any>(null);
+    const horizontalSize = ref(props.options?.editorWidthPercentage ?? 50);
+    /** just for console log */
+    const verticalSize = ref(70);
+    const consoleVisibility = ref(props.options?.showConsole ?? false);
+
+    const resizablePanels = computed(() => props.options?.resizablePanels ?? true);
     const codeEditorOptions = computed<CodeEditorProps>(() => ({
       showTabs: props.options?.showTabs,
       showLineNumbers: props.options?.showLineNumbers,
@@ -109,23 +119,17 @@ const Sandpack = defineComponent({
       classes: props.options?.classes,
     }));
 
-    const consoleVisibility = ref(props.options?.showConsole ?? false);
-    const counter = ref(0);
-
     /**
      * Parts are set as `flex` values, so they set the flex shrink/grow
      * Cannot use width percentages as it doesn't work with
      * the automatic layout break when the component is under 700px
      */
-    const editorPart = computed(() => props.options?.editorWidthPercentage || 50);
-    const previewPart = computed(() => 100 - editorPart.value);
-
     const rightColumnStyle = computed(() => ({
-      flexGrow: previewPart.value,
-      flexShrink: previewPart.value,
+      flexGrow: 100 - horizontalSize.value,
+      flexShrink: 100 - horizontalSize.value,
       flexBasis: 0,
-      minWidth: `${700 * (previewPart.value / (previewPart.value + editorPart.value))}px`,
-      gap: consoleVisibility.value ? 1 : 0,
+      width: 100 - horizontalSize.value + '%',
+      gap: consoleVisibility.value ? '1px' : '0',
       height: props.options?.editorHeight ? `${props.options?.editorHeight}px` : undefined, // use the original editor height
     }));
 
@@ -141,7 +145,65 @@ const Sandpack = defineComponent({
     ) : undefined);
 
     const hasRightColumn = computed(() => props.options?.showConsole || props.options?.showConsoleButton);
-    const customRightColumnStyle = computed(() => (hasRightColumn.value ? rightColumnStyle.value : {}));
+    const customRightColumnStyle = computed(() => (
+      hasRightColumn.value
+        ? { class: THEME_PREFIX + '-preset-column', style: rightColumnStyle.value }
+        : {}
+    ));
+
+    const topRowStyle = computed(() => hasRightColumn.value
+      ? {
+        flexGrow: verticalSize.value,
+        flexShrink: verticalSize.value,
+        flexBasis: 0,
+        overflow: 'hidden',
+      }
+      : rightColumnStyle.value);
+
+    const onDragMove = (event: MouseEvent) => {
+      if (!dragEventTargetRef.value) return;
+
+      event.preventDefault();
+
+      const container = dragEventTargetRef.value.parentElement as
+        | HTMLDivElement
+        | undefined;
+
+      if (!container) return;
+
+      const rtl = props?.rtl ?? false;
+      const direction = dragEventTargetRef.value.dataset.direction as
+          | 'horizontal'
+          | 'vertical';
+      const isHorizontal = direction === 'horizontal';
+
+      const { left, top, height, width } = container.getBoundingClientRect();
+      const offset = isHorizontal
+        ? ((event.clientX - left) / width) * 100
+        : ((event.clientY - top) / height) * 100;
+      const boundaries = Math.min(Math.max(offset, 25), 75);
+
+      if (isHorizontal) {
+        horizontalSize.value = rtl ? 100 - boundaries : boundaries;
+      } else {
+        verticalSize.value = boundaries;
+      }
+
+      container.querySelectorAll(`.${THEME_PREFIX}-stack`).forEach((item) => {
+        (item as HTMLDivElement).style.pointerEvents = 'none';
+      });
+    };
+
+    const stopDragging = () => {
+      const container = dragEventTargetRef.value?.parentElement as HTMLDivElement;
+
+      if (container) {
+        container.querySelectorAll(`.${THEME_PREFIX}-stack`).forEach((item) => {
+          (item as HTMLDivElement).style.pointerEvents = '';
+        });
+        dragEventTargetRef.value = null;
+      }
+    };
 
     watch(
       [() => props.options?.showConsole],
@@ -151,8 +213,27 @@ const Sandpack = defineComponent({
       { immediate: true },
     );
 
+    watch(
+      [() => props.options],
+      () => {
+        if (!resizablePanels.value) return;
+
+        document.body.removeEventListener('mousemove', onDragMove);
+        document.body.removeEventListener('mouseup', stopDragging);
+        document.body.addEventListener('mousemove', onDragMove);
+        document.body.addEventListener('mouseup', stopDragging);
+      },
+      { immediate: true },
+    );
+
+    onBeforeUnmount(() => {
+      document.body.removeEventListener('mousemove', onDragMove);
+      document.body.removeEventListener('mouseup', stopDragging);
+    });
+
     return () => (
       <SandpackProvider
+        {...props}
         customSetup={props.customSetup}
         files={props.files as TemplateFiles<SandpackPredefinedTemplate>}
         options={providerOptions.value}
@@ -166,50 +247,80 @@ const Sandpack = defineComponent({
                 {...codeEditorOptions.value}
                 style={{
                   height: `${props.options?.editorHeight}px`, // use the original editor height
-                  flexGrow: editorPart.value,
-                  flexShrink: editorPart.value,
-                  minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
+                  flexGrow: horizontalSize.value,
+                  flexShrink: horizontalSize.value,
+                  flexBasis: 0,
+                  overflow: 'hidden',
                 }}
               />
             )
           }
+
+          {resizablePanels.value && (
+            <div
+              class={classNames(
+                dragHandler({ direction: 'horizontal' }),
+                THEME_PREFIX + '-resize-handler',
+              )}
+              data-direction="horizontal"
+              onMousedown={(event) => {
+                dragEventTargetRef.value = event.target;
+              }}
+              style={{
+                left: `calc(${props?.rtl ? 100 - horizontalSize.value : horizontalSize.value}% - 5px)`,
+              } as StyleValue}
+            />
+          )}
+
           <SandpackRender
             fragment={!hasRightColumn.value}
-            style={{ ...customRightColumnStyle.value }}
+            {...customRightColumnStyle.value}
           >
             {mode.value === 'preview' && (
               <SandpackPreview
                 actionsChildren={actionsChildren.value}
                 showNavigator={props.options?.showNavigator}
                 showRefreshButton={props.options?.showRefreshButton}
-                style={{
-                  ...rightColumnStyle.value,
-                  flex: hasRightColumn.value ? 1 : rightColumnStyle.value.flexGrow,
-                }}
+                style={topRowStyle.value}
               />
             )}
             {mode.value === 'tests' && (
               <SandpackTests
                 actionsChildren={actionsChildren.value}
-                style={{
-                  ...rightColumnStyle.value,
-                  flex: hasRightColumn.value ? 1 : rightColumnStyle.value.flexGrow,
-                }}
+                style={topRowStyle.value}
               />
             )}
 
             {(props.options?.showConsoleButton || consoleVisibility.value) && (
-              <div
-                class={consoleWrapper.toString()}
-                style={{
-                  flex: consoleVisibility.value ? 0.5 : 0,
-                }}
-              >
-                <SandpackConsole
-                  onLogsChange={(logs) => { counter.value = logs.length; }}
-                  showHeader={false}
-                />
-              </div>
+              <>
+                {resizablePanels.value && consoleVisibility.value && (
+                  <div
+                    class={classNames(
+                      dragHandler({ direction: 'vertical' }),
+                      THEME_PREFIX + '-resize-handler',
+                    )}
+                    data-direction="vertical"
+                    onMousedown={(event) => {
+                      dragEventTargetRef.value = event.target;
+                    }}
+                    style={{ top: `calc(${verticalSize.value}% - 5px)` } as StyleValue}
+                  />
+                )}
+
+                <div
+                  class={classNames(consoleWrapper)}
+                  style={{
+                    flexGrow: consoleVisibility.value ? 100 - verticalSize.value : 0,
+                    flexShrink: consoleVisibility.value ? 100 - verticalSize.value : 0,
+                    flexBasis: 0,
+                  } as StyleValue}
+                >
+                  <SandpackConsole
+                    onLogsChange={(logs) => { counter.value = logs.length; }}
+                    showHeader={false}
+                  />
+                </div>
+              </>
             )}
           </SandpackRender>
           {
@@ -218,9 +329,10 @@ const Sandpack = defineComponent({
                 {...codeEditorOptions.value}
                 style={{
                   height: `${props.options?.editorHeight}px`, // use the original editor height
-                  flexGrow: editorPart.value,
-                  flexShrink: editorPart.value,
-                  minWidth: `${700 * (editorPart.value / (previewPart.value + editorPart.value))}px`,
+                  flexGrow: horizontalSize.value,
+                  flexShrink: horizontalSize.value,
+                  flexBasis: 0,
+                  overflow: 'hidden',
                 }}
               />
             )
@@ -265,6 +377,32 @@ const ConsoleCounterButton = defineComponent({
     );
   },
 }) as DefineComponent<IConsoleCounterButtonProp>;
+
+const dragHandler = css({
+  position: 'absolute',
+  zIndex: '$top',
+
+  variants: {
+    direction: {
+      vertical: {
+        right: 0,
+        left: 0,
+        height: 10,
+        cursor: 'ns-resize',
+      },
+      horizontal: {
+        top: 0,
+        bottom: 0,
+        width: 10,
+        cursor: 'ew-resize',
+      },
+    },
+  },
+
+  '@media screen and (max-width: 768px)': {
+    display: 'none',
+  },
+});
 
 const buttonCounter = css({
   position: 'relative',

@@ -104,7 +104,7 @@ const toggleReadOnly = () => {
     <br>
     <br>
 
-    <Sandpack template="test-ts" />
+    <Sandpack template="test-ts" rtl />
 
     <br>
     <br>
@@ -116,6 +116,7 @@ const toggleReadOnly = () => {
           code: `import { createApp } from 'vue';
 import App from './App.vue';
 
+console.log('hello');
 createApp(App).mount('#app');`,
           readOnly: true,
         },
@@ -125,7 +126,7 @@ createApp(App).mount('#app');`,
         visibleFiles: ['/src/App.vue', '/src/main.js', '/public/index.html'],
         activeFile: '/src/main.js',
         showConsoleButton: true,
-        showConsole: false,
+        showConsole: true,
       }"
     />
   </div>

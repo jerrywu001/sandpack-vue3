@@ -1,5 +1,5 @@
 import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider } from 'sandpack-vue3';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, type StyleValue } from 'vue';
 
 export const MultiplePreviewsStory = defineComponent({
   name: 'MultiplePreviewsStory',
@@ -15,7 +15,7 @@ export const MultiplePreviewsStory = defineComponent({
           <SandpackLayout>
             <SandpackCodeEditor />
             {previews.value.map((pr) => (
-              <SandpackPreview key={pr} />
+              <SandpackPreview key={pr} style={{ minWidth: '320px' } as StyleValue} />
             ))}
           </SandpackLayout>
         </SandpackProvider>

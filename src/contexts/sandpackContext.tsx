@@ -375,6 +375,7 @@ const SandpackProvider = defineComponent({
       if (client) {
         client.cleanup();
         client.iframe.contentWindow?.location.replace('about:blank');
+        client.iframe.removeAttribute('src');
         delete clients[clientId];
       } else {
         delete preregisteredIframes[clientId];

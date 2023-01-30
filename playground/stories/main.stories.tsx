@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as themes from '@codesandbox/sandpack-themes';
 import {
   CodeEditorProps,
@@ -11,7 +12,7 @@ import {
   SandpackConsole,
   Sandpack,
 } from 'sandpack-vue3';
-import { computed, ComputedRef, reactive } from 'vue';
+import { computed, ComputedRef, reactive, type StyleValue } from 'vue';
 
 export default {
   title: 'Intro/Playground',
@@ -66,8 +67,8 @@ export const Main = () => {
   }));
 
   return () => (
-    <div style={{ display: 'flex' }}>
-      <div style={{ marginRight: '2em', minWidth: 200 }}>
+    <div style={{ display: 'flex' } as StyleValue}>
+      <div style={{ marginRight: '2em', minWidth: '200px' } as StyleValue}>
         {Object.entries(config).map(([key, value]) => {
           if (typeof value === 'string') {
             if (key === 'Template') {
@@ -195,6 +196,7 @@ export const Main = () => {
           }
           options={{
             ...config.Options,
+            resizablePanels: false,
           }}
           template={
             config.Template === 'exhaustedFilesTests' ? undefined : config.Template
@@ -205,6 +207,61 @@ export const Main = () => {
     </div>
   );
 };
+
+export const Resizable = () => (
+  <>
+    <div style={{ maxWidth: '820px', margin: 'auto', padding: '4em 0' } as StyleValue}>
+      <Sandpack
+        files={{
+          'App.js': `export default function Example() {
+return (
+  <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div className="md:flex">
+      <div className="md:shrink-0">
+        <img className="h-48 w-full object-cover md:h-full md:w-48" src="https://images.unsplash.com/photo-1637734433731-621aca1c8cb6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=404&q=80" alt="Modern building architecture" />
+      </div>
+      <div className="p-8">
+        <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Company retreats</div>
+        <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">Incredible accomodation for your team</a>
+        <p className="mt-2 text-slate-500">Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of places to do just that.</p>
+      </div>
+    </div>
+  </div>
+)
+}`,
+        }}
+        options={{
+          externalResources: ['https://cdn.tailwindcss.com'],
+          showLineNumbers: true,
+          showConsole: true,
+          showConsoleButton: true,
+          resizablePanels: true,
+        }}
+        template="react"
+      />
+      <br />
+
+      <Sandpack
+        options={{
+          showLineNumbers: true,
+          showConsole: false,
+          showConsoleButton: false,
+        }}
+        template="vue"
+      />
+
+      <br />
+
+      <Sandpack
+        options={{
+          showLineNumbers: true,
+          showConsole: false,
+          showConsoleButton: true,
+        }}
+      />
+    </div>
+  </>
+);
 
 const defaultTemplate = SANDBOX_TEMPLATES['react-ts'];
 
@@ -239,3 +296,7 @@ test('renders welcome message', () => {
     }),
   },
 };
+
+export const Basic = () => (
+    <Sandpack />
+);

@@ -15,7 +15,8 @@ import type { LanguageSupport } from '@codemirror/language';
 import type { SANDBOX_TEMPLATES } from './templates';
 
 import type { CodeEditorProps } from '.';
-import { CSSProperties, HTMLAttributes, Ref } from 'vue';
+import { HTMLAttributes, Ref } from 'vue';
+import { CSSProperties } from '@stitches/core';
 
 /**
  * ------------------------ Public documentation ------------------------
@@ -106,6 +107,10 @@ export interface SandpackOptions {
   showConsole?: boolean;
   closableTabs?: boolean;
   wrapContent?: boolean;
+  /**
+   * @default true
+   */
+  resizablePanels?: boolean;
 
   codeEditor?: SandpackCodeOptions;
 
@@ -461,6 +466,10 @@ export interface SandpackInternalProps<
     showConsole?: boolean;
     closableTabs?: boolean;
     wrapContent?: boolean;
+    /**
+     * @default true
+     */
+    resizablePanels?: boolean;
 
     codeEditor?: SandpackCodeOptions;
 

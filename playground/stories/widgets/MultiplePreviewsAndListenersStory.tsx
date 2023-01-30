@@ -1,5 +1,5 @@
 import { SandpackCodeEditor, SandpackLayout, SandpackPreview, SandpackProvider } from 'sandpack-vue3';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, StyleValue } from 'vue';
 import { SandpackListener } from './SandpackListener';
 
 export const MultiplePreviewsAndListenersStory = defineComponent({
@@ -20,7 +20,7 @@ export const MultiplePreviewsAndListenersStory = defineComponent({
           <SandpackLayout>
             <SandpackCodeEditor />
             {previews.value.map((pr) => (
-              <SandpackPreview key={pr} />
+              <SandpackPreview key={pr} style={{ minWidth: '320px' } as StyleValue} />
             ))}
           </SandpackLayout>
         </SandpackProvider>
