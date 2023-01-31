@@ -166,7 +166,7 @@ export const SandpackPreview = defineComponent({
             title="Sandpack Preview"
           />
 
-          { props.showSandpackErrorOverlay && <ErrorOverlay /> }
+          { props.showSandpackErrorOverlay && <ErrorOverlay clientId={clientId.value} /> }
 
           <div
             class={classNames(

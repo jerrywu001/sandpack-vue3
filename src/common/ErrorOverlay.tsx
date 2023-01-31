@@ -4,10 +4,18 @@ import { defineComponent } from 'vue';
 import { useErrorMessage } from '../hooks/useErrorMessage';
 import { THEME_PREFIX } from '../styles';
 import { absoluteClassName, errorClassName, errorMessageClassName } from '../styles/shared';
+import { RefreshButton } from '../components';
 
 export const ErrorOverlay = defineComponent({
   name: 'ErrorOverlay',
-  setup(_, { slots, attrs }) {
+  props: {
+    clientId: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
+  setup(props, { slots, attrs }) {
     const error = useErrorMessage();
     const c = useClasser(THEME_PREFIX);
 
@@ -27,6 +35,14 @@ export const ErrorOverlay = defineComponent({
               <div class={classNames(c('error-message'), errorMessageClassName)}>
                 {error.value.message || (slots.default ? slots.default() : null) }
               </div>
+              <RefreshButton
+                clientId={props.clientId}
+                style={{
+                  position: 'absolute',
+                  right: '6px',
+                  bottom: '6px',
+                }}
+              />
             </div>
           )
         }

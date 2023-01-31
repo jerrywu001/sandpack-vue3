@@ -98,7 +98,7 @@ export const SandpackTranspiledCode = defineComponent({
           style={{ display: 'none' }}
           title="transpiled sandpack code"
         />
-        <ErrorOverlay />
+        <ErrorOverlay clientId="hidden" />
         <LoadingOverlay clientId="hidden" showOpenInCodeSandbox={false} />
       </div>
     );
