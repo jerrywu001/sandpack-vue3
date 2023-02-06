@@ -15,8 +15,22 @@
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.14",
+    "@storybook/addon-actions": "~6.5.16",
+    "@storybook/addon-docs": "~6.5.16",
+    "@storybook/addon-essentials": "~6.5.16",
+    "@storybook/addon-links": "~6.5.16",
+    "@storybook/builder-vite": "0.4.0",
+    "@storybook/vue3": "~6.5.16",
     "cross-env": "^7.0.3",
     "vite-plugin-pages": "^0.28.0",
     "vue-loader": "^17.0.1"
+  },
+  "overrides": {
+    "@storybook/addon-essentials": {
+      "babel-loader": "^9.1.0"
+    },
+    "@storybook/vue3": {
+      "babel-loader": "^9.1.0"
+    }
   }
 }
