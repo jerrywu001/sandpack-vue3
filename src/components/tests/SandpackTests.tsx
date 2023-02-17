@@ -66,6 +66,15 @@ interface Props {
   watchMode?: boolean;
   onComplete?: (specs: Record<string, Spec>) => void;
   actionsChildren?: JSX.Element;
+  showVerboseButton?: boolean;
+  showWatchButton?: boolean;
+  /**
+   * Hide the tests and supress logs
+   * If `true` the tests will be hidden and the logs will be supressed.
+   * This is useful when you want to run tests in the background and don't want to show the tests to the user.
+   * @default false
+   */
+  hideTestsAndSupressLogs?: boolean;
 }
 
 export const SandpackTests = defineComponent({
@@ -90,6 +99,21 @@ export const SandpackTests = defineComponent({
       type: Object as PropType<JSX.Element>,
       required: false,
       default: null,
+    },
+    showVerboseButton: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    showWatchButton: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    hideTestsAndSupressLogs: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   setup(props: Props, { slots, attrs }) {
@@ -427,6 +451,9 @@ export const SandpackTests = defineComponent({
         <iframe ref={iframe} style={{ display: 'none' }} title="Sandpack Tests" />
 
         <Header
+          hideTestsAndSupressLogs={props.hideTestsAndSupressLogs as boolean}
+          showVerboseButton={props.showVerboseButton as boolean}
+          showWatchButton={props.showWatchButton as boolean}
           setSuiteOnly={() => { state.value.suiteOnly = !state.value.suiteOnly; }}
           setVerbose={() => { state.value = { ...state.value, verbose: !state.value.verbose }; }}
           setWatchMode={() => { state.value = { ...state.value, watchMode: !state.value.watchMode }; }}
@@ -478,6 +505,7 @@ export const SandpackTests = defineComponent({
                 specs={specs.value}
                 status={state.value.status}
                 verbose={state.value.verbose}
+                hideTestsAndSupressLogs={props.hideTestsAndSupressLogs}
               />
 
               {state.value.status === 'complete' && testResults.value.total > 0 && (

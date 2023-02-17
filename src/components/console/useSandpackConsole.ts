@@ -17,11 +17,13 @@ export const useSandpackConsole = (props?: {
   clientId?: string;
   maxMessageCount?: number;
   showSyntaxError?: boolean;
+  resetOnPreviewRestart?: boolean;
 }): { logs: Ref<SandpackConsoleData>; reset: () => void } => {
   let unsubscribe: UnsubscribeFunction;
   const logs = ref<SandpackConsoleData>([]);
   const { listen } = useSandpack();
 
+  const resetOnPreviewRestart = computed(() => props?.resetOnPreviewRestart ?? false);
   const showSyntaxError = computed(() => props?.showSyntaxError ?? false);
   const maxMessageCount = computed(() => props?.maxMessageCount ?? MAX_MESSAGE_COUNT);
 
@@ -29,16 +31,22 @@ export const useSandpackConsole = (props?: {
     if (unsubscribe) unsubscribe();
 
     unsubscribe = listen((message) => {
-      if (message.type === 'console' && message.codesandbox) {
-        if (message.log.find(({ method }) => method === 'clear')) {
+      if (resetOnPreviewRestart.value && message.type === 'start') {
+        logs.value = [];
+      } else if (message.type === 'console' && message.codesandbox) {
+        const payloadLog = Array.isArray(message.log)
+          ? message.log
+          : [message.log];
+
+        if (payloadLog.find(({ method }) => method === 'clear')) {
           logs.value = [CLEAR_LOG];
           return;
         }
 
         const logsMessages = showSyntaxError.value
-          ? message.log
-          : message.log.filter((messageItem) => {
-            const messagesWithoutSyntaxErrors = messageItem.data.filter(
+          ? payloadLog
+          : payloadLog.filter((messageItem) => {
+            const messagesWithoutSyntaxErrors = messageItem?.data?.filter?.(
               (dataItem) => {
                 if (typeof dataItem !== 'string') return true;
 
@@ -46,7 +54,7 @@ export const useSandpackConsole = (props?: {
 
                 return matches.length === 0;
               },
-            );
+            ) ?? [];
 
             return messagesWithoutSyntaxErrors.length > 0;
           });
@@ -68,7 +76,6 @@ export const useSandpackConsole = (props?: {
 
   watch(
     [
-      listen,
       maxMessageCount,
       showSyntaxError,
       () => props?.clientId,

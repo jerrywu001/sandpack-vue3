@@ -12,7 +12,7 @@ import type { SandpackState } from '../types';
 
 interface UseSandpackClient {
   sandpack: SandpackState;
-  getClient: () => SandpackClient | null;
+  getClient: () => InstanceType<typeof SandpackClient> | null;
   iframe: Ref<HTMLIFrameElement | null>;
   listen: (listener: ListenerFunction) => UnsubscribeFunction;
   dispatch: (message: SandpackMessage) => void;
@@ -52,7 +52,7 @@ export const useSandpackClient = (): UseSandpackClient => {
     }
   });
 
-  const getClient = (): SandpackClient | null => {
+  const getClient = (): InstanceType<typeof SandpackClient> | null => {
     const { clients } = sandpack;
     return toRaw(clients[clientId.value] || null);
   };

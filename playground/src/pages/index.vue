@@ -54,15 +54,6 @@ const toggleReadOnly = () => {
       <button class="mybtn" @click="toggleReadOnly">toggle readOnly</button>
       <button class="mybtn" @click="toggleClosable">toggle closable</button>
     </div>
-
-    <Sandpack :options="{ editorHeight: 220, editorWidthPercentage: 30 }" />
-
-    <br>
-    <br>
-
-    <Sandpack :options="{ showConsoleButton: true }" />
-
-    <br>
     <br>
 
     <Sandpack
@@ -85,12 +76,26 @@ const toggleReadOnly = () => {
         showConsoleButton: true,
       }"
     />
+    <br>
+    <br>
+
+    <Sandpack
+      :files="{}"
+      theme="auto"
+      template="vite-react"
+      :options="{
+        showConsoleButton: true,
+      }"
+    />
+    <br>
+    <br>
+
+    <Sandpack :options="{ editorHeight: 220, editorWidthPercentage: 30 }" />
 
     <br>
     <br>
 
-    <hr>
-
+    <Sandpack :options="{ showConsoleButton: true }" />
     <br>
     <br>
 
@@ -126,7 +131,7 @@ createApp(App).mount('#app');`,
         visibleFiles: ['/src/App.vue', '/src/main.js', '/public/index.html'],
         activeFile: '/src/main.js',
         showConsoleButton: true,
-        showConsole: true,
+        showConsole: false,
       }"
     />
   </div>

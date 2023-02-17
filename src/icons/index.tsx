@@ -41,6 +41,34 @@ const SVG = defineComponent({
   },
 }) as DefineComponent<SVGAttributes>;
 
+export const RestartIcon = (): JSX.Element => (
+  <SVG fill="none" stroke="currentColor">
+    <title>Restart script</title>
+    <path
+      d="M8 2C4.68629 2 2 4.68629 2 8C2 10.0946 3.07333 11.9385 4.7 13.0118"
+      stroke-linecap="round"
+    />
+    <path
+      d="M14.0005 7.9998C14.0005 5.82095 12.8391 3.91335 11.1016 2.8623"
+      stroke-linecap="round"
+    />
+    <path
+      d="M14.0003 2.3335H11.167C10.8908 2.3335 10.667 2.55735 10.667 2.8335V5.66683"
+      stroke-linecap="round"
+    />
+    <path
+      d="M1.99967 13.6665L4.83301 13.6665C5.10915 13.6665 5.33301 13.4426 5.33301 13.1665L5.33301 10.3332"
+      stroke-linecap="round"
+    />
+    <path d="M10 10L12 12L10 14" stroke-linecap="round" stroke-linejoin="round" />
+    <path
+      d="M14.667 14L12.667 14"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </SVG>
+);
+
 export const RunIcon = (): JSX.Element => (
   <SVG>
     <title>Run sandbox</title>

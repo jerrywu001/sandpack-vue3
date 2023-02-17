@@ -21,6 +21,7 @@ export const OpenInCodeSandboxButton = defineComponent({
         )}
       >
         <ExportIcon />
+        <span>Open Sandbox</span>
       </UnstyledOpenInCodeSandboxButton>
     );
   },

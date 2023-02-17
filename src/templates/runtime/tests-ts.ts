@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 export const TEST_TYPESCRIPT_TEMPLATE = {
   files: {
     'tsconfig.json': {
@@ -21,6 +18,7 @@ export const TEST_TYPESCRIPT_TEMPLATE = {
     },
     '/add.test.ts': {
       code: `import { add } from './add';
+
 describe('add', () => {
   test('Commutative Law of Addition', () => {
     expect(add(1, 2)).toBe(add(2, 1));
@@ -32,7 +30,7 @@ describe('add', () => {
         dependencies: {},
         devDependencies: { typescript: '^4.0.0' },
         main: '/add.ts',
-      }),
+      }, null, 2),
     },
   },
   main: '/add.test.ts',

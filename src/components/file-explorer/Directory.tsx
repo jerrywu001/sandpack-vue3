@@ -18,6 +18,7 @@ export interface Props extends SandpackFileExplorerProp {
   depth: number;
   visibleFiles?: NonNullable<SandpackOptions['visibleFiles']>;
   autoHiddenFiles?: boolean;
+  initialCollapsedFolder?: string[];
 }
 
 /**
@@ -48,6 +49,13 @@ export const Directory = defineComponent({
       required: false,
       default: undefined,
     },
+    initialCollapsedFolder: {
+      type: Array as PropType<Array<string> | undefined>,
+      required: false,
+      default() {
+        return [];
+      },
+    },
     autoHiddenFiles: {
       type: Boolean,
       required: false,
@@ -56,7 +64,7 @@ export const Directory = defineComponent({
   },
   // @ts-ignore
   setup(props: Props) {
-    const open = ref(true);
+    const open = ref(!props.initialCollapsedFolder?.includes(props.prefixedPath || ''));
 
     const toggleOpen = () => {
       open.value = !open.value;
@@ -77,6 +85,7 @@ export const Directory = defineComponent({
             activeFile={props.activeFile}
             depth={props.depth + 1}
             files={props.files}
+            initialCollapsedFolder={props.initialCollapsedFolder}
             prefixedPath={props.prefixedPath}
             selectFile={props.selectFile}
             visibleFiles={props.visibleFiles}

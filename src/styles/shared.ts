@@ -6,7 +6,6 @@ export const iconStandaloneClassName = css({
 
 export const buttonClassName = css({
   appearance: 'none',
-  border: '0',
   outline: 'none',
   display: 'flex',
   alignItems: 'center',
@@ -16,6 +15,8 @@ export const buttonClassName = css({
   transition: 'color $default, background $default',
   cursor: 'pointer',
   color: '$colors$clickable',
+  border: '0',
+  textDecoration: 'none',
 
   '&:disabled': { color: '$colors$disabled' },
 
@@ -31,9 +32,19 @@ export const buttonClassName = css({
 
   [`&.${iconStandaloneClassName}`]: {
     padding: '$space$1',
-    width: '$space$7',
     height: '$space$7',
     display: 'flex',
+  },
+
+  // If there's a children besides the icon
+  [`&.${iconStandaloneClassName}&:not(:has(span))`]: {
+    width: '$space$7',
+  },
+
+  [`&.${iconStandaloneClassName}&:has(svg + span)`]: {
+    paddingRight: '$space$3',
+    paddingLeft: '$space$2',
+    gap: '$space$1',
   },
 });
 
@@ -51,21 +62,22 @@ export const roundedTestButtonClassName = css({
 });
 
 export const roundedButtonClassName = css({
-  backgroundColor: '$colors$surface2 !important',
+  backgroundColor: '$colors$surface2',
   borderRadius: '99999px',
+  border: '1px solid $colors$surface3',
   '&[data-active="true"]': {
     color: '$colors$surface1',
     background: '$colors$accent',
   },
 
   "&:hover:not(:disabled,[data-active='true'])": {
-    backgroundColor: '$colors$surface3 !important',
+    backgroundColor: '$colors$surface3',
   },
 });
 
 export const iconClassName = css({ padding: 0 });
 
-const fadeIn = keyframes({
+export const fadeIn = keyframes({
   '0%': {
     opacity: 0,
     transform: 'translateY(4px)',
@@ -96,7 +108,30 @@ export const errorClassName = css({
   backgroundColor: '$colors$errorSurface',
 });
 
+export const errorBundlerClassName = css({
+  padding: '$space$10',
+  backgroundColor: '$colors$surface1',
+
+  [`.${buttonClassName}`]: {
+    marginTop: '$space$6',
+    width: 'auto',
+    gap: '$space$2',
+    padding: '0 $space$3 0 $space$2',
+  },
+});
+
 export const errorMessageClassName = css({
   animation: `${fadeIn} 150ms ease`,
   color: '$colors$error',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$space$3',
+
+  a: {
+    color: 'inherit',
+  },
+
+  p: {
+    margin: 0,
+  },
 });

@@ -1,8 +1,8 @@
-/**
- * @hidden
- */
+import { commonFiles } from '../common';
+
 export const VANILLA_TYPESCRIPT_TEMPLATE = {
   files: {
+    ...commonFiles,
     'tsconfig.json': {
       code: `{
   "compilerOptions": {
@@ -21,36 +21,30 @@ export const VANILLA_TYPESCRIPT_TEMPLATE = {
   }
 }`,
     },
-    '/src/index.ts': {
+    '/index.ts': {
       code: `import "./styles.css";
+
 document.getElementById("app").innerHTML = \`
-<h1>Hello World</h1>
-<div>
-  We use the same configuration as Parcel to bundle this sandbox, you can find more
-  info about Parcel
-  <a href="https://parceljs.org" target="_blank" rel="noopener noreferrer">here</a>.
-</div>
+<h1>Hello world</h1>
 \`;
 `,
-    },
-    '/src/styles.css': {
-      code: `body {
-  font-family: sans-serif;
-}
-      `,
     },
     '/index.html': {
       code: `<!DOCTYPE html>
 <html>
+
 <head>
   <title>Parcel Sandbox</title>
   <meta charset="UTF-8" />
 </head>
+
 <body>
   <div id="app"></div>
-  <script src="src/index.ts">
+
+  <script src="index.ts">
   </script>
 </body>
+
 </html>`,
     },
     '/package.json': {
@@ -59,10 +53,10 @@ document.getElementById("app").innerHTML = \`
         devDependencies: {
           typescript: '^4.0.0',
         },
-        main: '/src/index.ts',
-      }),
+        main: '/index.ts',
+      }, null, 2),
     },
   },
-  main: '/src/index.ts',
+  main: '/index.ts',
   environment: 'parcel',
 };

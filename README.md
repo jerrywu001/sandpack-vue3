@@ -12,6 +12,12 @@ import { Sandpack } from 'sandpack-vue3';
 <Sandpack template="vue3" />;
 ```
 
+Frome 3.0, we add some new templates:
+
+[Quickstart](https://sandpack.codesandbox.io/docs/quickstart#preview)
+
+`node nextjs vite vite-react vite-react-ts vite-vue vite-vue-ts vite-svelte vite-svelte-ts vite-solid vite-lit astro`
+
 [Read more](https://sandpack.codesandbox.io/)
 
 ## online demo

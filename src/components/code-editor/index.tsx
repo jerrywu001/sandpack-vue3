@@ -35,7 +35,6 @@ export interface CodeMirrorRef {
 
 export interface CodeMirrorProps {
   onCodeUpdate?: (newCode: string) => void;
-  id?: string;
   code: string;
   filePath?: string;
   fileType?: string;
@@ -115,11 +114,6 @@ export interface CodeEditorProps {
    */
   extensionsKeymap?: KeyBinding[];
   /**
-   * By default, Sandpack generates a random value to use as an id.
-   * Use this to override this value if you need predictable values.
-   */
-  id?: string;
-  /**
    * This disables editing of the editor content by the user.
    */
   readOnly?: boolean;
@@ -178,11 +172,6 @@ export const SandpackCodeEditor = defineComponent({
       required: false,
       default: undefined,
     },
-    id: {
-      type: String,
-      required: false,
-      default: undefined,
-    },
     readOnly: {
       type: Boolean,
       required: false,
@@ -226,7 +215,6 @@ export const SandpackCodeEditor = defineComponent({
             extensions={props.extensions}
             extensionsKeymap={props.extensionsKeymap}
             filePath={sandpack.activeFile}
-            id={props.id}
             initMode={props.initMode || sandpack.initMode}
             onCodeUpdate={handleCodeUpdate}
             readOnly={props.readOnly || readOnlyFile.value}

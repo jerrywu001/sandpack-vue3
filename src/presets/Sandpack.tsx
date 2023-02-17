@@ -1,10 +1,9 @@
 /* eslint-disable vue/one-component-per-file */
-import { roundedButtonClassName, buttonClassName, iconStandaloneClassName } from '../styles/shared';
 import { classNames } from '../utils/classNames';
 import { ConsoleIcon } from '../icons';
 import { SandpackTests } from '../components/tests';
 import { css, THEME_PREFIX } from '../styles';
-import { SandpackLayout } from '../common';
+import { RoundedButton, SandpackLayout } from '../common';
 import { SandpackProvider } from '../contexts/sandpackContext';
 import {
   CodeEditorProps,
@@ -83,6 +82,7 @@ const Sandpack = defineComponent({
     const verticalSize = ref(70);
     const consoleVisibility = ref(props.options?.showConsole ?? false);
 
+    const rtlLayout = computed(() => (props?.rtl || props?.options?.rtl) ?? false);
     const resizablePanels = computed(() => props.options?.resizablePanels ?? true);
     const codeEditorOptions = computed<CodeEditorProps>(() => ({
       showTabs: props.options?.showTabs,
@@ -95,7 +95,6 @@ const Sandpack = defineComponent({
       extensionsKeymap: props.options?.codeEditor?.extensionsKeymap,
       readOnly: props.options?.readOnly,
       showReadOnly: props.options?.showReadOnly,
-      id: props.options?.id,
       additionalLanguages: props.options?.codeEditor?.additionalLanguages,
     }));
 
@@ -171,7 +170,6 @@ const Sandpack = defineComponent({
 
       if (!container) return;
 
-      const rtl = props?.rtl ?? false;
       const direction = dragEventTargetRef.value.dataset.direction as
           | 'horizontal'
           | 'vertical';
@@ -184,7 +182,7 @@ const Sandpack = defineComponent({
       const boundaries = Math.min(Math.max(offset, 25), 75);
 
       if (isHorizontal) {
-        horizontalSize.value = rtl ? 100 - boundaries : boundaries;
+        horizontalSize.value = rtlLayout.value ? 100 - boundaries : boundaries;
       } else {
         verticalSize.value = boundaries;
       }
@@ -238,27 +236,26 @@ const Sandpack = defineComponent({
     return () => (
       <SandpackProvider
         {...props}
+        key={props.template}
         customSetup={props.customSetup}
         files={props.files as TemplateFiles<SandpackPredefinedTemplate>}
         options={providerOptions.value}
         template={props.template as SandpackPredefinedTemplate}
         theme={props.theme}
       >
-        <SandpackLayout>
-          {
-            !props?.rtl && (
-              <SandpackCodeEditor
-                {...codeEditorOptions.value}
-                style={{
-                  height: `${props.options?.editorHeight}px`, // use the original editor height
-                  flexGrow: horizontalSize.value,
-                  flexShrink: horizontalSize.value,
-                  flexBasis: 0,
-                  overflow: 'hidden',
-                }}
-              />
-            )
-          }
+        <SandpackLayout
+          class={rtlLayout.value ? classNames(rtlLayoutClassName) : ''}
+        >
+          <SandpackCodeEditor
+            {...codeEditorOptions.value}
+            style={{
+              height: `${props.options?.editorHeight}px`, // use the original editor height
+              flexGrow: horizontalSize.value,
+              flexShrink: horizontalSize.value,
+              flexBasis: 0,
+              overflow: 'hidden',
+            }}
+          />
 
           {resizablePanels.value && (
             <div
@@ -271,7 +268,7 @@ const Sandpack = defineComponent({
                 dragEventTargetRef.value = event.target;
               }}
               style={{
-                left: `calc(${props?.rtl ? 100 - horizontalSize.value : horizontalSize.value}% - 5px)`,
+                left: `calc(${rtlLayout.value ? 100 - horizontalSize.value : horizontalSize.value}% - 5px)`,
               } as StyleValue}
             />
           )}
@@ -327,20 +324,6 @@ const Sandpack = defineComponent({
               </>
             )}
           </SandpackRender>
-          {
-            props?.rtl && (
-              <SandpackCodeEditor
-                {...codeEditorOptions.value}
-                style={{
-                  height: `${props.options?.editorHeight}px`, // use the original editor height
-                  flexGrow: horizontalSize.value,
-                  flexShrink: horizontalSize.value,
-                  flexBasis: 0,
-                  overflow: 'hidden',
-                }}
-              />
-            )
-          }
         </SandpackLayout>
       </SandpackProvider>
     );
@@ -366,18 +349,10 @@ const ConsoleCounterButton = defineComponent({
   // @ts-ignore
   setup(props: IConsoleCounterButtonProp) {
     return () => (
-      <button
-        class={classNames(
-          buttonClassName,
-          iconStandaloneClassName,
-          roundedButtonClassName,
-          buttonCounter,
-        )}
-        onClick={() => { props.onClick(); }}
-      >
+      <RoundedButton class={buttonCounter.toString()} onClick={props.onClick}>
         <ConsoleIcon />
-        {props.counter > 0 && <span>{props.counter}</span>}
-      </button>
+        {props.counter > 0 && <strong>{props.counter}</strong>}
+      </RoundedButton>
     );
   },
 }) as DefineComponent<IConsoleCounterButtonProp>;
@@ -411,7 +386,7 @@ const dragHandler = css({
 const buttonCounter = css({
   position: 'relative',
 
-  span: {
+  strong: {
     background: '$colors$clickable',
     color: '$colors$surface1',
     minWidth: '12px',
@@ -423,6 +398,7 @@ const buttonCounter = css({
     position: 'absolute',
     top: '0',
     right: '0',
+    fontWeight: 'normal',
   },
 });
 
@@ -430,6 +406,15 @@ const consoleWrapper = css({
   transition: 'flex $transitions$default',
   width: '100%',
   overflow: 'hidden',
+});
+
+const rtlLayoutClassName = css({
+  flexDirection: 'row-reverse',
+
+  '@media screen and (max-width: 768px)': {
+    flexFlow: 'wrap-reverse !important',
+    flexDirection: 'initial',
+  },
 });
 
 export { Sandpack };

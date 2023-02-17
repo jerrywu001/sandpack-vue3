@@ -44,7 +44,6 @@ import { type CustomLanguage } from '../../../types';
 export default function useDelayCodeEditor(props: CodeMirrorProps) {
   // ===== vars & states ========
   let timer: NodeJS.Timer;
-
   const sandpackTheme = useSandpackTheme();
   // const languageExtension = getLanguageFromFile(props.filePath, props.fileType);
   // const langSupport = getCodeMirrorLanguage(languageExtension);
@@ -223,7 +222,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
       props.filePath ? `Code Editor for ${getFileName(props.filePath)}` : 'Code Editor',
     );
 
-    if (!props.readOnly) {
+    if (props.readOnly) {
       view.contentDOM.classList.add('cm-readonly');
     } else {
       view.contentDOM.setAttribute('tabIndex', '-1');

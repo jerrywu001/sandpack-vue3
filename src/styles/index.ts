@@ -12,7 +12,10 @@ export const THEME_PREFIX = 'sp';
 
 const getNodeProcess = (): false | string | undefined => {
   if (typeof process !== 'undefined') {
-    return process?.env?.SANDPACK_BARE_COMPONENTS;
+    return (
+      process.env?.SANDPACK_BARE_COMPONENTS ||
+      process.env?.NEXT_PUBLIC_SANDPACK_BARE_COMPONENTS
+    );
   }
 
   return false;
@@ -93,7 +96,7 @@ export const standardizeTheme = (
     return {
       theme: predefinedTheme,
       id: inputTheme,
-      mode: 'light',
+      mode: isDarkColor(predefinedTheme.colors.surface1) ? 'dark' : 'light',
     };
   }
 

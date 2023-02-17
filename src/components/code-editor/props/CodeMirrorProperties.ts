@@ -12,9 +12,6 @@ const CodeMirrorProperties = {
     type: String,
     required: true,
   },
-  id: {
-    type: String,
-  },
   filePath: {
     type: String,
   },

@@ -1,7 +1,7 @@
 import CodeMirrorProperties from './props/CodeMirrorProperties';
 import useDelayCodeEditor from './data/useDelayCodeEditor';
 import { CodeMirrorProps } from '.';
-import { defineComponent, nextTick, onMounted, watch } from 'vue';
+import { defineComponent, nextTick, onBeforeUnmount, onMounted, onUnmounted, watch } from 'vue';
 import { getFileName } from '../../utils/stringUtils';
 import { useClasser } from 'code-hike-classer-vue3';
 import type { DefineComponent } from 'vue';
@@ -67,7 +67,7 @@ const CodeMirror = defineComponent({
     watch(
       () => props.code, // Update editor when code passed as prop from outside sandpack changes
       (newCode) => {
-        if (cmView.value && newCode !== internalCode.value) {
+        if (cmView.value && typeof newCode === 'string' && newCode !== internalCode.value) {
           const view = cmView.value;
 
           const selection = view.state.selection.ranges.some(
@@ -148,6 +148,14 @@ const CodeMirror = defineComponent({
 
       return `var(--${THEME_PREFIX}-space-${offset})`;
     };
+
+    onBeforeUnmount(() => {
+      if (unsubscribe) unsubscribe();
+    });
+
+    onUnmounted(() => {
+      if (unsubscribe) unsubscribe();
+    });
 
     // ======= render ===========
     return () => props.readOnly ? (

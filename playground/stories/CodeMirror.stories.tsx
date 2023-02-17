@@ -18,14 +18,13 @@ Object.entries(mocks).forEach(([languageName, mockFile]) => stories.add(language
       <CodeEditor
         code={mockFile}
         fileType={languageName}
-        id={languageName}
         initMode="immediate"
         showLineNumbers={false}
       />
     </SandpackProvider>
 )));
 
-export const CustomLanguageShell = () => (
+stories.add('CustomLanguageShell', () => (
   <SandpackProvider>
     <CodeEditor
       additionalLanguages={[
@@ -37,14 +36,13 @@ export const CustomLanguageShell = () => (
       ]}
       code={mocks.shell}
       filePath="example.sh"
-      id="shell"
       initMode="immediate"
       showLineNumbers={false}
     />
   </SandpackProvider>
-);
+));
 
-export const CustomLanguagePython = () => (
+stories.add('CustomLanguagePython', () => (
   <SandpackProvider>
     <CodeEditor
       additionalLanguages={[
@@ -56,14 +54,13 @@ export const CustomLanguagePython = () => (
       ]}
       code={mocks.python}
       fileType="python"
-      id="python"
       initMode="immediate"
       showLineNumbers={false}
     />
   </SandpackProvider>
-);
+));
 
-export const ShowLineNumber = () => (
+stories.add('ShowLineNumber', () => (
   <SandpackProvider>
     <CodeEditor
       code={`
@@ -75,26 +72,24 @@ export const ShowLineNumber = () => (
 }
 `}
       fileType="less"
-      id="less"
       initMode="immediate"
       showLineNumbers
     />
   </SandpackProvider>
-);
+));
 
-export const WrapContent = () => (
+stories.add('WrapContent', () => (
   <SandpackProvider>
     <CodeEditor
       code={Array(20).fill('Lorem ipsum').join('')}
-      id="wrap"
       initMode="immediate"
       showLineNumbers
       wrapContent
     />
   </SandpackProvider>
-);
+));
 
-export const Decorators = () => (
+stories.add('Decorators', () => (
   <SandpackProvider>
     <style>
       {`.highlight, .widget {
@@ -137,8 +132,7 @@ export default function List() {
         },
       ]}
       fileType="jsx"
-      id="decorators"
       initMode="immediate"
     />
   </SandpackProvider>
-);
+));

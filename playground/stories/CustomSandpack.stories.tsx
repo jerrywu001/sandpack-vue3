@@ -11,7 +11,8 @@ import { MultiplePreviewsAndListenersStory } from './widgets/MultiplePreviewsAnd
 import { MultiplePreviewsStory } from './widgets/MultiplePreviewsStory';
 import {
   OpenInCodeSandboxButton,
-  RefreshButton,
+  RefreshIcon,
+  RoundedButton,
   Sandpack,
   SandpackCodeEditor,
   SandpackCodeViewer,
@@ -72,7 +73,9 @@ export const UsingVisualElements = () => (
         }}
       >
         <OpenInCodeSandboxButton />
-        <RefreshButton />
+        <RoundedButton>
+          <RefreshIcon />
+        </RoundedButton>
       </div>
     </SandpackThemeProvider>
   </SandpackProvider>

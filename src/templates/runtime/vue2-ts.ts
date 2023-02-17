@@ -1,8 +1,11 @@
+import { commonFiles } from '../common';
+
 /**
  * @hidden
  */
-export const VUE_TEMPLATE = {
+export const VUE2_TS_TEMPLATE = {
   files: {
+    '/src/styles.css': commonFiles['/styles.css'],
     '/src/App.vue': {
       code: `<template>
   <div id="app">
@@ -12,8 +15,8 @@ export const VUE_TEMPLATE = {
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue from "vue";
 
 export default Vue.extend({
   name: "App",
@@ -34,9 +37,11 @@ export default Vue.extend({
 });
 </script>`,
     },
-    '/src/main.js': {
+    '/src/main.ts': {
       code: `import Vue from "vue";
 import App from "./App.vue";
+import "./styles.css";
+
 Vue.config.productionTip = false;
 new Vue({
   render: h => h(App)
@@ -66,12 +71,16 @@ new Vue({
 </html>
 `,
     },
+    '/src/shims-vue.d.ts': `declare module '*.vue' {
+  import Vue from 'vue'
+  export default Vue
+}`,
     '/package.json': {
       code: JSON.stringify({
-        name: 'vue',
+        name: 'vue-ts',
         version: '0.1.0',
         private: true,
-        main: '/src/main.js',
+        main: '/src/main.ts',
         scripts: {
           serve: 'vue-cli-service serve',
           build: 'vue-cli-service build',
@@ -82,10 +91,54 @@ new Vue({
         },
         devDependencies: {
           '@vue/cli-plugin-babel': '^5.0.8',
+          '@vue/cli-plugin-typescript': '^5.0.8',
           '@vue/cli-service': '^5.0.8',
+          typescript: '^4.9.3',
           'vue-template-compiler': '^2.7.14',
         },
-      }),
+      }, null, 2),
+    },
+    '/tsconfig.json': {
+      code: JSON.stringify({
+        compilerOptions: {
+          target: 'esnext',
+          module: 'esnext',
+          strict: true,
+          jsx: 'preserve',
+          moduleResolution: 'node',
+          skipLibCheck: true,
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          forceConsistentCasingInFileNames: true,
+          useDefineForClassFields: true,
+          sourceMap: true,
+          baseUrl: '.',
+          types: [
+            'webpack-env',
+          ],
+          paths: {
+            '@/*': [
+              'src/*',
+            ],
+          },
+          lib: [
+            'esnext',
+            'dom',
+            'dom.iterable',
+            'scripthost',
+          ],
+        },
+        include: [
+          'src/**/*.ts',
+          'src/**/*.tsx',
+          'src/**/*.vue',
+          'tests/**/*.ts',
+          'tests/**/*.tsx',
+        ],
+        exclude: [
+          'node_modules',
+        ],
+      }, null, 2),
     },
   },
   main: '/src/App.vue',

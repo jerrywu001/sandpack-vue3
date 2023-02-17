@@ -1,11 +1,11 @@
-/**
- * @hidden
- */
+import { commonFiles } from '../common';
+
 export const REACT_TEMPLATE = {
   files: {
+    ...commonFiles,
     '/App.js': {
       code: `export default function App() {
-  return <h1>Hello World</h1>
+  return <h1>Hello world</h1>
 }
 `,
     },
@@ -13,29 +13,15 @@ export const REACT_TEMPLATE = {
       code: `import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
+
 import App from "./App";
+
 const root = createRoot(document.getElementById("root"));
 root.render(
   <StrictMode>
     <App />
   </StrictMode>
 );`,
-    },
-    '/styles.css': {
-      code: `body {
-  font-family: sans-serif;
-  -webkit-font-smoothing: auto;
-  -moz-font-smoothing: auto;
-  -moz-osx-font-smoothing: grayscale;
-  font-smoothing: auto;
-  text-rendering: optimizeLegibility;
-  font-smooth: always;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-h1 {
-  font-size: 1.5rem;
-}`,
     },
     '/public/index.html': {
       code: `<!DOCTYPE html>
@@ -58,7 +44,7 @@ h1 {
           'react-scripts': '^4.0.0',
         },
         main: '/index.js',
-      }),
+      }, null, 2),
     },
   },
   main: '/App.js',

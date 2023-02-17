@@ -5,11 +5,11 @@ import type { Spec } from './Specs';
 import type { SuiteResults, TestResults } from './Summary';
 import type { Test } from './Tests';
 
-export const getFailingTests = (block: Describe | Spec): Test[] => getTests(block).filter((t) => t.status === 'fail');
-
-export const getTests = (block: Describe | Spec): Test[] => Object.values(block.tests).concat(
-  ...Object.values(block.describes).map(getTests),
+const getTests = (block: Describe | Spec): Test[] => Object.values(block.tests ?? {}).concat(
+  ...Object.values(block.describes ?? {}).map(getTests),
 );
+
+export const getFailingTests = (block: Describe | Spec): Test[] => getTests(block).filter((t) => t.status === 'fail');
 
 export const getAllTestResults = (specs: Spec[]): TestResults => specs.map(getSpecTestResults).reduce(
   (acc, stats) => ({

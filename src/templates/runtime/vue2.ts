@@ -1,31 +1,51 @@
+import { commonFiles } from '../common';
+
 /**
  * @hidden
  */
-export const VUE_TEMPLATE_3 = {
+export const VUE2_TEMPLATE = {
   files: {
+    '/src/styles.css': commonFiles['/styles.css'],
     '/src/App.vue': {
-      code: `<script setup>
-import { ref } from 'vue';
+      code: `<template>
+  <div id="app">
+    <h1>Hello {{ msg }}</h1>
+    <button @click="add">add</button>
+    <p>count: {{ count }}</p>
+  </div>
+</template>
 
-const msg = ref('world');
-const count = ref(1);
+<script>
+import Vue from 'vue';
 
-const add = () => {
-  count.value += 1;
-};
-</script>
-
-<template>
-  <h1>Hello {{ msg }}</h1>
-  <button @click="add">add</button>
-  <p>count: {{ count }}</p>
-</template>`,
+export default Vue.extend({
+  name: "App",
+  data() {
+    return {
+      msg: "",
+      count: 1,
+    };
+  },
+  methods: {
+    add() {
+      this.count += 1;
+    },
+  },
+  mounted() {
+    this.msg = "world";
+  },
+});
+</script>`,
     },
     '/src/main.js': {
-      code: `import { createApp } from 'vue'
-import App from './App.vue'
+      code: `import Vue from "vue";
+import App from "./App.vue";
+import "./styles.css";
 
-createApp(App).mount('#app')
+Vue.config.productionTip = false;
+new Vue({
+  render: h => h(App)
+}).$mount("#app");
 `,
     },
     '/public/index.html': {
@@ -35,6 +55,7 @@ createApp(App).mount('#app')
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>codesandbox</title>
   </head>
   <body>
@@ -52,7 +73,7 @@ createApp(App).mount('#app')
     },
     '/package.json': {
       code: JSON.stringify({
-        name: 'vue3',
+        name: 'vue',
         version: '0.1.0',
         private: true,
         main: '/src/main.js',
@@ -62,13 +83,14 @@ createApp(App).mount('#app')
         },
         dependencies: {
           'core-js': '^3.26.1',
-          vue: '^3.2.45',
+          vue: '^2.7.14',
         },
         devDependencies: {
           '@vue/cli-plugin-babel': '^5.0.8',
           '@vue/cli-service': '^5.0.8',
+          'vue-template-compiler': '^2.7.14',
         },
-      }),
+      }, null, 2),
     },
   },
   main: '/src/App.vue',

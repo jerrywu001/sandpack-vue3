@@ -1,48 +1,45 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-import isEqual from 'lodash.isequal';
+import { dequal as deepEqual } from 'dequal';
 import { ClasserProvider } from 'code-hike-classer-vue3';
 import { convertedFilesToBundlerFiles, getSandpackStateFromProps } from '../utils/sandpackUtils';
-import { extractErrorDetails, SandpackClient, normalizePath } from '@codesandbox/sandpack-client';
 import { generateRandomId } from '../utils/stringUtils';
+import {
+  BundlerState,
+  extractErrorDetails,
+  ListenerFunction,
+  loadSandpackClient,
+  normalizePath,
+  ReactDevToolsMode,
+  SandpackClient,
+  SandpackError,
+  SandpackMessage,
+  UnsubscribeFunction,
+} from '@codesandbox/sandpack-client';
 import { type SandpackFiles, useContext, SandpackThemeProvider } from '..';
 import {
   DefineComponent,
   defineComponent,
   InjectionKey,
-  onUnmounted,
   reactive,
-  Ref,
-  ref,
-  watch,
   provide,
   PropType,
   onMounted,
   UnwrapNestedRefs,
-  nextTick,
   StyleValue,
+  watch,
+  ref,
+  nextTick,
   toRaw,
 } from 'vue';
-import type {
-  BundlerState,
-  ListenerFunction,
-  SandpackError,
-  SandpackMessage,
-  UnsubscribeFunction,
-  ReactDevToolsMode,
-} from '@codesandbox/sandpack-client';
 import type {
   SandpackContext,
   SandpackPredefinedTemplate,
   SandpackSetup,
-  SandpackClientListen,
   SandpackState,
-  SandpackClientDispatch,
   SandpackProviderProps,
-  SandpackInitMode,
   SandpackThemeProp,
+  SandpackClientListen,
+  SandpackClientDispatch,
 } from '../types';
-
-const BUNDLER_TIMEOUT = 30000; // 30 seconds timeout for the bundler to respond.
 
 export interface UseSandpack {
   sandpack: SandpackState;
@@ -50,6 +47,7 @@ export interface UseSandpack {
   listen: SandpackClientListen;
 }
 
+const BUNDLER_TIMEOUT = 30000; // 30 seconds timeout for the bundler to respond.
 const SandpackStateContext: InjectionKey<UnwrapNestedRefs<SandpackState>> = Symbol('sandpackStateContext');
 
 /**
@@ -88,320 +86,63 @@ const SandpackProvider = defineComponent({
   },
   // @ts-ignore
   setup(props: SandpackProviderProps, { attrs, slots }) {
-    let debounceHook: number = 0;
-    let timeoutHook: NodeJS.Timer | null = null;
-    let initializeSandpackIframeHook: NodeJS.Timer | null = null;
-    let intersectionObserver: IntersectionObserver;
-    const preregisteredIframes: Record<string, HTMLIFrameElement> = {};
-    const clients: Record<string, SandpackClient> = {};
-    const unsubscribeClientListeners: Record<string, Record<string, UnsubscribeFunction>> = {};
-    const queuedListeners: Record<string, Record<string, ListenerFunction>> = { global: {} };
+    /** merge above states */
+    const { activeFile, visibleFiles = [], files, environment } = getSandpackStateFromProps(props);
+    const initModeFromProps = props.options?.initMode || 'lazy';
+    // const data = reactive({ reactDevTools: undefined } as any);
 
-    let unsubscribe: UnsubscribeFunction | undefined;
+    const intersectionObserver = ref<IntersectionObserver | null>(null);
+    const initializeSandpackIframeHook = ref<NodeJS.Timer | null>(null);
+    const preregisteredIframes = ref<Record<string, HTMLIFrameElement>>({});
+    const timeoutHook = ref<NodeJS.Timer | null>(null);
+    const unsubscribe = ref<() => void | undefined>();
+    const debounceHook = ref<number | undefined>();
 
-    const { activeFile, visibleFiles = [], files, environment } = getSandpackStateFromProps({
-      template: props.template,
-      files: props.files,
-      customSetup: props.customSetup,
-      options: props.options,
-    });
-
-    const data = reactive({
-      reactDevTools: undefined,
-    } as any);
-
-    const state: UnwrapNestedRefs<SandpackState> = reactive({
+    const state = reactive({
+      /** file state */
+      visibleFiles,
+      activeFile,
       files,
       environment,
-      visibleFiles,
       visibleFilesFromProps: visibleFiles,
-      activeFile,
-      startRoute: props.options?.startRoute,
-      error: { message: '' } as SandpackError,
-      bundlerState: { entry: '', transpiledModules: {} } as BundlerState,
-      autorun: props.options?.autorun ?? true,
-      status: props.options?.autorun ?? true ? 'initial' : 'idle',
+      shouldUpdatePreview: true,
       editorState: 'pristine',
-      initMode: props.options?.initMode || 'lazy',
-      clients,
+      openFile,
+      resetFile,
+      resetAllFiles,
+      setActiveFile,
+      updateFile,
+      updateCurrentFile,
+      addFile: updateFile,
       closeFile,
       deleteFile,
-      addFile: updateFile,
-      dispatch: dispatchMessage,
-      openInCSBRegisteredRef: false,
-      errorScreenRegisteredRef: false,
+
+      /** clients state */
+      reactDevTools: undefined as ReactDevToolsMode | undefined,
+      startRoute: props.options?.startRoute,
+      initMode: props.options?.initMode || 'lazy',
+      bundlerState: { entry: '', transpiledModules: {} } as BundlerState,
+      error: { message: '' } as SandpackError | null,
+      status: props.options?.autorun ?? true ? 'initial' : 'idle',
+      clients: {} as Record<string, SandpackClient>,
       loadingScreenRegisteredRef: false,
-      lazyAnchorRef: ref<HTMLDivElement>() as Ref<HTMLDivElement>,
-      // lazyAnchorRef: lazyAnchorRef as Ref<HTMLDivElement>,
-      listen: addListener,
-      openFile,
-      registerBundler,
-      resetAllFiles,
-      resetFile,
+      errorScreenRegisteredRef: false,
+      lazyAnchorRef: null as HTMLDivElement | null,
+      unsubscribeClientListenersRef: {} as Record<string, Record<string, UnsubscribeFunction>>,
+      queuedListenersRef: { global: {} } as Record<string, Record<string, ListenerFunction>>,
+      initializeSandpackIframe,
       runSandpack,
-      setActiveFile,
+      registerBundler,
       unregisterBundler,
-      updateCurrentFile,
-      updateFile,
       registerReactDevTools,
-    } as SandpackState);
-
-    provide(SandpackStateContext, state);
-
-    function handleMessage(msg: SandpackMessage) {
-      if (timeoutHook) {
-        clearTimeout(timeoutHook);
-      }
-
-      if (msg.type === 'state') {
-        state.bundlerState = msg.state;
-      } else if (msg.type === 'done' && !msg.compilatonError) {
-        state.error = { message: '' };
-      } else if (msg.type === 'action' && msg.action === 'show-error') {
-        state.error = extractErrorDetails(msg);
-      } else if (
-        msg.type === 'action' &&
-          msg.action === 'notification' &&
-          msg.notificationType === 'error'
-      ) {
-        state.error = { message: msg.title };
-      }
-    }
+      addListener,
+      dispatchMessage,
+      listen: addListener,
+      dispatch: dispatchMessage,
+    });
 
     function registerReactDevTools(value: ReactDevToolsMode) {
-      data.reactDevTools = value;
-    }
-
-    function updateCurrentFile(code: string) {
-      updateFile(state.activeFile, code);
-    }
-
-    function updateFile(pathOrFiles: string | SandpackFiles, code?: string) {
-      if (typeof pathOrFiles === 'string') {
-        if (state.files[pathOrFiles]?.code && code === state.files[pathOrFiles].code) {
-          return;
-        }
-
-        state.files = { ...state.files, [pathOrFiles]: { code: code ?? '' } };
-      } else if (typeof pathOrFiles === 'object') {
-        state.files = normalizePath({ ...state.files, ...convertedFilesToBundlerFiles(pathOrFiles) });
-      }
-      updateClients();
-    }
-
-    function updateClients() {
-      const { status: latestStatus } = state;
-      const recompileMode = props.options?.recompileMode ?? 'delayed';
-      const recompileDelay = props.options?.recompileDelay ?? 500;
-
-      if (latestStatus !== 'running') {
-        return;
-      }
-
-      if (recompileMode === 'immediate') {
-        Object.values(clients).forEach((client) => {
-          client.updatePreview({
-            files: toRaw(state.files),
-          });
-        });
-      }
-
-      if (recompileMode === 'delayed') {
-        window.clearTimeout(debounceHook);
-        debounceHook = window.setTimeout(() => {
-          Object.values(clients).forEach((client) => {
-            client.updatePreview({
-              files: toRaw(state.files),
-            });
-          });
-        }, recompileDelay);
-      }
-    }
-
-    function initializeSandpackIframe() {
-      const autorun = props.options?.autorun ?? true;
-      if (!autorun) {
-        return;
-      }
-
-      const observerOptions = props.options?.initModeObserverOptions ?? {
-        rootMargin: '1000px 0px',
-      };
-
-      if (intersectionObserver && state.lazyAnchorRef) {
-        intersectionObserver?.unobserve(state.lazyAnchorRef);
-      }
-
-      if (state.lazyAnchorRef && state.initMode === 'lazy') {
-        // If any component registerd a lazy anchor ref component, use that for the intersection observer
-        intersectionObserver = new IntersectionObserver((entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)
-            initializeSandpackIframeHook = setTimeout(() => {
-              runSandpack();
-            }, 50);
-
-            if (state.lazyAnchorRef) {
-              intersectionObserver?.unobserve(state.lazyAnchorRef);
-            }
-          }
-        }, observerOptions);
-
-        intersectionObserver?.observe(state.lazyAnchorRef);
-      } else if (
-        state.lazyAnchorRef &&
-        state.initMode === 'user-visible'
-      ) {
-        intersectionObserver = new IntersectionObserver((entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)
-            initializeSandpackIframeHook = setTimeout(() => {
-              runSandpack();
-            }, 50);
-          } else {
-            if (initializeSandpackIframeHook) {
-              clearTimeout(initializeSandpackIframeHook);
-            }
-
-            Object.keys(clients).map(unregisterBundler);
-            unregisterAllClients();
-          }
-        }, observerOptions);
-
-        intersectionObserver?.observe(state.lazyAnchorRef);
-      } else {
-        // else run the sandpack on mount, with a slight delay to allow all subcomponents to mount/register components
-        initializeSandpackIframeHook = setTimeout(
-          () => runSandpack(),
-          50,
-        );
-      }
-    }
-
-    function createClient(
-      iframe: HTMLIFrameElement,
-      clientId: string,
-    ) {
-      const client = new SandpackClient(
-        iframe,
-        {
-          files: state.files,
-          template: state.environment,
-        },
-        {
-          externalResources: props.options?.externalResources,
-          bundlerURL: props.options?.bundlerURL,
-          logLevel: props.options?.logLevel,
-          startRoute: props.options?.startRoute,
-          fileResolver: props.options?.fileResolver,
-          skipEval: props.options?.skipEval,
-          showOpenInCodeSandbox: !state.openInCSBRegisteredRef,
-          showErrorScreen: !state.errorScreenRegisteredRef,
-          showLoadingScreen: !state.loadingScreenRegisteredRef,
-          reactDevTools: data.reactDevTools,
-          customNpmRegistries: props.customSetup?.npmRegistries?.map(
-            (config) => ({
-              ...config,
-              proxyEnabled: false, // force
-            } ?? []),
-          ),
-        },
-      );
-
-      /**
-       * Subscribe inside the context with the first client that gets instantiated.
-       * This subscription is for global states like error and timeout, so no need for a per client listen
-       * Also, set the timeout timer only when the first client is instantiated
-       */
-      if (typeof unsubscribe !== 'function') {
-        unsubscribe = client.listen(handleMessage);
-
-        timeoutHook = setTimeout(() => {
-          state.status = 'timeout';
-        }, BUNDLER_TIMEOUT);
-      }
-
-      /**
-       * Register any potential listeners that subscribed before sandpack ran
-       */
-      if (queuedListeners[clientId]) {
-        Object.keys(queuedListeners[clientId]).forEach((listenerId) => {
-          const listener = queuedListeners[clientId][listenerId];
-          const unsubscribe_a = client.listen(listener) as () => void;
-          unsubscribeClientListeners[clientId][listenerId] = unsubscribe_a;
-        });
-
-        // Clear the queued listeners after they were registered
-        queuedListeners[clientId] = {};
-      }
-
-      /**
-       * Register global listeners
-       */
-      const globalListeners = Object.entries(queuedListeners.global);
-      globalListeners.forEach(([listenerId, listener]) => {
-        const unsubscribe_a = client.listen(listener) as () => void;
-        unsubscribeClientListeners[clientId][listenerId] = unsubscribe_a;
-
-        /**
-         * Important: Do not clean the global queue
-         * Instead of cleaning the queue, keep it there for the
-         * following clients that might be created
-         */
-      });
-
-      return client;
-    }
-
-    function runSandpack() {
-      Object.keys(preregisteredIframes).forEach((clientId) => {
-        const iframe = preregisteredIframes[clientId];
-        clients[clientId] = createClient(iframe, clientId);
-      });
-
-      state.status = 'running';
-    }
-
-    function registerBundler(iframe: HTMLIFrameElement, clientId: string) {
-      if (state.status === 'running') {
-        clients[clientId] = createClient(iframe, clientId);
-      } else {
-        preregisteredIframes[clientId] = iframe;
-      }
-    }
-
-    function unregisterBundler(clientId: string) {
-      const client = clients[clientId];
-      if (client) {
-        client.cleanup();
-        client.iframe.contentWindow?.location.replace('about:blank');
-        client.iframe.removeAttribute('src');
-        delete clients[clientId];
-      } else {
-        delete preregisteredIframes[clientId];
-      }
-
-      if (timeoutHook) {
-        clearTimeout(timeoutHook);
-      }
-
-      state.autorun = false;
-      state.status = 'idle';
-    }
-
-    function unregisterAllClients() {
-      Object.keys(clients).map(unregisterBundler);
-
-      if (typeof unsubscribe === 'function') {
-        unsubscribe();
-        unsubscribe = undefined;
-      }
-    }
-
-    function setActiveFile(theActiveFile: string) {
-      if (state) {
-        state.activeFile = theActiveFile;
-      }
+      state.reactDevTools = value;
     }
 
     function openFile(path: string) {
@@ -411,8 +152,41 @@ const SandpackProvider = defineComponent({
       state.visibleFiles = newPaths;
     }
 
+    function resetFile(path: string) {
+      const { files: newFiles } = getSandpackStateFromProps(props);
+      state.files = { ...toRaw(state.files), [path]: newFiles[path] };
+    }
+
+    function resetAllFiles() {
+      const { files: newFiles } = getSandpackStateFromProps(props);
+      state.files = newFiles;
+    }
+
+    function setActiveFile(theActiveFile: string) {
+      if (state && state.files[theActiveFile]) {
+        state.activeFile = theActiveFile;
+      }
+    }
+
+    function updateFile(
+      pathOrFiles: string | SandpackFiles,
+      code?: string,
+      shouldUpdatePreview = true,
+    ) {
+      if (typeof pathOrFiles === 'string' && typeof code === 'string') {
+        state.files = { ...toRaw(state.files), [pathOrFiles]: { code } };
+      } else if (typeof pathOrFiles === 'object') {
+        state.files = normalizePath({ ...toRaw(state.files), ...convertedFilesToBundlerFiles(pathOrFiles) });
+      }
+      state.shouldUpdatePreview = shouldUpdatePreview;
+    }
+
+    function updateCurrentFile(code: string) {
+      updateFile(state.activeFile, code);
+    }
+
     function closeFile(path: string) {
-      if (state.visibleFiles.length === 1 || !state) {
+      if (state.visibleFiles.length === 1) {
         return;
       }
 
@@ -427,29 +201,44 @@ const SandpackProvider = defineComponent({
       state.visibleFiles = newPaths;
     }
 
-    function deleteFile(path: string) {
-      const { visibleFiles: prevVisibleFiles, files: prevFiles } = state;
-
+    function deleteFile(path: string, shouldUpdatePreview = true) {
+      const { visibleFiles: prevVisibleFiles, files: prevFiles, activeFile: prevActiveFile } = state;
       const newFiles = { ...prevFiles };
       delete newFiles[path];
 
-      state.visibleFiles = prevVisibleFiles.filter((openPath) => openPath !== path);
-      state.files = newFiles;
+      const remainingVisibleFiles = prevVisibleFiles.filter((openPath) => openPath !== path);
+      const deletedLastVisibleFile = remainingVisibleFiles.length === 0;
 
-      updateClients();
+      if (deletedLastVisibleFile) {
+        const nextFile = Object.keys(prevFiles)[Object.keys(prevFiles).length - 1];
+        state.visibleFiles = [nextFile];
+        state.activeFile = nextFile;
+      } else {
+        state.visibleFiles = remainingVisibleFiles;
+        state.activeFile = path === prevActiveFile
+          ? remainingVisibleFiles[remainingVisibleFiles.length - 1]
+          : prevActiveFile;
+      }
+      state.files = toRaw(newFiles);
+      state.shouldUpdatePreview = shouldUpdatePreview;
     }
 
-    function dispatchMessage(message: SandpackMessage, clientId?: string) {
+    function dispatchMessage(
+      message: SandpackMessage,
+      clientId?: string,
+    ) {
       if (state.status !== 'running') {
-        console.warn('dispatch cannot be called while in idle mode');
+        console.warn(
+          '[sandpack-react]: dispatch cannot be called while in idle mode',
+        );
         return;
       }
 
       if (clientId) {
-        clients[clientId].dispatch(message);
+        toRaw(state.clients[clientId]).dispatch(message);
       } else {
-        Object.values(clients).forEach((client) => {
-          client.dispatch(message);
+        Object.values(state.clients).forEach((client) => {
+          toRaw(client).dispatch(message);
         });
       }
     }
@@ -457,36 +246,40 @@ const SandpackProvider = defineComponent({
     function addListener(
       listener: ListenerFunction,
       clientId?: string,
-    ): UnsubscribeFunction {
+    ) {
       if (clientId) {
-        if (clients[clientId]) {
-          const unsubscribeListener = clients[clientId].listen(listener);
+        if (state.clients[clientId]) {
+          const unsubscribeListener = toRaw(state.clients[clientId]).listen(listener);
 
           return unsubscribeListener;
         } else {
-          // When listeners are added before the client is instantiated, they are stored with an unique id
-          // When the client is eventually instantiated, the listeners are registered on the spot
-          // Their unsubscribe functions are stored in unsubscribeClientListeners for future cleanup
+          /**
+           * When listeners are added before the client is instantiated, they are stored with an unique id
+           * When the client is eventually instantiated, the listeners are registered on the spot
+           * Their unsubscribe functions are stored in unsubscribeClientListeners for future cleanup
+           */
           const listenerId = generateRandomId();
-          queuedListeners[clientId] = queuedListeners[clientId] || {};
-          unsubscribeClientListeners[clientId] = unsubscribeClientListeners[clientId] || {};
+          state.queuedListenersRef[clientId] =
+            state.queuedListenersRef[clientId] || {};
+          state.unsubscribeClientListenersRef[clientId] =
+            state.unsubscribeClientListenersRef[clientId] || {};
 
-          queuedListeners[clientId][listenerId] = listener;
+          state.queuedListenersRef[clientId][listenerId] = listener;
 
-          const unsubscribeListener = () => {
-            if (queuedListeners[clientId][listenerId]) {
+          const unsubscribeListener = (): void => {
+            if (state.queuedListenersRef[clientId][listenerId]) {
               /**
                * Unsubscribe was called before the client was instantiated
                * common example - a component with autorun=false that unmounted
                */
-              delete queuedListeners[clientId][listenerId];
-            } else if (unsubscribeClientListeners[clientId][listenerId]) {
+              delete state.queuedListenersRef[clientId][listenerId];
+            } else if (state.unsubscribeClientListenersRef[clientId][listenerId]) {
               /**
                * unsubscribe was called for a listener that got added before the client was instantiated
                * call the unsubscribe function and remove it from memory
                */
-              unsubscribeClientListeners[clientId][listenerId]();
-              delete unsubscribeClientListeners[clientId][listenerId];
+              state.unsubscribeClientListenersRef[clientId][listenerId]();
+              delete state.unsubscribeClientListenersRef[clientId][listenerId];
             }
           };
 
@@ -495,42 +288,333 @@ const SandpackProvider = defineComponent({
       } else {
         // Push to the **global** queue
         const listenerId = generateRandomId();
-        queuedListeners.global[listenerId] = listener;
+        state.queuedListenersRef.global[listenerId] = listener;
 
         // Add to the current clients
-        const latestClients = Object.values(clients);
-        const currentClientUnsubscribeListeners = latestClients.map((client) => client.listen(listener));
+        const clientsList = Object.values(state.clients);
+        const currentClientUnsubscribeListeners = clientsList.map((client) => toRaw(client).listen(listener));
 
-        const unsubscribeListener = () => {
+        const unsubscribeListener = (): void => {
           // Unsubscribing from the clients already created
-          currentClientUnsubscribeListeners.forEach((unsubscribe_a) => unsubscribe_a());
+          currentClientUnsubscribeListeners.forEach((unsubscribeFunc) => unsubscribeFunc());
+
+          delete state.queuedListenersRef.global[listenerId];
+
+          // Unsubscribe in case it was added later from `global`
+          Object.values(state.unsubscribeClientListenersRef).forEach((client) => {
+            client?.[listenerId]?.();
+          });
         };
 
         return unsubscribeListener;
       }
     }
 
-    function resetFile(path: string) {
-      const { files: newFiles } = getSandpackStateFromProps({
-        template: props.template,
-        files: props.files,
-        customSetup: props.customSetup,
-        options: props.options,
-      });
-      state.files = { ...state.files, [path]: newFiles[path] };
-      updateClients();
+    async function registerBundler(
+      iframe: HTMLIFrameElement,
+      clientId: string,
+    ) {
+      if (state.status === 'running') {
+        state.clients[clientId] = await createClient(iframe, clientId);
+      } else {
+        preregisteredIframes.value[clientId] = iframe;
+      }
     }
 
-    function resetAllFiles() {
-      const { files: newFiles } = getSandpackStateFromProps({
-        template: props.template,
-        files: props.files,
-        customSetup: props.customSetup,
-        options: props.options,
+    function unregisterBundler(clientId: string) {
+      const client = toRaw(state.clients[clientId]);
+      if (client) {
+        client.destroy();
+        client.iframe.contentWindow?.location.replace('about:blank');
+        client.iframe.removeAttribute('src');
+        delete state.clients[clientId];
+      } else {
+        delete preregisteredIframes.value[clientId];
+      }
+
+      if (timeoutHook.value) {
+        clearTimeout(timeoutHook.value);
+      }
+
+      const unsubscribeQueuedClients = Object.values(
+        state.unsubscribeClientListenersRef[clientId],
+      );
+
+      // Unsubscribing all listener registered
+      unsubscribeQueuedClients.forEach((listenerOfClient) => {
+        const listenerFunctions = Object.values(listenerOfClient);
+        listenerFunctions.forEach((unsubscribeFunc) => unsubscribeFunc());
       });
-      state.files = newFiles;
-      updateClients();
+
+      // Keep running if it still have clients
+      const status = Object.keys(state.clients).length > 0 ? 'running' : 'idle';
+
+      state.status = status;
     }
+
+    function handleMessage(msg: SandpackMessage) {
+      if (timeoutHook.value) {
+        clearTimeout(timeoutHook.value);
+      }
+
+      if (msg.type === 'state') {
+        state.bundlerState = msg.state;
+      } else if (msg.type === 'done' && !msg.compilatonError) {
+        state.error = null;
+      } else if (msg.type === 'action' && msg.action === 'show-error') {
+        state.error = extractErrorDetails(msg);
+      } else if (
+        msg.type === 'action' &&
+        msg.action === 'notification' &&
+        msg.notificationType === 'error'
+      ) {
+        state.error = { message: msg.title };
+      }
+    }
+
+    async function createClient(
+      iframe: HTMLIFrameElement,
+      clientId: string,
+    ): Promise<SandpackClient> {
+      const customSetup = props?.customSetup ?? { npmRegistries: [] };
+      const timeOut = props?.options?.bundlerTimeOut ?? BUNDLER_TIMEOUT;
+
+      if (timeoutHook.value) {
+        clearTimeout(timeoutHook.value);
+      }
+
+      timeoutHook.value = setTimeout(() => {
+        state.status = 'timeout';
+      }, timeOut);
+
+      const client = await loadSandpackClient(
+        iframe,
+        {
+          files: toRaw(state.files),
+          template: toRaw(state.environment),
+        },
+        {
+          externalResources: props.options?.externalResources,
+          bundlerURL: props.options?.bundlerURL,
+          startRoute: props.options?.startRoute,
+          fileResolver: props.options?.fileResolver,
+          skipEval: props.options?.skipEval ?? false,
+          logLevel: props.options?.logLevel,
+          showOpenInCodeSandbox: false,
+          showErrorScreen: state.errorScreenRegisteredRef,
+          showLoadingScreen: state.loadingScreenRegisteredRef,
+          reactDevTools: state.reactDevTools,
+          customNpmRegistries: customSetup?.npmRegistries?.map(
+            (config) => ({
+              ...config,
+              proxyEnabled: false, // force
+            } ?? []),
+          ),
+        },
+      );
+
+      /**
+       * Subscribe inside the context with the first client that gets instantiated.
+       * This subscription is for global states like error and timeout, so no need for a per client listen
+       * Also, set the timeout timer only when the first client is instantiated
+       */
+      if (typeof unsubscribe.value !== 'function') {
+        unsubscribe.value = client.listen(handleMessage);
+      }
+
+      state.unsubscribeClientListenersRef[clientId] =
+        state.unsubscribeClientListenersRef[clientId] || {};
+
+      /**
+       * Register any potential listeners that subscribed before sandpack ran
+       */
+      if (state.queuedListenersRef[clientId]) {
+        Object.keys(state.queuedListenersRef[clientId]).forEach((listenerId) => {
+          const listener = state.queuedListenersRef[clientId][listenerId];
+          const unsubscribeFunc = client.listen(listener) as () => void;
+          state.unsubscribeClientListenersRef[clientId][listenerId] = unsubscribeFunc;
+        });
+
+        // Clear the queued listeners after they were registered
+        state.queuedListenersRef[clientId] = {};
+      }
+
+      /**
+       * Register global listeners
+       */
+      const globalListeners = Object.entries(state.queuedListenersRef.global);
+      globalListeners.forEach(([listenerId, listener]) => {
+        const unsubscribeFunc = client.listen(listener) as () => void;
+        state.unsubscribeClientListenersRef[clientId][listenerId] = unsubscribeFunc;
+
+        /**
+         * Important: Do not clean the global queue
+         * Instead of cleaning the queue, keep it there for the
+         * following clients that might be created
+         */
+      });
+
+      return client;
+    }
+
+    function unregisterAllClients() {
+      Object.keys(state.clients).map(unregisterBundler);
+
+      if (typeof unsubscribe.value === 'function') {
+        unsubscribe.value();
+        unsubscribe.value = undefined;
+      }
+    }
+
+    async function runSandpack() {
+      await Promise.all(
+        Object.keys(preregisteredIframes.value).map(async (clientId) => {
+          const iframe = preregisteredIframes.value[clientId];
+          state.clients[clientId] = await createClient(iframe, clientId);
+        }),
+      );
+
+      state.error = null;
+      state.status = 'running';
+    }
+
+    function initializeSandpackIframe() {
+      const autorun = props.options?.autorun ?? true;
+
+      if (!autorun) {
+        return;
+      }
+
+      const observerOptions = props.options?.initModeObserverOptions ?? {
+        rootMargin: '1000px 0px',
+      };
+
+      if (intersectionObserver.value && state.lazyAnchorRef) {
+        intersectionObserver.value?.unobserve(state.lazyAnchorRef);
+      }
+
+      if (state.lazyAnchorRef && state.initMode === 'lazy') {
+        // If any component registerd a lazy anchor ref component, use that for the intersection observer
+        intersectionObserver.value = new IntersectionObserver((entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)
+            initializeSandpackIframeHook.value = setTimeout(() => {
+              runSandpack();
+            }, 50);
+
+            if (state.lazyAnchorRef) {
+              intersectionObserver.value?.unobserve(state.lazyAnchorRef);
+            }
+          }
+        }, observerOptions);
+
+        intersectionObserver.value.observe(state.lazyAnchorRef);
+      } else if (state.lazyAnchorRef && state.initMode === 'user-visible') {
+        intersectionObserver.value = new IntersectionObserver((entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)
+            initializeSandpackIframeHook.value = setTimeout(() => {
+              runSandpack();
+            }, 50);
+          } else {
+            if (initializeSandpackIframeHook.value) {
+              clearTimeout(initializeSandpackIframeHook.value);
+            }
+
+            Object.keys(state.clients).map(unregisterBundler);
+            unregisterAllClients();
+          }
+        }, observerOptions);
+
+        intersectionObserver.value.observe(state.lazyAnchorRef);
+      } else {
+        // else run the sandpack on mount, with a slight delay to allow all subcomponents to mount/register components
+        initializeSandpackIframeHook.value = setTimeout(
+          () => runSandpack(),
+          50,
+        );
+      }
+    }
+
+    // TODO
+    // @ts-ignore
+    provide(SandpackStateContext, state);
+
+    watch(
+      [
+        () => state.files,
+        () => state.environment,
+        () => state.shouldUpdatePreview,
+        () => state.reactDevTools,
+        () => state.status,
+        () => props.options?.recompileMode,
+        () => props.options?.recompileDelay,
+      ],
+      () => {
+        const { environment: prevEnvironment } = getSandpackStateFromProps(props);
+        const recompileMode = props.options?.recompileMode ?? 'delayed';
+        const recompileDelay = props.options?.recompileDelay ?? 500;
+        if (state.status !== 'running' || !state.shouldUpdatePreview) {
+          return;
+        }
+
+        /**
+         * When the environment changes, Sandpack needs to make sure
+         * to create a new client and the proper bundler
+         */
+        if (prevEnvironment !== state.environment) {
+          state.environment = prevEnvironment;
+
+          Object.entries(state.clients).forEach(([key, client]) => {
+            registerBundler(toRaw(client).iframe, key);
+          });
+        }
+
+        if (recompileMode === 'immediate') {
+          Object.values(state.clients).forEach((client) => {
+            toRaw(client).updateSandbox({
+              files: { ...toRaw(state.files) },
+              template: toRaw(state.environment),
+            });
+          });
+        }
+
+        if (recompileMode === 'delayed') {
+          if (typeof window === 'undefined') return;
+
+          window.clearTimeout(debounceHook.value);
+          debounceHook.value = window.setTimeout(() => {
+            Object.values(state.clients).forEach((client) => {
+              toRaw(client).updateSandbox({
+                files: { ...toRaw(state.files) },
+                template: toRaw(state.environment),
+              });
+            });
+          }, recompileDelay);
+        }
+      },
+      { immediate: true, deep: true },
+    );
+
+    watch(
+      [
+        () => props.options?.initMode,
+        () => state.initMode,
+        () => props.options?.autorun,
+        () => props.options?.initModeObserverOptions,
+        () => state.environment,
+        () => state.files,
+        () => state.reactDevTools,
+      ],
+      () => {
+        if (initModeFromProps !== state.initMode) {
+          state.initMode = initModeFromProps;
+
+          initializeSandpackIframe();
+        }
+      },
+      { immediate: true, deep: true },
+    );
 
     watch(
       [
@@ -539,49 +623,21 @@ const SandpackProvider = defineComponent({
         () => props?.files,
         () => props.customSetup,
       ],
-      (
-        [newOptions],
-        [prevOptions],
-      ) => {
-        /**
-         * Watch the changes on the initMode prop
-         */
-        if (prevOptions?.initMode !== newOptions?.initMode && newOptions?.initMode) {
-          state.initMode = newOptions?.initMode as SandpackInitMode;
-          initializeSandpackIframe();
-        }
-
+      () => {
         /**
          * Custom setup derived from props
          */
-        const stateFromProps = getSandpackStateFromProps({
-          template: props.template,
-          files: props.files,
-          customSetup: props.customSetup,
-          options: props.options,
-        });
-
+        const stateFromProps = getSandpackStateFromProps(props);
         state.activeFile = stateFromProps.activeFile;
         state.visibleFiles = stateFromProps.visibleFiles;
         state.visibleFilesFromProps = stateFromProps.visibleFiles;
         state.files = stateFromProps.files;
         state.environment = stateFromProps.environment;
 
-        if (state.status !== 'running') {
-          return;
-        }
-
-        Object.values(clients).forEach((client) => {
-          client.updatePreview({
-            files: toRaw(stateFromProps.files),
-            template: toRaw(stateFromProps.environment),
-          });
-        });
-
         /**
          * Watch the changes on editorState
         */
-        const newEditorState = isEqual(stateFromProps.files, state.files) ? 'pristine' : 'dirty';
+        const newEditorState = deepEqual(stateFromProps.files, toRaw(state.files)) ? 'pristine' : 'dirty';
         if (newEditorState !== state.editorState) {
           state.editorState = newEditorState;
         }
@@ -590,31 +646,29 @@ const SandpackProvider = defineComponent({
     );
 
     onMounted(() => {
+      if (typeof unsubscribe.value === 'function') {
+        unsubscribe.value();
+      }
+
+      if (timeoutHook.value) {
+        clearTimeout(timeoutHook.value);
+      }
+
+      if (debounceHook.value) {
+        clearTimeout(debounceHook.value);
+      }
+
+      if (initializeSandpackIframeHook.value) {
+        clearTimeout(initializeSandpackIframeHook.value);
+      }
+
+      if (intersectionObserver.value) {
+        intersectionObserver.value.disconnect();
+      }
+
       nextTick(() => {
         initializeSandpackIframe();
       });
-    });
-
-    onUnmounted(() => {
-      if (typeof unsubscribe === 'function') {
-        unsubscribe();
-      }
-
-      if (timeoutHook) {
-        clearTimeout(timeoutHook);
-      }
-
-      if (debounceHook) {
-        clearTimeout(debounceHook);
-      }
-
-      if (initializeSandpackIframeHook) {
-        clearTimeout(initializeSandpackIframeHook);
-      }
-
-      if (intersectionObserver) {
-        intersectionObserver?.disconnect();
-      }
     });
 
     return () => (

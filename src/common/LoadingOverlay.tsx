@@ -1,11 +1,32 @@
-import { useClasser } from 'code-hike-classer-vue3';
-import { computed, DefineComponent, defineComponent } from 'vue';
-import { useLoadingOverlayState, FADE_ANIMATION_DURATION } from '../hooks/useLoadingOverlayState';
-import { css, THEME_PREFIX } from '../styles';
-import { Loading } from './Loading';
 import { classNames } from '../utils/classNames';
-import { absoluteClassName, errorClassName, errorMessageClassName } from '../styles/shared';
+import {
+  computed,
+  DefineComponent,
+  defineComponent,
+  onBeforeUnmount,
+  onUnmounted,
+  ref,
+  watch,
+} from 'vue';
+import { css, THEME_PREFIX } from '../styles';
+import { FADE_ANIMATION_DURATION, useLoadingOverlayState } from '../hooks/useLoadingOverlayState';
+import { Loading } from './Loading';
+import { RestartIcon } from '../icons';
+import { StdoutList } from '../components/console/StdoutList';
+import { useClasser } from 'code-hike-classer-vue3';
+import { usePreviewProgress } from 'sandpack-vue3/hooks/usePreviewProgress';
 import { useSandpack } from '../contexts/sandpackContext';
+import { useSandpackShellStdout } from '../hooks/useSandpackShellStdout';
+import {
+  absoluteClassName,
+  buttonClassName,
+  errorBundlerClassName,
+  errorMessageClassName,
+  fadeIn,
+  iconStandaloneClassName,
+  roundedButtonClassName,
+} from '../styles/shared';
+import { useSandpackShell } from 'sandpack-vue3/hooks';
 
 export interface LoadingOverlayProps {
   clientId?: string;
@@ -33,75 +54,173 @@ export const LoadingOverlay = defineComponent({
     },
   },
   setup(props: LoadingOverlayProps, { attrs }) {
+    let timer: NodeJS.Timer;
     const { sandpack } = useSandpack();
-    const loadingOverlayState = useLoadingOverlayState(props);
+    const { restart } = useSandpackShell();
     const c = useClasser(THEME_PREFIX);
+    const shouldShowStdout = ref(false);
 
-    const isLoading = computed(() => (loadingOverlayState.value === 'LOADING'));
-    const stillLoading = computed(() => (isLoading.value || loadingOverlayState.value === 'PRE_FADING'));
+    const loadingOverlayState = useLoadingOverlayState(props);
+    const progressMessage = usePreviewProgress();
+    const { logs: stdoutData } = useSandpackShellStdout({});
+
     const notHidden = computed(() => loadingOverlayState.value !== 'HIDDEN');
     const timeout = computed(() => loadingOverlayState.value === 'TIMEOUT');
+    const isLoading = computed(() => loadingOverlayState.value === 'LOADING');
+    const stillLoading = computed(() => (isLoading.value || loadingOverlayState.value === 'PRE_FADING'));
 
     const timeoutLayout = () => (
       <div
         class={classNames(
           c('overlay', 'error'),
           absoluteClassName,
-          errorClassName,
+          errorBundlerClassName,
           attrs?.class || '',
         )}
       >
         <div class={classNames(c('error-message'), errorMessageClassName)}>
-          Unable to establish connection with the sandpack bundler. Make sure
-          you are online or try again later. If the problem persists, please
-          report it via{' '}
-          <a
-            class={classNames(c('error-message'), errorMessageClassName)}
-            href="mailto:hello@codesandbox.io?subject=Sandpack Timeout Error"
-          >
-            email
-          </a>{' '}
-          or submit an issue on{' '}
-          <a
-            class={classNames(c('error-message'), errorMessageClassName)}
-            href="https://github.com/codesandbox/sandpack/issues"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            GitHub.
-          </a>
+          <p class={classNames(css({ fontWeight: 'bold' }))}>
+            Couldn't connect to server
+          </p>
+
+          <p>
+            This means sandpack cannot connect to the runtime or your network is
+            having some issues. Please check the network tab in your browser and
+            try again. If the problem persists, report it via{' '}
+            <a href="mailto:hello@codesandbox.io?subject=Sandpack Timeout Error">
+              email
+            </a>{' '}
+            or submit an issue on{' '}
+            <a
+              href="https://github.com/codesandbox/sandpack/issues"
+              rel="noreferrer noopener"
+              target="_blank"
+            >
+              GitHub.
+            </a>
+          </p>
+
+          <pre>
+            ENV: {sandpack.environment}
+            <br />
+            ERROR: TIME_OUT
+          </pre>
+
+          <div>
+            <button
+              class={classNames(
+                c('button', 'icon-standalone'),
+                buttonClassName,
+                iconStandaloneClassName,
+                roundedButtonClassName,
+              )}
+              onClick={() => {
+                restart();
+                if (sandpack) sandpack.runSandpack();
+              }}
+              title="Restart script"
+              type="button"
+            >
+              <RestartIcon />
+              <span>Try again</span>
+            </button>
+          </div>
         </div>
       </div>
     );
 
-    const loadingLayout = () => (
-      <div
-        class={classNames(
-          c('overlay', 'loading'),
-          absoluteClassName,
-          loadingClassName,
-          attrs?.class || '',
-        )}
-        style={{
-          // @ts-ignore
-          ...(attrs?.style || {}),
-          opacity: sandpack && stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,
-          transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
-        }}
-      >
-        <Loading showOpenInCodeSandbox={props.showOpenInCodeSandbox} />
-      </div>
+    watch(
+      progressMessage,
+      () => {
+        if (timer) clearTimeout(timer);
+        if (progressMessage.value?.includes('Running')) {
+          timer = setTimeout(() => {
+            shouldShowStdout.value = true;
+          }, 3_000);
+        }
+      },
+      { immediate: true },
     );
+
+    onBeforeUnmount(() => {
+      if (timer) clearTimeout(timer);
+    });
+
+    onUnmounted(() => {
+      if (timer) clearTimeout(timer);
+    });
 
     return () => (
       <>
         {
           notHidden.value
             ? timeout.value
-              ? timeoutLayout() : isLoading.value ? loadingLayout() : null
+              ? timeoutLayout()
+              : isLoading.value ? (
+                <>
+                  <div
+                    class={classNames(
+                      c('overlay', 'loading'),
+                      absoluteClassName,
+                      loadingClassName,
+                      attrs?.class || '',
+                    )}
+                    style={{
+                      ...(attrs.style || {}),
+                      opacity: sandpack && stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,
+                      transition: `opacity ${FADE_ANIMATION_DURATION}ms ease-out`,
+                    }}
+                  >
+                    {
+                      shouldShowStdout.value && (
+                        <div class={stdoutPreview.toString()}>
+                          <StdoutList data={stdoutData.value} />
+                        </div>
+                      )
+                    }
+                    <Loading showOpenInCodeSandbox={props.showOpenInCodeSandbox} />
+                  </div>
+
+                  {
+                    progressMessage.value && (
+                      <div class={wrapperClassName.toString()}>
+                        <p>{progressMessage.value}</p>
+                      </div>
+                    )
+                  }
+                </>
+              ) : null
             : null
         }
       </>
     );
   },
 }) as DefineComponent<LoadingOverlayProps>;
+
+const stdoutPreview = css({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: '$space$8',
+  overflow: 'auto',
+  opacity: 0.5,
+  overflowX: 'hidden',
+});
+
+const wrapperClassName = css({
+  position: 'absolute',
+  left: '$space$5',
+  bottom: '$space$4',
+  zIndex: '$top',
+  color: '$colors$clickable',
+  animation: `${fadeIn} 150ms ease`,
+  fontFamily: '$font$mono',
+  fontSize: '.8em',
+  width: '75%',
+  p: {
+    whiteSpace: 'nowrap',
+    margin: 0,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+});

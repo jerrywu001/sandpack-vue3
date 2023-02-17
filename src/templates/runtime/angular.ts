@@ -1,14 +1,8 @@
-/**
- * @hidden
- */
+import { commonFiles } from '../common';
+
 export const ANGULAR_TEMPLATE = {
   files: {
-    '/src/app/app.component.css': {
-      code: `div {
-  text-align: center;
-}
-`,
-    },
+    '/src/app/app.component.css': commonFiles['/styles.css'],
     '/src/app/app.component.html': {
       code: `<div>
 <h1>{{ helloWorld }}</h1>
@@ -17,13 +11,14 @@ export const ANGULAR_TEMPLATE = {
     },
     '/src/app/app.component.ts': {
       code: `import { Component } from "@angular/core";
+
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  helloWorld = "Hello World";
+  helloWorld = "Hello world";
 }
 `,
     },
@@ -67,6 +62,7 @@ export class AppModule {}
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
 import { AppModule } from "./app/app.module";
+
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch(err => console.log(err));
@@ -91,7 +87,7 @@ platformBrowserDynamic()
           rxjs: '6.6.3',
         },
         main: '/src/main.ts',
-      }),
+      }, null, 2),
     },
   },
   main: '/src/app/app.component.ts',

@@ -132,3 +132,30 @@ export const Preset = () => (
     />
   </div>
 );
+
+export const ImperativeReset = () => {
+  const consoleRef = ref();
+
+  const resetLogs = () => {
+    consoleRef.value?.reset();
+  };
+
+  return () => (
+    <SandpackProvider
+      files={{
+        '/index.js': `import "./styles.css";
+
+console.log(111);
+document.getElementById("app").innerHTML = \`
+<h1>Hello world</h1>
+\`;
+`,
+      }}
+    >
+      <SandpackCodeEditor showTabs />
+      <SandpackPreview />
+      <button onClick={resetLogs}>Reset logs</button>
+      <SandpackConsole resetOnPreviewRestart={true} ref={consoleRef} />
+    </SandpackProvider>
+  );
+};

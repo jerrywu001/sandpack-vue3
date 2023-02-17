@@ -72,7 +72,7 @@ export const InlineError = () => (
   <SandpackProvider
     files={{
       '/App.js': `export default function App()
-  return <h1>Hello World</h1>
+  return <h1>Hello world</h1>
 }`,
     }}
     template="react"
@@ -86,19 +86,11 @@ export const InlineError = () => (
 
 export const ClosableTabs = () => (
   <SandpackProvider
-    files={{
-      '/App.js': `export default function App()
-  return <h1>Hello World</h1>
-  }`,
-      '/test.js': `export default function App()
-return <h1>test</h1>
-}`,
-    }}
+    options={{ visibleFiles: ['/App.js', '/index.js', '/styles.css'] }}
     template="react"
+    theme="dark"
   >
-    <SandpackThemeProvider theme="dark">
-      <SandpackCodeEditor closableTabs />
-    </SandpackThemeProvider>
+    <SandpackCodeEditor closableTabs />
   </SandpackProvider>
 );
 

@@ -82,7 +82,7 @@ export const SandpackCodeViewer = defineComponent({
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.visibleFiles?.length > 1));
 
     return () => (
-      <SandpackStack>
+      <SandpackStack class={c('editor-viewer')}>
         {shouldShowTabs.value ? <FileTabs /> : null}
 
         <div class={classNames(c('code-editor'), editorClassName)}>

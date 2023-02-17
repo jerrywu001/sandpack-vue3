@@ -1,29 +1,35 @@
-import { Button } from './Button';
 import { classNames } from '../../utils/classNames';
-import { CodeEditor } from '../code-editor';
+import { CleanIcon, RestartIcon } from '../../icons';
+import { ConsoleList } from './ConsoleList';
 import { css, THEME_PREFIX } from '../../styles';
+import { Header } from './Header';
+import { RoundedButton } from '../../common/RoundedButton';
+import { SandpackConsoleData } from './utils/getType';
+import { SandpackStack } from '../../common';
+import { StdoutList } from './StdoutList';
+import { useSandpack, useSandpackShell } from '../..';
+import { useSandpackConsole } from './useSandpackConsole';
+import { useSandpackShellStdout } from '../../hooks/useSandpackShellStdout';
 import {
+  computed,
   defineComponent,
   DefineComponent,
-  Fragment,
   nextTick,
   PropType,
   ref,
+  toRaw,
   watch,
 } from 'vue';
-import { fromConsoleToString } from './utils/fromConsoleToString';
-import { Header } from './Header';
-import { SandpackStack } from '../../common';
-import { useSandpackConsole } from './useSandpackConsole';
-
-import { getType, type SandpackConsoleData } from './utils/getType';
 
 interface SandpackConsoleProps {
   clientId?: string;
   showHeader?: boolean;
   showSyntaxError?: boolean;
+  showSetupProgress?: boolean;
   maxMessageCount?: number;
   onLogsChange?: (logs: SandpackConsoleData) => void;
+  /** Reset the console list on every preview restart */
+  resetOnPreviewRestart?: boolean;
 }
 
 /**
@@ -40,10 +46,15 @@ export const SandpackConsole = defineComponent({
       required: false,
       default: undefined,
     },
-    clientId: {
-      type: String,
+    showSetupProgress: {
+      type: Boolean,
       required: false,
-      default: undefined,
+      default: false,
+    },
+    resetOnPreviewRestart: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     showHeader: {
       type: Boolean,
@@ -61,29 +72,52 @@ export const SandpackConsole = defineComponent({
       default: undefined,
     },
   },
-  setup(props: SandpackConsoleProps, { attrs }) {
-    const { logs, reset } = useSandpackConsole({
-      clientId: props.clientId,
+  setup(props: SandpackConsoleProps & { reset?: () => void }, { attrs, expose }) {
+    const {
+      sandpack: { environment },
+    } = useSandpack();
+
+    const wrapperRef = ref<HTMLDivElement>();
+    const { restart } = useSandpackShell();
+
+    const currentTab = ref<'server' | 'client'>(environment === 'node' ? 'server' : 'client');
+
+    const { logs: consoleData, reset: resetConsole } = useSandpackConsole({
       maxMessageCount: props.maxMessageCount,
       showSyntaxError: props.showSyntaxError,
+      resetOnPreviewRestart: props.resetOnPreviewRestart,
     });
-    const wrapperRef = ref<HTMLDivElement>();
+
+    const { logs: stdoutData, reset: resetStdout } = useSandpackShellStdout({
+      maxMessageCount: props.maxMessageCount,
+      resetOnPreviewRestart: props.resetOnPreviewRestart,
+    });
+    const isServerTab = computed(() => currentTab.value === 'server');
+    const isNodeEnvironment = computed(() => environment === 'node');
+
+    expose({
+      reset() {
+        resetConsole();
+        resetStdout();
+      },
+    });
 
     watch(
       [
         () => props.onLogsChange,
-        wrapperRef,
-        logs,
+        consoleData,
+        stdoutData,
+        currentTab,
       ],
       () => {
         if (props.onLogsChange) {
-          props.onLogsChange(logs.value);
+          props.onLogsChange(toRaw(consoleData.value));
         }
 
         nextTick(() => {
           setTimeout(() => {
             if (wrapperRef.value) {
-              wrapperRef.value.scrollTop = wrapperRef.value.scrollHeight * 2;
+              wrapperRef.value.scrollTop = wrapperRef.value.scrollHeight;
             }
           });
         });
@@ -94,126 +128,76 @@ export const SandpackConsole = defineComponent({
       <SandpackStack
         {...props}
         class={classNames(
-          css({ height: '100%', background: '$surface1' }),
+          css({
+            height: '100%',
+            background: '$surface1',
+            iframe: { display: 'none' },
+          }),
           `${THEME_PREFIX}-console`,
           attrs?.class || '',
         )}
       >
-        {props.showHeader && <Header />}
+        {
+          (props.showHeader || isNodeEnvironment.value) && (
+            <Header
+              currentTab={currentTab.value}
+              node={isNodeEnvironment.value}
+              setCurrentTab={(val) => { currentTab.value = val; }}
+            />
+          )
+        }
+
         <div
           ref={wrapperRef}
           class={classNames(
             css({ overflow: 'auto', scrollBehavior: 'smooth' }),
           )}
         >
-          {logs.value.map(({ data, id, method }, logIndex, references) => {
-            if (!data) return null;
-
-            if (Array.isArray(data)) {
-              return (
-                <Fragment key={id}>
-                  {data.map((msg, msgIndex) => {
-                    const fixReferences = references.slice(
-                      logIndex,
-                      references.length,
-                    );
-
-                    return (
-                      <div
-                        key={`${id}-${msgIndex}`}
-                        class={classNames(
-                          consoleItemClassName({ variant: getType(method) }),
-                        )}
-                      >
-                        <CodeEditor
-                          code={
-                            method === 'clear'
-                              ? (msg as string)
-                              : fromConsoleToString(msg, fixReferences)
-                          }
-                          fileType="js"
-                          initMode="user-visible"
-                          showReadOnly={false}
-                          readOnly
-                          wrapContent
-                        />
-                      </div>
-                    );
-                  })}
-                </Fragment>
-              );
-            }
-
-            return null;
-          })}
+          {
+            isServerTab.value ? (
+              <StdoutList data={stdoutData.value} />
+            ) : (
+              <ConsoleList data={consoleData.value} />
+            )
+          }
         </div>
 
-        <Button onClick={reset} />
+        <div
+          class={classNames(
+            css({
+              position: 'absolute',
+              bottom: '$space$2',
+              right: '$space$2',
+              display: 'flex',
+              gap: '$space$2',
+            }),
+          )}
+        >
+          {isServerTab.value && (
+            <RoundedButton
+              onClick={() => {
+                restart();
+                resetConsole();
+                resetStdout();
+              }}
+            >
+              <RestartIcon />
+            </RoundedButton>
+          )}
+
+          <RoundedButton
+            onClick={() => {
+              if (currentTab.value === 'client') {
+                resetConsole();
+              } else {
+                resetStdout();
+              }
+            }}
+          >
+            <CleanIcon />
+          </RoundedButton>
+        </div>
       </SandpackStack>
     );
   },
 }) as DefineComponent<SandpackConsoleProps>;
-
-const consoleItemClassName = css({
-  width: '100%',
-  padding: '$space$3 $space$2',
-  fontSize: '.85em',
-  position: 'relative',
-
-  '&:not(:first-child):after': {
-    content: '',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '1px',
-    background: '$colors$surface3',
-  },
-
-  /**
-   * Editor reset
-   */
-  '.sp-cm': {
-    padding: 0,
-  },
-
-  '.cm-editor': {
-    background: 'none',
-  },
-
-  '.cm-content': {
-    padding: 0,
-  },
-
-  [`.${THEME_PREFIX}-pre-placeholder`]: {
-    margin: '0 !important',
-    fontSize: '1em',
-  },
-
-  variants: {
-    variant: {
-      error: {
-        color: '$colors$error',
-        background: '$colors$errorSurface',
-
-        '&:not(:first-child):after': {
-          background: '$colors$error',
-          opacity: 0.07,
-        },
-      },
-      warning: {
-        color: '$colors$warning',
-        background: '$colors$warningSurface',
-
-        '&:not(:first-child):after': {
-          background: '$colors$warning',
-          opacity: 0.07,
-        },
-      },
-      clear: {
-        fontStyle: 'italic',
-      },
-      info: {},
-    },
-  },
-});

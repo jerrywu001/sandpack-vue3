@@ -1,6 +1,6 @@
 import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 import { useSandpack } from '../contexts/sandpackContext';
-import { onBeforeMount, ref, watch } from 'vue';
+import { onBeforeMount, onBeforeUnmount, onUnmounted, ref, watch } from 'vue';
 
 export type LoadingOverlayState =
   | 'LOADING'
@@ -50,6 +50,14 @@ export const useLoadingOverlayState = (props: LoadingOverlayStateProp) => {
     state.value = 'LOADING';
   });
 
+  onBeforeUnmount(() => {
+    if (unsubscribe) unsubscribe();
+  });
+
+  onUnmounted(() => {
+    if (unsubscribe) unsubscribe();
+  });
+
   watch(
     () => sandpack.status,
     () => {
@@ -65,12 +73,6 @@ export const useLoadingOverlayState = (props: LoadingOverlayStateProp) => {
         handleListener();
       }
     },
-    { immediate: true },
-  );
-
-  watch(
-    () => props.clientId,
-    handleListener,
     { immediate: true },
   );
 

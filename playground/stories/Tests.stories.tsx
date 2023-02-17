@@ -2,7 +2,7 @@ import { dracula } from '@codesandbox/sandpack-themes';
 import * as themes from '@codesandbox/sandpack-themes';
 
 import { SandpackTests, SandpackProvider, SandpackLayout, SandpackCodeEditor } from 'sandpack-vue3';
-import { ref } from 'vue';
+import { CSSProperties, ref } from 'vue';
 
 export default {
   title: 'components/Tests',
@@ -141,6 +141,33 @@ export const VerboseMode = () => (
       <SandpackTests verbose />
     </SandpackLayout>
   </SandpackProvider>
+);
+
+/**
+ * This story is used to test the `hideTestsAndSupressLogs` prop.
+ * Tests content should not be visible in the tests console.
+ * It is useful when you want to hide the tests from the user.
+ *
+ */
+export const HiddenTests = () => (
+    <SandpackProvider
+      customSetup={{ entry: 'add.ts' }}
+      files={{
+        '/add.test.ts': addTests,
+        '/add.ts': add,
+        '/src/app/sub.ts': sub,
+        '/src/app/sub.test.ts': subTests,
+      }}
+      options={{
+        visibleFiles: ['/add.ts'],
+      }}
+      theme={dracula}
+    >
+      <SandpackLayout style={{ '--sp-layout-height': '70vh' } as CSSProperties}>
+        <SandpackCodeEditor showRunButton={false} showLineNumbers />
+        <SandpackTests hideTestsAndSupressLogs />
+      </SandpackLayout>
+    </SandpackProvider>
 );
 
 export const OneTestFile = () => (

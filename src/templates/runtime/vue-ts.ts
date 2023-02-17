@@ -1,29 +1,22 @@
-/**
- * @hidden
- */
-export const VUE_TS_TEMPLATE_3 = {
+import { commonFiles } from '../common';
+
+export const VUE_TS_TEMPLATE = {
   files: {
+    '/src/styles.css': commonFiles['/styles.css'],
     '/src/App.vue': {
-      code: `<script setup lang="ts">
-import { ref } from 'vue';
-
-const msg = ref<string>('world');
-const count = ref<number>(1);
-
-const add = (): void => {
-  count.value += 1;
-};
-</script>
-
-<template>
+      code: `<template>
   <h1>Hello {{ msg }}</h1>
-  <button @click="add">add</button>
-  <p>count: {{ count }}</p>
-</template>`,
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+const msg = ref<string>('world');
+</script>`,
     },
     '/src/main.ts': {
       code: `import { createApp } from 'vue'
 import App from './App.vue'
+import "./styles.css";
 
 createApp(App).mount('#app')
 `,
@@ -76,7 +69,7 @@ declare module "*.vue" {
           '@vue/cli-service': '^5.0.8',
           typescript: '^4.9.3',
         },
-      }),
+      }, null, 2),
     },
     '/tsconfig.json': {
       code: JSON.stringify({
@@ -94,20 +87,11 @@ declare module "*.vue" {
           useDefineForClassFields: true,
           sourceMap: false,
           baseUrl: '.',
-          types: [
-            'webpack-env',
-          ],
+          types: ['webpack-env'],
           paths: {
-            '@/*': [
-              'src/*',
-            ],
+            '@/*': ['src/*'],
           },
-          lib: [
-            'esnext',
-            'dom',
-            'dom.iterable',
-            'scripthost',
-          ],
+          lib: ['esnext', 'dom', 'dom.iterable', 'scripthost'],
         },
         include: [
           'src/**/*.ts',
@@ -116,10 +100,8 @@ declare module "*.vue" {
           'tests/**/*.ts',
           'tests/**/*.tsx',
         ],
-        exclude: [
-          'node_modules',
-        ],
-      }),
+        exclude: ['node_modules'],
+      }, null, 2),
     },
   },
   main: '/src/App.vue',

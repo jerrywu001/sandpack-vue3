@@ -1,36 +1,24 @@
-/**
- * @hidden
- */
+import { commonFiles } from '../common';
+
 export const SOLID_TEMPLATE = {
   files: {
+    ...commonFiles,
     '/App.tsx': {
       code: `import { Component } from "solid-js";
+
 const App: Component = () => {
-  return <h1>Hello World</h1>;
+  return <h1>Hello world</h1>
 };
+
 export default App;`,
     },
     '/index.tsx': {
       code: `import { render } from "solid-js/web";
 import App from "./App";
+
 import "./styles.css";
+
 render(() => <App />, document.getElementById("app"));`,
-    },
-    '/styles.css': {
-      code: `body {
-  font-family: sans-serif;
-  -webkit-font-smoothing: auto;
-  -moz-font-smoothing: auto;
-  -moz-osx-font-smoothing: grayscale;
-  font-smoothing: auto;
-  text-rendering: optimizeLegibility;
-  font-smooth: always;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-h1 {
-  font-size: 1.5rem;
-}`,
     },
     '/index.html': {
       code: `<html>
@@ -50,7 +38,7 @@ h1 {
           'solid-js': '1.3.15',
         },
         main: '/index.tsx',
-      }),
+      }, null, 2),
     },
   },
   main: '/App.tsx',

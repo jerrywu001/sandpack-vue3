@@ -17,7 +17,7 @@ import Link from './link';
 export default function App() {
   return (
     <div>
-      <h1>Hello World</h1>
+      <h1>Hello world</h1>
       <Button />
       <Link />
     </div>
@@ -303,7 +303,7 @@ function show-example() {
 }`,
       '/example.bat': `@echo off
 Rem Prints the "example" variable
-set example=Hello World
+set example=Hello world
 echo %example%`,
       '/example.ps1': `$example = "Hello world"
 # Prints the "example" variable

@@ -1,7 +1,7 @@
 import type { SandpackBundlerFiles } from '@codesandbox/sandpack-client';
 import LZString from 'lz-string';
 import { useSandpack } from '../../contexts/sandpackContext';
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import type { SandboxEnvironment } from '../../types';
 
 const getParameters = (parameters: Record<string, any>): string => LZString.compressToBase64(JSON.stringify(parameters))
@@ -68,16 +68,11 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
       }, 600);
     }, { deep: true, immediate: true });
 
-    onMounted(() => {
-      if (sandpack) {
-        sandpack.openInCSBRegisteredRef = true;
-      }
-    });
-
     return () => (paramsValues.value?.get?.('parameters')?.length ?? 0) > 1500 ? (
       <button
         onClick={(): void => formRef.value?.submit()}
         title="Open in CodeSandbox"
+        type="button"
       >
         <form
           ref={formRef}
@@ -86,6 +81,13 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
           style={{ visibility: 'hidden' }}
           target="_blank"
         >
+           <input
+            name="environment"
+            type="hidden"
+            value={
+              sandpack.environment === 'node' ? 'server' : sandpack.environment
+            }
+          />
           {Array.from(
             paramsValues.value as unknown as Array<[string, string]>,
             ([key, value]) => (
@@ -97,7 +99,9 @@ export const UnstyledOpenInCodeSandboxButton = defineComponent({
       </button>
     ) : (
       <a
-        href={`${CSB_URL}?${paramsValues.value?.toString()}`}
+        href={`${CSB_URL}?${paramsValues.value?.toString()}&environment=${
+          sandpack.environment === 'node' ? 'server' : sandpack.environment
+        }`}
         rel="noreferrer noopener"
         target="_blank"
         title="Open in CodeSandbox"

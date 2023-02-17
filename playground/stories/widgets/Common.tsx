@@ -95,7 +95,7 @@ export const ListenerIframeMessage = defineComponent({
   name: 'JustIframeStory',
   inheritAttrs: true,
   setup() {
-    const text = ref('Hello World');
+    const text = ref('Hello world');
     const { sandpack } = useSandpack();
 
     const sender = () => {

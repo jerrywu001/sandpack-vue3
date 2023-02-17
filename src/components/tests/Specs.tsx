@@ -26,6 +26,7 @@ interface Props {
   verbose: boolean;
   status: Status;
   openSpec: (name: string) => void;
+  hideTestsAndSupressLogs?: boolean;
 }
 
 const fileContainer = css({
@@ -92,6 +93,11 @@ export const Specs = defineComponent({
       type: Function as PropType<(name: string) => void>,
       required: true,
     },
+    hideTestsAndSupressLogs: {
+      type: Boolean,
+      required: false,
+      default: undefined,
+    },
   },
   setup(props: Props) {
     return () => (
@@ -154,16 +160,20 @@ export const Specs = defineComponent({
                 )}
 
                 <FilePath
-                  onClick={() => { props.openSpec(spec.name); }}
+                  onClick={() => {
+                    if (!props.hideTestsAndSupressLogs) {
+                      props.openSpec(spec.name);
+                    }
+                  }}
                   path={spec.name}
                 />
               </div>
 
-              {props.verbose && <Tests tests={tests} />}
+              {props.verbose && !props.hideTestsAndSupressLogs && <Tests tests={tests} />}
 
-              {props.verbose && <Describes describes={describes} />}
+              {props.verbose && !props.hideTestsAndSupressLogs && <Describes describes={describes} />}
 
-              {getFailingTests(spec).map((test) => (
+              {!props.hideTestsAndSupressLogs && getFailingTests(spec).map((test) => (
                 <div
                   key={`failing-${test.name}`}
                   class={classNames(gapBottomClassName)}
@@ -225,6 +235,7 @@ export const FilePath = defineComponent({
       <button
         class={classNames(buttonClassName, filePathButtonClassName)}
         onClick={() => { props.onClick(); }}
+        type="button"
       >
         <span class={classNames(filePathClassName)}>{basePath.value}</span>
         <span class={classNames(fileNameClassName)}>{fileName.value}</span>

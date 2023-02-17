@@ -13,7 +13,7 @@ import {
 
 interface Props {
   error: TestError;
-  path: string;
+  path?: string;
 }
 
 const containerClassName = css({
@@ -32,14 +32,15 @@ export const FormattedError = defineComponent({
     },
     path: {
       type: String,
-      required: true,
+      required: false,
+      default: undefined,
     },
   },
   setup(props: Props) {
     return () => (
       <div
         class={classNames(containerClassName)}
-        v-html={formatDiffMessage(props.error, props.path)}
+        v-html={formatDiffMessage(props.error, props?.path)}
       />
     );
   },
@@ -52,7 +53,7 @@ const escapeHtml = (unsafe: string): string => unsafe
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
 
-const formatDiffMessage = (error: TestError, path: string): string => {
+const formatDiffMessage = (error: TestError, path = ''): string => {
   let finalMessage = '';
   if (error.matcherResult) {
     finalMessage = `<span>${escapeHtml(error.message)

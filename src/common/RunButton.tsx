@@ -1,10 +1,8 @@
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../contexts/sandpackContext';
 import { defineComponent, PropType } from 'vue';
 import { RunIcon } from '../icons';
-import { classNames } from '../utils/classNames';
-import { roundedButtonClassName, buttonClassName } from '../styles/shared';
-import { css, THEME_PREFIX } from '../styles';
+import { css } from '../styles';
+import { RoundedButton } from './RoundedButton';
 
 const runButtonClassName = css({
   position: 'absolute',
@@ -21,19 +19,12 @@ export const RunButton = defineComponent({
       default: null,
     },
   },
-  setup(props, { attrs }) {
-    const c = useClasser(THEME_PREFIX);
+  setup(props) {
     const { sandpack } = useSandpack();
 
     return () => (
-      <button
-        class={classNames(
-          c('button'),
-          buttonClassName,
-          roundedButtonClassName,
-          runButtonClassName,
-          attrs?.class || '',
-        )}
+      <RoundedButton
+        class={runButtonClassName.toString()}
         onClick={(event) => {
           if (sandpack && sandpack.runSandpack) {
             sandpack.runSandpack();
@@ -42,11 +33,10 @@ export const RunButton = defineComponent({
             props.onClick(event);
           }
         }}
-        type="button"
       >
         <RunIcon />
-        Run
-      </button>
+        <span>Run</span>
+      </RoundedButton>
     );
   },
 });

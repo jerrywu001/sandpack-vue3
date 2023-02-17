@@ -5,7 +5,6 @@ import {
   defineComponent,
   HtmlHTMLAttributes,
   PropType,
-  StyleValue,
 } from 'vue';
 import type { TestError } from '@codesandbox/sandpack-client';
 import {
@@ -56,10 +55,6 @@ export const Tests = defineComponent({
   props: {
     tests: {
       type: Array as PropType<Test[]>,
-      required: true,
-    },
-    style: {
-      type: Object as PropType<StyleValue>,
       required: true,
     },
   },

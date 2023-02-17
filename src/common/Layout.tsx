@@ -21,6 +21,7 @@ export const layoutClassName = css({
     flexShrink: 1,
     flexBasis: '0',
     height: '$layout$height',
+    overflow: 'hidden',
 
     '@media print': {
       height: 'auto',
@@ -39,9 +40,10 @@ export const layoutClassName = css({
     flex: 0.2,
     minWidth: '200px',
     '@media screen and (max-width: 768px)': {
-      '&': {
-        minWidth: '100% !important',
-      },
+      flex: 1,
+      // '&': {
+      //   minWidth: '100% !important',
+      // },
     },
   },
 });

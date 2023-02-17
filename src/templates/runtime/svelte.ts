@@ -1,27 +1,31 @@
-/**
- * @hidden
- */
+import { commonFiles } from '../common';
+
 export const SVELTE_TEMPLATE = {
   files: {
+    ...commonFiles,
     '/App.svelte': {
       code: `<style>
-  main {
-    font-family: sans-serif;
-    text-align: center;
+  h1 {
+    font-size: 1.5rem;
   }
 </style>
+
 <script>
-  let name = 'World';
+  let name = 'world';
 </script>
+
 <main>
   <h1>Hello {name}</h1>
 </main>`,
     },
     '/index.js': {
       code: `import App from "./App.svelte";
+import "./styles.css";
+
 const app = new App({
   target: document.body
 });
+
 export default app;
       `,
     },
@@ -31,9 +35,12 @@ export default app;
   <head>
     <meta charset="utf8" />
     <meta name="viewport" content="width=device-width" />
+
     <title>Svelte app</title>
+
     <link rel="stylesheet" href="public/bundle.css" />
   </head>
+
   <body>
     <script src="bundle.js"></script>
   </body>
@@ -45,9 +52,9 @@ export default app;
           svelte: '^3.0.0',
         },
         main: '/index.js',
-      }),
+      }, null, 2),
     },
   },
-  main: '/index.js',
+  main: '/App.svelte',
   environment: 'svelte',
 };

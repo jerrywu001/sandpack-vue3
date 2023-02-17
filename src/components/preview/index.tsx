@@ -1,13 +1,13 @@
 import { classNames } from '../../utils/classNames';
 import { css, THEME_PREFIX } from '../../styles';
-import { ErrorOverlay } from '../../common/ErrorOverlay';
 import { LoadingOverlay } from '../../common/LoadingOverlay';
 import { Navigator } from '../navigator';
 import { OpenInCodeSandboxButton } from '../../common/OpenInCodeSandboxButton';
-import { RefreshButton } from './RefreshButton';
+import { RefreshIcon, RestartIcon } from '../../icons';
+import { RoundedButton } from '../../common/RoundedButton';
 import { SandpackStack } from '../../common/Stack';
 import { useClasser } from 'code-hike-classer-vue3';
-import { useSandpackClient } from '../../hooks';
+import { useSandpackClient, useSandpackNavigation, useSandpackShell } from '../../hooks';
 import {
   DefineComponent,
   defineComponent,
@@ -19,16 +19,17 @@ import {
   ref,
 } from 'vue';
 import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
+import { ErrorOverlay } from '../../common';
 
 export interface PreviewProps {
   showNavigator?: boolean;
   showOpenInCodeSandbox?: boolean;
   showRefreshButton?: boolean;
+  showRestartButton?: boolean;
   showSandpackErrorOverlay?: boolean;
+  showOpenNewtab?: boolean;
   actionsChildren?: JSX.Element;
 }
-
-export { RefreshButton };
 
 const previewClassName = css({
   flex: 1,
@@ -37,6 +38,18 @@ const previewClassName = css({
   background: 'white',
   overflow: 'auto',
   position: 'relative',
+
+  [`.${THEME_PREFIX}-bridge-frame`]: {
+    border: 0,
+    position: 'absolute',
+    left: '$space$2',
+    bottom: '$space$2',
+    zIndex: '$top',
+    height: 12,
+    width: '30%',
+    mixBlendMode: 'multiply',
+    pointerEvents: 'none',
+  },
 });
 
 const previewIframe = css({
@@ -55,15 +68,14 @@ const previewActionsClassName = css({
   bottom: '$space$2',
   right: '$space$2',
   zIndex: '$overlay',
-
-  '> *': { marginLeft: '$space$2' },
+  gap: '$space$2',
 });
 
 export interface SandpackPreviewRef {
   /**
    * Retrieve the current Sandpack client instance from preview
    */
-  getClient: () => SandpackClient | null;
+  getClient: () => InstanceType<typeof SandpackClient> | null;
   /**
    * Returns the client id, which will be used to
    * initialize a client in the main Sandpack context
@@ -94,6 +106,16 @@ export const SandpackPreview = defineComponent({
       required: false,
       default: true,
     },
+    showOpenNewtab: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    showRestartButton: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
     actionsChildren: {
       type: Object as PropType<JSX.Element>,
       required: false,
@@ -109,8 +131,10 @@ export const SandpackPreview = defineComponent({
 
     const c = useClasser(THEME_PREFIX);
 
+    const { refresh } = useSandpackNavigation(clientId.value);
+    const { restart } = useSandpackShell(clientId.value);
+
     // SandpackPreview immediately registers the custom screens/components so the bundler does not render any of them
-    sandpack.openInCSBRegisteredRef = true;
     sandpack.errorScreenRegisteredRef = true;
     sandpack.loadingScreenRegisteredRef = true;
 
@@ -166,8 +190,6 @@ export const SandpackPreview = defineComponent({
             title="Sandpack Preview"
           />
 
-          { props.showSandpackErrorOverlay && <ErrorOverlay clientId={clientId.value} /> }
-
           <div
             class={classNames(
               c('preview-actions'),
@@ -179,11 +201,20 @@ export const SandpackPreview = defineComponent({
                 ? slots.actionsChildren()
                 : props.actionsChildren ? props.actionsChildren : null
             }
+
             {
-              !props.showNavigator && props.showRefreshButton && sandpack.status === 'running' && (
-                <RefreshButton clientId={clientId.value} />
+              props.showRestartButton && sandpack.environment === 'node' && (
+                <RoundedButton onClick={restart}>
+                  <RestartIcon />
+                </RoundedButton>
               )
             }
+
+            {!props.showNavigator && props.showRefreshButton && sandpack.status === 'running' && (
+              <RoundedButton onClick={refresh}>
+                <RefreshIcon />
+              </RoundedButton>
+            )}
 
             { props.showOpenInCodeSandbox && <OpenInCodeSandboxButton /> }
           </div>
@@ -193,7 +224,8 @@ export const SandpackPreview = defineComponent({
             showOpenInCodeSandbox={props.showOpenInCodeSandbox as boolean}
           />
 
-          {slots.default ? slots.default() : null}
+          { props.showSandpackErrorOverlay && <ErrorOverlay clientId={clientId.value} /> }
+          { slots.default ? slots.default() : null }
         </div>
       </SandpackStack>
     );

@@ -2,7 +2,7 @@ import { DefineComponent, defineComponent, PropType } from 'vue';
 
 import { ConsoleIcon } from '../..';
 import { css } from '../../styles';
-import { roundedTestButtonClassName, buttonClassName } from '../../styles/shared';
+import { buttonClassName, roundedButtonClassName } from '../../styles/shared';
 import { classNames } from '../../utils/classNames';
 
 import type { Status } from './SandpackTests';
@@ -10,9 +10,10 @@ import type { Status } from './SandpackTests';
 const wrapperClassName = css({
   justifyContent: 'space-between',
   borderBottom: '1px solid $colors$surface2',
-  padding: '$space$3 $space$2',
+  padding: '0 $space$2',
   fontFamily: '$font$mono',
-  maxHeight: '$layout$headerHeight',
+  height: '$layout$headerHeight',
+  minHeight: '$layout$headerHeight',
   overflowX: 'auto',
   whiteSpace: 'nowrap',
 });
@@ -24,6 +25,12 @@ const flexClassName = css({
   gap: '$space$2',
 });
 
+const buttonsClassName = classNames(
+  buttonClassName,
+  roundedButtonClassName,
+  css({ padding: '$space$1 $space$3' }),
+);
+
 interface Props {
   setVerbose: () => void;
   setSuiteOnly: () => void;
@@ -33,6 +40,9 @@ interface Props {
   watchMode: boolean;
   setWatchMode: () => void;
   showSuitesOnly: boolean;
+  showVerboseButton: boolean;
+  showWatchButton: boolean;
+  hideTestsAndSupressLogs: boolean;
 }
 
 export const Header = defineComponent({
@@ -71,15 +81,21 @@ export const Header = defineComponent({
       type: Boolean,
       required: true,
     },
+    showVerboseButton: {
+      type: Boolean,
+      required: true,
+    },
+    showWatchButton: {
+      type: Boolean,
+      required: true,
+    },
+    hideTestsAndSupressLogs: {
+      type: Boolean,
+      required: true,
+    },
   },
   // @ts-ignore
   setup(props: Props) {
-    const buttonsClassName = classNames(
-      buttonClassName,
-      roundedTestButtonClassName,
-      css({ padding: '$space$1 $space$3' }),
-    );
-
     return () => (
       <div class={classNames(wrapperClassName, flexClassName)}>
         <div class={classNames(flexClassName)}>
@@ -110,26 +126,37 @@ export const Header = defineComponent({
               data-active={props.suiteOnly}
               disabled={props.status === 'initialising'}
               onClick={props.setSuiteOnly}
+              type="button"
             >
               Suite only
             </button>
           )}
-          <button
-            class={buttonsClassName}
-            data-active={props.verbose}
-            disabled={props.status === 'initialising'}
-            onClick={props.setVerbose}
-          >
-            Verbose
-          </button>
-          <button
-            class={buttonsClassName}
-            data-active={props.watchMode}
-            disabled={props.status === 'initialising'}
-            onClick={props.setWatchMode}
-          >
-            Watch
-          </button>
+          {
+            props.showVerboseButton && (
+              <button
+                class={buttonsClassName}
+                data-active={props.verbose}
+                disabled={props.status === 'initialising' || props.hideTestsAndSupressLogs}
+                onClick={props.setVerbose}
+                type="button"
+              >
+                Verbose
+              </button>
+            )
+          }
+          {
+            props.showWatchButton && (
+              <button
+                class={buttonsClassName}
+                data-active={props.watchMode}
+                disabled={props.status === 'initialising'}
+                onClick={props.setWatchMode}
+                type="button"
+              >
+                Watch
+              </button>
+            )
+          }
         </div>
       </div>
     );

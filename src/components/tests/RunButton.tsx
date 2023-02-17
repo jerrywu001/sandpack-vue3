@@ -1,13 +1,6 @@
-import { useClasser } from 'code-hike-classer-vue3';
+import { RoundedButton } from '../../common/RoundedButton';
 import { defineComponent, PropType } from 'vue';
 import { RunIcon } from '../../icons';
-import { THEME_PREFIX } from '../../styles';
-import {
-  roundedButtonClassName,
-  buttonClassName,
-  iconStandaloneClassName,
-} from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
 
 export const RunButton = defineComponent({
   name: 'RunButton',
@@ -19,22 +12,10 @@ export const RunButton = defineComponent({
   },
   // @ts-ignore
   setup(props: { onClick: () => void }) {
-    const c = useClasser(THEME_PREFIX);
-
     return () => (
-      <button
-        class={classNames(
-          c('button', 'icon-standalone'),
-          buttonClassName,
-          iconStandaloneClassName,
-          roundedButtonClassName,
-        )}
-        onClick={props.onClick}
-        title="Run tests"
-        type="button"
-      >
+      <RoundedButton onClick={props.onClick} title="Run tests">
         <RunIcon />
-      </button>
+      </RoundedButton>
     );
   },
 });

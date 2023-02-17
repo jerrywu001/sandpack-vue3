@@ -1,11 +1,12 @@
 import { classNames } from '../../utils/classNames';
 import { css, THEME_PREFIX } from '../../styles';
-import { DefineComponent, defineComponent } from 'vue';
+import { computed, DefineComponent, defineComponent, onBeforeUnmount, onUnmounted, PropType, watch } from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
 import { ModuleList } from './ModuleList';
 import { stackClassName } from '../..';
 import { useSandpack } from '../../contexts/sandpackContext';
+import type { SandpackBundlerFiles, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 
 export interface SandpackFileExplorerProp {
   /**
@@ -15,6 +16,8 @@ export interface SandpackFileExplorerProp {
    * @default false
    */
   autoHiddenFiles?: boolean;
+
+  initialCollapsedFolder?: string[];
 }
 
 const fileExplorerClassName = css({
@@ -34,27 +37,73 @@ export const SandpackFileExplorer = defineComponent({
       required: false,
       default: false,
     },
+    initialCollapsedFolder: {
+      type: Array as PropType<Array<string> | undefined>,
+      required: false,
+      default() {
+        return [];
+      },
+    },
   },
   setup(props, { attrs }) {
-    const { sandpack } = useSandpack();
+    let unsubscribe: UnsubscribeFunction;
+    const { sandpack, listen } = useSandpack();
+
+    const orderedFiles = computed(() => Object.keys(sandpack.files)
+      .sort()
+      .reduce<SandpackBundlerFiles>((obj, key) => {
+      obj[key] = sandpack.files[key];
+      return obj;
+    }, {}));
+
+    watch(
+      () => sandpack.status,
+      () => {
+        if (sandpack.status !== 'running') return;
+        if (unsubscribe) unsubscribe();
+
+        unsubscribe = listen((message) => {
+          if (message.type === 'fs/change') {
+            sandpack.updateFile(message.path, message.content, false);
+          }
+
+          if (message.type === 'fs/remove') {
+            sandpack.deleteFile(message.path, false);
+          }
+        });
+
+        return unsubscribe;
+      },
+      { immediate: true },
+    );
+
+    onBeforeUnmount(() => {
+      if (unsubscribe) unsubscribe();
+    });
+
+    onUnmounted(() => {
+      if (unsubscribe) unsubscribe();
+    });
 
     return () => (
       <div
         class={classNames(
           stackClassName,
-          fileExplorerClassName,
           `${THEME_PREFIX}-file-explorer`,
           attrs?.class || '',
         )}
       >
-        <ModuleList
-          activeFile={sandpack.activeFile}
-          autoHiddenFiles={props.autoHiddenFiles}
-          files={sandpack.files}
-          prefixedPath="/"
-          selectFile={sandpack.openFile}
-          visibleFiles={sandpack.visibleFilesFromProps}
-        />
+        <div class={classNames(fileExplorerClassName)}>
+          <ModuleList
+            activeFile={sandpack.activeFile}
+            autoHiddenFiles={props.autoHiddenFiles}
+            files={orderedFiles.value}
+            initialCollapsedFolder={props?.initialCollapsedFolder ?? []}
+            prefixedPath="/"
+            selectFile={sandpack.openFile}
+            visibleFiles={sandpack.visibleFilesFromProps}
+          />
+        </div>
       </div>
     );
   },

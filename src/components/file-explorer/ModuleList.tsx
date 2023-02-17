@@ -20,6 +20,7 @@ export interface ModuleListProps extends SandpackFileExplorerProp {
   visibleFiles?: NonNullable<SandpackOptions['visibleFiles']>;
   depth?: number;
   autoHiddenFiles?: boolean;
+  initialCollapsedFolder?: string[];
 }
 
 /**
@@ -55,6 +56,13 @@ export const ModuleList = defineComponent({
       required: false,
       default: undefined,
     },
+    initialCollapsedFolder: {
+      type: Array as PropType<Array<string> | undefined>,
+      required: false,
+      default() {
+        return [];
+      },
+    },
   },
   // @ts-ignore
   setup(props: ModuleListProps) {
@@ -74,6 +82,7 @@ export const ModuleList = defineComponent({
             autoHiddenFiles={props.autoHiddenFiles}
             depth={props.depth as number}
             files={props.files}
+            initialCollapsedFolder={props.initialCollapsedFolder}
             prefixedPath={dir}
             selectFile={props.selectFile}
             visibleFiles={props.visibleFiles as string[]}

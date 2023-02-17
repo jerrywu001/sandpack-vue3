@@ -5,6 +5,8 @@ import { css, THEME_PREFIX } from '../../styles';
 import {
   DefineComponent,
   defineComponent,
+  onBeforeUnmount,
+  onUnmounted,
   PropType,
   ref,
   watch,
@@ -124,7 +126,8 @@ export const Navigator = defineComponent({
 
         if (typeof props.onURLChange === 'function') {
           // @ts-ignore
-          onURLChange(baseUrl.value + e.currentTarget.value);
+          // eslint-disable-next-line no-unsafe-optional-chaining
+          props.onURLChange(baseUrl.value + e.currentTarget?.value);
         }
       }
     };
@@ -150,6 +153,14 @@ export const Navigator = defineComponent({
         justifyContent: 'center',
       }),
     );
+
+    onBeforeUnmount(() => {
+      if (unsub) unsub();
+    });
+
+    onUnmounted(() => {
+      if (unsub) unsub();
+    });
 
     return () => (
       <div

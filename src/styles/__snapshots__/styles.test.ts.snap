@@ -1,4 +1,4 @@
-// Vitest Snapshot v1
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`standardizeStitchesTheme > converts a theme to the stitches format 1`] = `
 {
@@ -152,7 +152,7 @@ exports[`standardizeTheme > should return a custom theme merged with the default
 exports[`standardizeTheme > should return the \`dark\` theme 1`] = `
 {
   "id": "dark",
-  "mode": "light",
+  "mode": "dark",
   "theme": {
     "colors": {
       "accent": "#E5E5E5",
