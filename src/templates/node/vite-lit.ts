@@ -107,7 +107,7 @@ export default defineConfig({
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "tsc && vite build"
   },
   "dependencies": {

@@ -44,7 +44,7 @@ root.render(
     '/package.json': {
       code: JSON.stringify({
         scripts: {
-          dev: 'vite',
+          dev: 'vite --force',
           build: 'vite build',
           preview: 'vite preview',
         },

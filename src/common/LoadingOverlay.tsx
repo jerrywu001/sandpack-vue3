@@ -14,7 +14,7 @@ import { Loading } from './Loading';
 import { RestartIcon } from '../icons';
 import { StdoutList } from '../components/console/StdoutList';
 import { useClasser } from 'code-hike-classer-vue3';
-import { usePreviewProgress } from 'sandpack-vue3/hooks/usePreviewProgress';
+import { useSandpackPreviewProgress } from '../hooks/useSandpackPreviewProgress';
 import { useSandpack } from '../contexts/sandpackContext';
 import { useSandpackShellStdout } from '../hooks/useSandpackShellStdout';
 import {
@@ -26,7 +26,7 @@ import {
   iconStandaloneClassName,
   roundedButtonClassName,
 } from '../styles/shared';
-import { useSandpackShell } from 'sandpack-vue3/hooks';
+import { useSandpackShell } from '../hooks';
 
 export interface LoadingOverlayProps {
   clientId?: string;
@@ -61,7 +61,7 @@ export const LoadingOverlay = defineComponent({
     const shouldShowStdout = ref(false);
 
     const loadingOverlayState = useLoadingOverlayState(props);
-    const progressMessage = usePreviewProgress();
+    const progressMessage = useSandpackPreviewProgress();
     const { logs: stdoutData } = useSandpackShellStdout({});
 
     const notHidden = computed(() => loadingOverlayState.value !== 'HIDDEN');

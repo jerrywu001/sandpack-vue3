@@ -353,13 +353,12 @@ const SandpackProvider = defineComponent({
     }
 
     function handleMessage(msg: SandpackMessage) {
-      if (timeoutHook.value) {
-        clearTimeout(timeoutHook.value);
-      }
-
       if (msg.type === 'state') {
         state.bundlerState = msg.state;
-      } else if (msg.type === 'done' && !msg.compilatonError) {
+      } else if ((msg.type === 'done' && !msg.compilatonError) || msg.type === 'connected') {
+        if (timeoutHook.value) {
+          clearTimeout(timeoutHook.value);
+        }
         state.error = null;
       } else if (msg.type === 'action' && msg.action === 'show-error') {
         state.error = extractErrorDetails(msg);
