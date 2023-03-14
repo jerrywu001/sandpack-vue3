@@ -5,9 +5,9 @@ import { css, THEME_PREFIX } from '../../styles';
 import { Header } from './Header';
 import { RoundedButton } from '../../common/RoundedButton';
 import { SandpackConsoleData } from './utils/getType';
-import { SandpackStack } from '../../common';
+import { DependenciesProgress, SandpackStack } from '../../common';
 import { StdoutList } from './StdoutList';
-import { useSandpack, useSandpackShell } from '../..';
+import { useSandpack, useSandpackClient, useSandpackShell } from '../..';
 import { useSandpackConsole } from './useSandpackConsole';
 import { useSandpackShellStdout } from '../../hooks/useSandpackShellStdout';
 import {
@@ -30,6 +30,8 @@ interface SandpackConsoleProps {
   onLogsChange?: (logs: SandpackConsoleData) => void;
   /** Reset the console list on every preview restart */
   resetOnPreviewRestart?: boolean;
+  standalone?: boolean;
+  actionsChildren?: JSX.Element;
 }
 
 /**
@@ -71,26 +73,40 @@ export const SandpackConsole = defineComponent({
       required: false,
       default: undefined,
     },
+    standalone: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    actionsChildren: {
+      type: Object as PropType<JSX.Element>,
+      required: false,
+      default: null,
+    },
   },
-  setup(props: SandpackConsoleProps & { reset?: () => void }, { attrs, expose }) {
+  setup(props: SandpackConsoleProps & { reset?: () => void }, { slots, attrs, expose }) {
     const {
       sandpack: { environment },
     } = useSandpack();
 
     const wrapperRef = ref<HTMLDivElement>();
+    const { iframe, clientId: internalClientId } = useSandpackClient();
     const { restart } = useSandpackShell();
 
     const currentTab = ref<'server' | 'client'>(environment === 'node' ? 'server' : 'client');
+    const clientId = computed(() => props.standalone ? internalClientId.value : undefined);
 
     const { logs: consoleData, reset: resetConsole } = useSandpackConsole({
       maxMessageCount: props.maxMessageCount,
       showSyntaxError: props.showSyntaxError,
       resetOnPreviewRestart: props.resetOnPreviewRestart,
+      clientId: clientId.value,
     });
 
     const { logs: stdoutData, reset: resetStdout } = useSandpackShellStdout({
       maxMessageCount: props.maxMessageCount,
       resetOnPreviewRestart: props.resetOnPreviewRestart,
+      clientId: clientId.value,
     });
     const isServerTab = computed(() => currentTab.value === 'server');
     const isNodeEnvironment = computed(() => environment === 'node');
@@ -132,6 +148,19 @@ export const SandpackConsole = defineComponent({
             height: '100%',
             background: '$surface1',
             iframe: { display: 'none' },
+
+            [`.${THEME_PREFIX}-bridge-frame`]: {
+              display: 'block',
+              border: 0,
+              position: 'absolute',
+              left: '$space$2',
+              bottom: '$space$2',
+              zIndex: '$top',
+              height: 12,
+              width: '30%',
+              mixBlendMode: 'multiply',
+              pointerEvents: 'none',
+            },
           }),
           `${THEME_PREFIX}-console`,
           attrs?.class || '',
@@ -173,6 +202,12 @@ export const SandpackConsole = defineComponent({
             }),
           )}
         >
+          {
+            slots.actionsChildren
+              ? slots.actionsChildren()
+              : props.actionsChildren ? props.actionsChildren : null
+          }
+
           {isServerTab.value && (
             <RoundedButton
               onClick={() => {
@@ -197,6 +232,13 @@ export const SandpackConsole = defineComponent({
             <CleanIcon />
           </RoundedButton>
         </div>
+
+        {props.standalone && (
+          <>
+            <DependenciesProgress />
+            <iframe title="console" ref={iframe}></iframe>
+          </>
+        )}
       </SandpackStack>
     );
   },

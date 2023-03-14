@@ -69,6 +69,19 @@ export const ShowConsoleButton = () => (
   </div>
 );
 
+export const Layout = () => (
+  <>
+    <p>Console</p>
+    <Sandpack options={{ layout: 'console' }} template="node" />
+
+    <p>Tests</p>
+    <Sandpack options={{ layout: 'tests' }} template="test-ts" />
+
+    <p>Preview</p>
+    <Sandpack options={{ layout: 'preview' }} template="react" />
+  </>
+);
+
 export const CustomSetup = () => (
   <Sandpack
     customSetup={{

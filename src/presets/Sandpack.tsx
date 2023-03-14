@@ -134,7 +134,12 @@ const Sandpack = defineComponent({
 
     /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     const templateFiles = computed(() => SANDBOX_TEMPLATES[props.template!] ?? {});
-    const mode = computed(() => 'mode' in templateFiles.value ? templateFiles.value.mode : 'preview');
+    const mode = computed(() => (
+      props.options?.layout
+        ? props.options?.layout
+        : 'mode' in templateFiles.value
+          ? templateFiles.value.mode : 'preview'
+    ));
 
     const actionsChildren = computed(() => props.options?.showConsoleButton ? (
       <ConsoleCounterButton
@@ -287,6 +292,13 @@ const Sandpack = defineComponent({
             )}
             {mode.value === 'tests' && (
               <SandpackTests
+                actionsChildren={actionsChildren.value}
+                style={topRowStyle.value}
+              />
+            )}
+
+            {mode.value === 'console' && (
+              <SandpackConsole
                 actionsChildren={actionsChildren.value}
                 style={topRowStyle.value}
               />

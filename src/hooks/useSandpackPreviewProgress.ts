@@ -22,8 +22,9 @@ const mapProgressMessage = (
   }
 };
 
-export const useSandpackPreviewProgress = () => {
+export const useSandpackPreviewProgress = (timeout?: number) => {
   let unsubscribe: UnsubscribeFunction;
+  let timer: NodeJS.Timer;
 
   const isReady = ref(false);
   const totalDependencies = ref<number>();
@@ -35,6 +36,7 @@ export const useSandpackPreviewProgress = () => {
     [
       totalDependencies,
       isReady,
+      () => timeout,
     ],
     () => {
       if (unsubscribe) unsubscribe();
@@ -43,6 +45,13 @@ export const useSandpackPreviewProgress = () => {
         if (message.type === 'start' && message.firstLoad) {
           isReady.value = false;
         }
+
+        if (timeout) {
+          timer = setTimeout(() => {
+            loadingMessage.value = null;
+          }, timeout);
+        }
+
         if (message.type === 'shell/progress' && !isReady.value) {
           if (!totalDependencies.value && message.data.state === 'downloaded_module') {
             totalDependencies.value = message.data.totalPending;
@@ -54,6 +63,7 @@ export const useSandpackPreviewProgress = () => {
         if (message.type === 'done' && message.compilatonError === false) {
           isReady.value = true;
           loadingMessage.value = null;
+          clearTimeout(timer);
         }
       });
     },
@@ -61,10 +71,16 @@ export const useSandpackPreviewProgress = () => {
   );
 
   onBeforeUnmount(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (unsubscribe) unsubscribe();
   });
 
   onUnmounted(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
     if (unsubscribe) unsubscribe();
   });
 

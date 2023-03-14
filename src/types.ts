@@ -122,6 +122,7 @@ export interface SandpackOptions {
    * appears when `readOnly` is `true`
    */
   showReadOnly?: boolean;
+  layout?: 'preview' | 'tests' | 'console';
 
   /**
    * This provides a way to control how some components are going to
@@ -472,6 +473,8 @@ export interface SandpackInternalProps<
      * appears when `readOnly` is `true`
      */
     showReadOnly?: boolean;
+
+    layout?: 'preview' | 'tests' | 'console';
   };
 }
 

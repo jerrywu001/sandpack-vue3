@@ -337,7 +337,7 @@ const SandpackProvider = defineComponent({
       }
 
       const unsubscribeQueuedClients = Object.values(
-        state.unsubscribeClientListenersRef[clientId],
+        state.unsubscribeClientListenersRef[clientId] ?? {},
       );
 
       // Unsubscribing all listener registered
