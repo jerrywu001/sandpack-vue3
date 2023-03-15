@@ -23,26 +23,37 @@
   "license": "MIT",
   "author": "jerrywu001 <57242263@163.com>",
   "main": "./dist/index.js",
-  "module": "./dist/esm/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "typings": "./dist/index.d.ts",
   "exports": {
-    "./unstyled": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/unstyled/esm/index.js",
-      "require": "./dist/unstyled/index.js"
-    },
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./unstyled": {
+      "types": "./dist/unstyled.d.ts",
+      "import": "./dist/unstyled.mjs",
+      "require": "./dist/unstyled.js"
+    },
+    "./*": [
+      "./*",
+      "./*.d.ts"
+    ]
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
     }
   },
   "files": [
     "dist",
     "package.json",
     "README.md",
-    "global.d.ts"
+    "*.d.ts"
   ],
   "workspaces": [
     "playground"
@@ -100,7 +111,7 @@
     "@typescript-eslint/parser": "^5.55.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
-    "@vitest/ui": "^0.29.2",
+    "@vitest/ui": "^0.29.3",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/eslint-config-typescript": "^11.0.2",
     "acorn-walk": "^8.2.0",
@@ -119,14 +130,14 @@
     "husky": "^8.0.3",
     "jsdom": "^21.1.1",
     "lint-staged": "^13.2.0",
-    "npm": "^9.6.1",
+    "npm": "^9.6.2",
     "rimraf": "^4.4.0",
     "shelljs": "^0.8.5",
     "tsup": "^6.6.3",
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
     "vite-plugin-windicss": "^1.8.10",
-    "vitest": "^0.29.2",
+    "vitest": "^0.29.3",
     "vue-tsc": "^1.2.0"
   },
   "peerDependencies": {
