@@ -10,16 +10,7 @@ import { isDarkColor } from '../utils/stringUtils';
  */
 export const THEME_PREFIX = 'sp';
 
-const getNodeProcess = (): false | string | undefined => {
-  if (typeof process !== 'undefined') {
-    return (
-      process.env?.SANDPACK_BARE_COMPONENTS ||
-      process.env?.NEXT_PUBLIC_SANDPACK_BARE_COMPONENTS
-    );
-  }
-
-  return false;
-};
+const getNodeProcess = () => typeof __UNSTYLED_COMPONENTS__ !== 'undefined' && !!__UNSTYLED_COMPONENTS__;
 
 /**
  * @category Theme
@@ -142,3 +133,12 @@ const simpleHashFunction = (str: string): number => {
   }
   return Math.abs(hash);
 };
+
+/**
+ * The fake `css` function used to match the real `css` function usage
+ * We use this for the unstyled bundle which do not need real class names
+ * `css` is a factory which return a className generator, but also it be used in scenarios which `toString` will be invoked
+ * so we also need to add the `toString` method to it.
+ */
+export const fakeCss = () => '';
+fakeCss.toString = fakeCss;

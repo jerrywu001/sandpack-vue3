@@ -5,8 +5,7 @@
   "editor.insertSpaces": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
-    "source.fixAll.tslint": true,
-    "source.fixAll.stylelint": true
+    "source.fixAll.tslint": true
   },
   "eslint.options": {
     "overrideConfigFile": "./.eslintrc.js"
@@ -16,14 +15,6 @@
     "javascriptreact",
     "typescript",
     "typescriptreact"
-  ],
-  "stylelint.validate": [
-    "css",
-    "postcss",
-    "less",
-    "scss",
-    "sass",
-    "vue"
   ],
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"

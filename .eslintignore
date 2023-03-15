@@ -4,9 +4,7 @@ node_modules/*
 __tests__
 setupTests.ts
 .eslintrc.js
-.stylelintrc.js
 babel.config.js
-postcss.config.js
 commitlint.config.js
 tsconfig.json
 **/*.css

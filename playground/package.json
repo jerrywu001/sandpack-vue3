@@ -5,8 +5,8 @@
     "build": "tsc && vue-tsc && vite build",
     "build:storybook": "build-storybook",
     "dev": "vite --host --open",
-    "dev:usepack": "cross-env USEPACK=true vite --port 5000 --open",
-    "preview": "vite preview",
+    "dev:usepack": "cross-env USEPACK=true vite --host --port 5000 --open",
+    "preview": "vite preview --host",
     "storybook": "start-storybook -p 6006",
     "typecheck": "tsc && vue-tsc"
   },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import isEqual from 'lodash.isequal';
+import { dequal as isEqual } from 'dequal';
 import { ref } from 'vue';
 import { githubLight, aquaBlue } from '@codesandbox/sandpack-themes';
 import {

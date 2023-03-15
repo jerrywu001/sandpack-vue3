@@ -1,16 +1,21 @@
 /// <reference types="vitest" />
 
-import dts from 'vite-plugin-dts';
 import path from 'path';
 import Vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig } from 'vite';
+import pkg from './package.json';
+
+const removeCss = require('./scripts/rollup-remove-css-transformer');
 
 export default defineConfig({
   resolve: {
     alias: {
       'sandpack-vue3': path.resolve(__dirname, './src/index.ts'),
     },
+  },
+  define: {
+    __UNSTYLED_COMPONENTS__: true,
   },
   build: {
     minify: true,
@@ -23,39 +28,22 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/index.ts'),
       formats: ['es', 'cjs'],
     },
+    outDir: path.resolve(__dirname, 'dist/unstyled'),
     // sourcemap: true,
     rollupOptions: {
       external: [
-        'vue',
-        '@codemirror/closebrackets',
-        '@codemirror/commands',
-        '@codemirror/comment',
-        '@codemirror/gutter',
-        '@codemirror/highlight',
-        '@codemirror/history',
-        '@codemirror/lang-css',
-        '@codemirror/lang-html',
-        '@codemirror/lang-javascript',
-        '@codemirror/matchbrackets',
-        '@codemirror/state',
-        '@codemirror/view',
-        '@codesandbox/sandpack-client',
+        ...Object.keys(pkg.dependencies),
+        ...Object.keys(pkg.devDependencies),
+        ...Object.keys(pkg.peerDependencies),
+      ],
+      plugins: [
+        removeCss(),
       ],
     },
   },
   plugins: [
-    Vue({
-      // reactivityTransform: true,
-    }),
+    Vue(),
     vueJsx(),
-    // https://www.npmjs.com/package/vite-plugin-dts
-    dts({
-      include: 'src',
-      rollupTypes: true,
-      afterBuild: () => {
-        // do something else
-      },
-    }),
   ],
   // https://github.com/vitest-dev/vitest
   test: {

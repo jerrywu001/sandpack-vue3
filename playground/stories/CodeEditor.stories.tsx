@@ -10,7 +10,7 @@ import {
 import { Story } from '@storybook/vue3';
 import { ref } from 'vue';
 import { aquaBlue, sandpackDark } from '@codesandbox/sandpack-themes';
-import isEqual from 'lodash.isequal';
+import { dequal as isEqual } from 'dequal';
 
 export default {
   title: 'components/Code Editor',
