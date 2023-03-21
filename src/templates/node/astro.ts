@@ -41,7 +41,7 @@ export default defineConfig({});`,
       code: JSON.stringify({
         dependencies: {
           astro: '^1.9.2',
-          'esbuild-wasm': '0.17.10',
+          'esbuild-wasm': '^0.17.12',
         },
         scripts: {
           dev: 'astro dev',

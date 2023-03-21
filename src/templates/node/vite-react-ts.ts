@@ -61,7 +61,6 @@ root.render(
           noEmit: true,
           jsx: 'react-jsx',
         },
-        include: ['src'],
         references: [{ path: './tsconfig.node.json' }],
       }, null, 2),
     },
@@ -91,9 +90,10 @@ root.render(
           '@types/react': '^18.0.28',
           '@types/react-dom': '^18.0.11',
           '@vitejs/plugin-react': '^3.1.0',
-          typescript: '^4.9.5',
-          vite: '^4.1.4',
-          'esbuild-wasm': '0.17.10',
+          'vite-plugin-checker': '^0.5.6',
+          typescript: '^5.0.2',
+          vite: '^4.2.1',
+          'esbuild-wasm': '^0.17.12',
         },
       }, null, 2),
     },
@@ -106,7 +106,9 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+  ],
 })
 `,
     },

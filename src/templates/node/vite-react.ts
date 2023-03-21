@@ -54,8 +54,8 @@ root.render(
         },
         devDependencies: {
           '@vitejs/plugin-react': '3.1.0',
-          vite: '^4.1.4',
-          'esbuild-wasm': '0.17.10',
+          vite: '^4.2.1',
+          'esbuild-wasm': '^0.17.12',
         },
       }, null, 2),
     },

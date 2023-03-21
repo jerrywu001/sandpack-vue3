@@ -72,13 +72,13 @@ export default defineConfig({
           serve: 'vite preview',
         },
         dependencies: {
-          'solid-js': '^1.6.11',
+          'solid-js': '^1.6.15',
         },
         devDependencies: {
-          vite: '^4.1.4',
-          typescript: '^4.9.5',
+          vite: '^4.2.1',
+          typescript: '^5.0.2',
           'vite-plugin-solid': '^2.6.1',
-          'esbuild-wasm': '0.17.10',
+          'esbuild-wasm': '^0.17.12',
         },
         main: '/index.tsx',
       }, null, 2),

@@ -47,27 +47,26 @@ declare global {
     },
     '/tsconfig.json': {
       code: `{
-"compilerOptions": {
-  "module": "ESNext",
-  "lib": ["ES2020", "DOM", "DOM.Iterable"],
-  "declaration": true,
-  "emitDeclarationOnly": true,
-  "outDir": "./types",
-  "strict": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "noImplicitReturns": true,
-  "noFallthroughCasesInSwitch": true,
-  "moduleResolution": "Node",
-  "isolatedModules": true,
-  "allowSyntheticDefaultImports": true,
-  "experimentalDecorators": true,
-  "forceConsistentCasingInFileNames": true,
-  "useDefineForClassFields": false,
-  "skipLibCheck": true
-},
-"include": ["src/**/*.ts"],
-"references": [{ "path": "./tsconfig.node.json" }]
+  "compilerOptions": {
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./types",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "Node",
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true
+  },
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
 `,
     },
@@ -114,9 +113,9 @@ export default defineConfig({
     "lit": "^2.6.1"
   },
   "devDependencies": {
-    "typescript": "^4.9.5",
+    "typescript": "^5.0.2",
     "vite": "^4.1.4",
-    "esbuild-wasm": "0.17.10"
+    "esbuild-wasm": "^0.17.12"
   }
 }
 `,

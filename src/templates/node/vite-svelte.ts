@@ -72,8 +72,8 @@ export default defineConfig({
         },
         devDependencies: {
           '@sveltejs/vite-plugin-svelte': '^2.0.3',
-          vite: '^4.1.4',
-          'esbuild-wasm': '0.17.10',
+          vite: '^4.2.1',
+          'esbuild-wasm': '^0.17.12',
         },
       }, null, 2),
     },
