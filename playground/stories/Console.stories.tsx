@@ -223,3 +223,59 @@ console.log("foo");`,
     template="node"
   />
 );
+
+export const MaxMessageCount = () => {
+  const mode = ref('client');
+  const maxMessageCount = ref(5);
+
+  return () => (
+    <>
+      <SandpackProvider
+        key={mode.value}
+        files={{
+          '/index.js': 'new Array(10).fill(\'\').forEach((_, i) => console.log(i));',
+          '/package.json': JSON.stringify({
+            scripts: { start: 'node index.js' },
+          }),
+        }}
+        options={{ visibleFiles: ['/index.js'], recompileDelay: 500 }}
+        template={mode.value === 'client' ? 'vanilla' : 'node'}
+      >
+        <SandpackLayout>
+          <SandpackCodeEditor />
+          <SandpackConsole
+            maxMessageCount={Number(maxMessageCount.value)}
+            standalone
+          />
+        </SandpackLayout>
+        <div
+          style={{
+            marginTop: 32,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
+            justifyItems: 'left',
+            width: 'fit-content',
+          }}
+        >
+          <button
+            onClick={() => { mode.value = mode.value === 'client' ? 'server' : 'client'; }}
+          >
+            Toggle mode: {mode.value}
+          </button>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <span>Max Message Count</span>
+            <input
+              type="number"
+              value={maxMessageCount.value}
+              onChange={(e) => {
+                // @ts-ignore
+                maxMessageCount.value = Number(e.target?.value);
+              }}
+            />
+          </label>
+        </div>
+      </SandpackProvider>
+    </>
+  );
+};

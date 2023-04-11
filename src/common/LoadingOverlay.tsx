@@ -61,8 +61,8 @@ export const LoadingOverlay = defineComponent({
     const shouldShowStdout = ref(false);
 
     const loadingOverlayState = useLoadingOverlayState(props);
-    const progressMessage = useSandpackPreviewProgress();
-    const { logs: stdoutData } = useSandpackShellStdout({});
+    const progressMessage = useSandpackPreviewProgress({ clientId: props?.clientId });
+    const { logs: stdoutData } = useSandpackShellStdout({ clientId: props?.clientId });
 
     const notHidden = computed(() => loadingOverlayState.value !== 'HIDDEN');
     const timeout = computed(() => loadingOverlayState.value === 'TIMEOUT');

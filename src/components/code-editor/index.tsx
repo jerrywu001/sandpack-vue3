@@ -225,7 +225,9 @@ export const SandpackCodeEditor = defineComponent({
             additionalLanguages={props.additionalLanguages}
           />
 
-          { showRunButton.value && sandpack.status === 'idle' ? <RunButton /> : null }
+          {
+            (!sandpack.autoReload || (showRunButton.value && sandpack.status === 'idle')) ? <RunButton /> : null
+          }
         </div>
       </SandpackStack>
     );

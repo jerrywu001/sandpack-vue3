@@ -78,6 +78,7 @@ export const useSandpackConsole = (props?: {
     [
       maxMessageCount,
       showSyntaxError,
+      resetOnPreviewRestart,
       () => props?.clientId,
     ],
     () => {

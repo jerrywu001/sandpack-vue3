@@ -75,6 +75,7 @@ interface Props {
    * @default false
    */
   hideTestsAndSupressLogs?: boolean;
+  standalone?: boolean;
 }
 
 export const SandpackTests = defineComponent({
@@ -111,6 +112,11 @@ export const SandpackTests = defineComponent({
       default: true,
     },
     hideTestsAndSupressLogs: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    standalone: {
       type: Boolean,
       required: false,
       default: false,

@@ -167,7 +167,7 @@ export const SandpackConsole = defineComponent({
         )}
       >
         {
-          (props.showHeader || isNodeEnvironment.value) && (
+          props.showHeader && isNodeEnvironment.value && (
             <Header
               currentTab={currentTab.value}
               node={isNodeEnvironment.value}
@@ -235,7 +235,7 @@ export const SandpackConsole = defineComponent({
 
         {props.standalone && (
           <>
-            <DependenciesProgress />
+            <DependenciesProgress clientId={clientId.value} />
             <iframe title="console" ref={iframe}></iframe>
           </>
         )}

@@ -22,6 +22,7 @@ import { VUE_TEMPLATE } from './runtime/vue';
 import { VUE_TS_TEMPLATE } from './runtime/vue-ts';
 import { VUE2_TEMPLATE } from './runtime/vue2';
 import { VUE2_TS_TEMPLATE } from './runtime/vue2-ts';
+import { STATIC_TEMPLATE } from './static';
 
 export { VITE_TEMPLATE } from './node/vite';
 export { VITE_REACT_TEMPLATE } from './node/vite-react';
@@ -55,6 +56,7 @@ export const SANDBOX_TEMPLATES = {
   'vue3-ts': VUE_TS_TEMPLATE,
   vanilla: VANILLA_TEMPLATE,
   'vanilla-ts': VANILLA_TYPESCRIPT_TEMPLATE,
+  static: STATIC_TEMPLATE,
   angular: ANGULAR_TEMPLATE,
   svelte: SVELTE_TEMPLATE,
   solid: SOLID_TEMPLATE,

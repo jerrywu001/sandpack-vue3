@@ -67,6 +67,24 @@ export const WithNavigator = () => (
   </SandpackProvider>
 );
 
+export const MultipleRoutePreviews = () => (
+  <SandpackProvider
+    files={{
+      '/pages/index.js': 'export default () => "Home"',
+      '/pages/about.js': 'export default () => "About"',
+      '/pages/careers.js': 'export default () => "Careers"',
+    }}
+    options={{ startRoute: '/' }}
+    template="nextjs"
+  >
+    <SandpackLayout>
+      <SandpackPreview showNavigator />
+      <SandpackPreview startRoute="/about" showNavigator />
+      <SandpackPreview startRoute="/careers" showNavigator />
+    </SandpackLayout>
+  </SandpackProvider>
+);
+
 export const AutoResize = () => (
   <SandpackProvider
     files={{

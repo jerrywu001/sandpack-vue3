@@ -173,7 +173,7 @@ export const ExternalResources = () => (
   />
 );
 
-export const RunnableComponent = () => (
+export const AutoRun = () => (
   <Sandpack
     files={{
       '/App.js': `export default function Kitten() {
@@ -187,6 +187,23 @@ export const RunnableComponent = () => (
       showTabs: true,
       showLineNumbers: true,
       showNavigator: true,
+    }}
+    template="react"
+  />
+);
+
+export const AutoReload = () => (
+  <Sandpack
+    files={{
+      '/App.js': `export default function Kitten() {
+  return (
+    <img src="https://placekitten.com/200/250" alt="Kitten" />
+  );
+}`,
+    }}
+    options={{
+      autorun: true,
+      autoReload: false,
     }}
     template="react"
   />

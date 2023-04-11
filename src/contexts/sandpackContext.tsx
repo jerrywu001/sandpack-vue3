@@ -41,6 +41,8 @@ import type {
   SandpackClientDispatch,
 } from '../types';
 
+export interface ClientPropsOverride { startRoute?: string }
+
 export interface UseSandpack {
   sandpack: SandpackState;
   dispatch: SandpackClientDispatch;
@@ -93,7 +95,10 @@ const SandpackProvider = defineComponent({
 
     const intersectionObserver = ref<IntersectionObserver | null>(null);
     const initializeSandpackIframeHook = ref<NodeJS.Timer | null>(null);
-    const preregisteredIframes = ref<Record<string, HTMLIFrameElement>>({});
+    const preregisteredIframes = ref<Record<
+    string,
+    { iframe: HTMLIFrameElement; clientPropsOverride?: ClientPropsOverride }
+    >>({});
     const timeoutHook = ref<NodeJS.Timer | null>(null);
     const unsubscribe = ref<() => void | undefined>();
     const debounceHook = ref<number | undefined>();
@@ -118,6 +123,7 @@ const SandpackProvider = defineComponent({
       deleteFile,
 
       /** clients state */
+      autoReload: props.options?.autoReload ?? true,
       reactDevTools: undefined as ReactDevToolsMode | undefined,
       startRoute: props.options?.startRoute,
       initMode: props.options?.initMode || 'lazy',
@@ -313,11 +319,15 @@ const SandpackProvider = defineComponent({
     async function registerBundler(
       iframe: HTMLIFrameElement,
       clientId: string,
+      clientPropsOverride?: ClientPropsOverride,
     ) {
       if (state.status === 'running') {
-        state.clients[clientId] = await createClient(iframe, clientId);
+        state.clients[clientId] = await createClient(iframe, clientId, clientPropsOverride);
       } else {
-        preregisteredIframes.value[clientId] = iframe;
+        preregisteredIframes.value[clientId] = {
+          iframe,
+          clientPropsOverride,
+        };
       }
     }
 
@@ -374,6 +384,7 @@ const SandpackProvider = defineComponent({
     async function createClient(
       iframe: HTMLIFrameElement,
       clientId: string,
+      clientPropsOverride?: ClientPropsOverride,
     ): Promise<SandpackClient> {
       const customSetup = props?.customSetup ?? { npmRegistries: [] };
       const timeOut = props?.options?.bundlerTimeOut ?? BUNDLER_TIMEOUT;
@@ -395,7 +406,7 @@ const SandpackProvider = defineComponent({
         {
           externalResources: props.options?.externalResources,
           bundlerURL: props.options?.bundlerURL,
-          startRoute: props.options?.startRoute,
+          startRoute: clientPropsOverride?.startRoute ?? props.options?.startRoute,
           fileResolver: props.options?.fileResolver,
           skipEval: props.options?.skipEval ?? false,
           logLevel: props.options?.logLevel,
@@ -468,8 +479,13 @@ const SandpackProvider = defineComponent({
     async function runSandpack() {
       await Promise.all(
         Object.keys(preregisteredIframes.value).map(async (clientId) => {
-          const iframe = preregisteredIframes.value[clientId];
-          state.clients[clientId] = await createClient(iframe, clientId);
+          // There's already a client if the same id, so we should destroy it
+          if (state.clients[clientId]) {
+            state.clients[clientId].destroy();
+          }
+
+          const { iframe, clientPropsOverride = {} } = preregisteredIframes.value[clientId];
+          state.clients[clientId] = await createClient(iframe, clientId, clientPropsOverride);
         }),
       );
 
@@ -641,7 +657,7 @@ const SandpackProvider = defineComponent({
           state.editorState = newEditorState;
         }
       },
-      { immediate: true, deep: true },
+      { deep: true }, // TODOW
     );
 
     onMounted(() => {

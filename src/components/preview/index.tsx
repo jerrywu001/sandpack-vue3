@@ -26,9 +26,14 @@ export interface PreviewProps {
   showOpenInCodeSandbox?: boolean;
   showRefreshButton?: boolean;
   showRestartButton?: boolean;
+  /**
+   * Whether to show the `<ErrorOverlay>` component on top of
+   * the preview, if a runtime error happens.
+   */
   showSandpackErrorOverlay?: boolean;
   showOpenNewtab?: boolean;
   actionsChildren?: JSX.Element;
+  startRoute?: string;
 }
 
 const previewClassName = css({
@@ -121,10 +126,15 @@ export const SandpackPreview = defineComponent({
       required: false,
       default: null,
     },
+    startRoute: {
+      type: String,
+      required: false,
+      default: '/',
+    },
   },
   // @ts-ignore
   setup(props: PreviewProps, { slots, attrs, expose }) {
-    const { sandpack, listen, iframe, getClient, clientId } = useSandpackClient();
+    const { sandpack, listen, iframe, getClient, clientId } = useSandpackClient({ startRoute: props?.startRoute });
     const iframeComputedHeight = ref<number | null>(null);
 
     let unsubscribe: UnsubscribeFunction;
@@ -176,7 +186,11 @@ export const SandpackPreview = defineComponent({
         { ...props }
         class={classNames(`${THEME_PREFIX}-preview`, attrs?.class || '')}
       >
-        { props.showNavigator && <Navigator clientId={clientId.value} onURLChange={handleNewURL} /> }
+        {
+          props.showNavigator && (
+            <Navigator clientId={clientId.value} startRoute={props?.startRoute} onURLChange={handleNewURL} />
+          )
+        }
 
         <div class={classNames(c('preview-container'), previewClassName)}>
           <iframe

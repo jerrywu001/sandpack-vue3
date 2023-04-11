@@ -1,6 +1,6 @@
 import { generateRandomId } from '../utils/stringUtils';
 import { toRaw, onBeforeUnmount, onMounted, onUnmounted, ref, Ref } from 'vue';
-import { useSandpack } from '../contexts/sandpackContext';
+import { ClientPropsOverride, useSandpack } from '../contexts/sandpackContext';
 import type {
   ListenerFunction,
   SandpackClient,
@@ -27,7 +27,7 @@ interface UseSandpackClient {
  *
  * @category Hooks
  */
-export const useSandpackClient = (): UseSandpackClient => {
+export const useSandpackClient = (clientPropsOverride?: ClientPropsOverride): UseSandpackClient => {
   const { sandpack, listen, dispatch } = useSandpack();
   const iframeRef = ref<HTMLIFrameElement | null>(null);
   const clientId = ref<string>(generateRandomId());
@@ -36,7 +36,7 @@ export const useSandpackClient = (): UseSandpackClient => {
     const iframeElement = iframeRef.value;
 
     if (iframeElement !== null) {
-      sandpack.registerBundler(iframeElement, clientId.value);
+      sandpack.registerBundler(iframeElement, clientId.value, clientPropsOverride);
     }
   });
 

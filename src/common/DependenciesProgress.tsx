@@ -5,8 +5,18 @@ import { useSandpackPreviewProgress } from '../hooks/useSandpackPreviewProgress'
 
 export const DependenciesProgress = defineComponent({
   name: 'SandpackLayout',
-  setup(_) {
-    const progressMessage = useSandpackPreviewProgress(3_000);
+  props: {
+    clientId: {
+      type: String,
+      required: false,
+      default: undefined,
+    },
+  },
+  setup(props) {
+    const progressMessage = useSandpackPreviewProgress({
+      timeout: 3_000,
+      clientId: props?.clientId,
+    });
 
     return () => (
       <>

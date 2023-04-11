@@ -107,6 +107,7 @@ const Sandpack = defineComponent({
       recompileMode: props.options?.recompileMode,
       recompileDelay: props.options?.recompileDelay,
       autorun: props.options?.autorun,
+      autoReload: props.options?.autoReload,
       bundlerURL: props.options?.bundlerURL,
       startRoute: props.options?.startRoute,
       skipEval: props.options?.skipEval,
@@ -292,6 +293,7 @@ const Sandpack = defineComponent({
             )}
             {mode.value === 'tests' && (
               <SandpackTests
+                standalone
                 actionsChildren={actionsChildren.value}
                 style={topRowStyle.value}
               />

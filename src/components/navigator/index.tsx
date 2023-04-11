@@ -63,6 +63,7 @@ const splitUrl = (url: string): string[] => {
 interface NavigatorProps {
   clientId: string;
   onURLChange?: (newURL: string) => void;
+  startRoute?: string;
 }
 
 export const Navigator = defineComponent({
@@ -77,13 +78,18 @@ export const Navigator = defineComponent({
       required: false,
       default: undefined,
     },
+    startRoute: {
+      type: String,
+      required: false,
+      default: undefined,
+    },
   },
   setup(props: NavigatorProps, { attrs }) {
     let unsub: UnsubscribeFunction;
     const baseUrl = ref<string>('');
     const { sandpack, dispatch, listen } = useSandpack();
 
-    const relativeUrl = ref<string>(sandpack.startRoute ?? '/');
+    const relativeUrl = ref<string>(props?.startRoute ?? sandpack.startRoute ?? '/');
 
     const backEnabled = ref(false);
     const forwardEnabled = ref(false);

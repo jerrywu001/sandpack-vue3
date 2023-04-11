@@ -22,7 +22,14 @@ const mapProgressMessage = (
   }
 };
 
-export const useSandpackPreviewProgress = (timeout?: number) => {
+export const useSandpackPreviewProgress = (
+  props:
+  | {
+    timeout?: number;
+    clientId?: string;
+  }
+  | undefined,
+) => {
   let unsubscribe: UnsubscribeFunction;
   let timer: NodeJS.Timer;
 
@@ -36,7 +43,8 @@ export const useSandpackPreviewProgress = (timeout?: number) => {
     [
       totalDependencies,
       isReady,
-      () => timeout,
+      () => props?.timeout,
+      () => props?.clientId,
     ],
     () => {
       if (unsubscribe) unsubscribe();
@@ -46,10 +54,10 @@ export const useSandpackPreviewProgress = (timeout?: number) => {
           isReady.value = false;
         }
 
-        if (timeout) {
+        if (props?.timeout) {
           timer = setTimeout(() => {
             loadingMessage.value = null;
-          }, timeout);
+          }, props?.timeout);
         }
 
         if (message.type === 'shell/progress' && !isReady.value) {
@@ -65,7 +73,7 @@ export const useSandpackPreviewProgress = (timeout?: number) => {
           loadingMessage.value = null;
           clearTimeout(timer);
         }
-      });
+      }, props?.clientId);
     },
     { immediate: true },
   );

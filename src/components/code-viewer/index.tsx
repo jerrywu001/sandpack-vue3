@@ -1,5 +1,6 @@
 import {
   CodeEditor,
+  CustomLanguage,
   Decorators,
   FileTabs,
   SandpackInitMode,
@@ -36,6 +37,12 @@ export interface CodeViewerProps {
    * a certain control of when to initialize them.
    */
   initMode?: SandpackInitMode;
+  /**
+   * Provides a way to add custom language modes by supplying a language
+   * type, applicable file extensions, and a LanguageSupport instance
+   * for that syntax mode
+   */
+  additionalLanguages?: CustomLanguage[];
 }
 
 export const SandpackCodeViewer = defineComponent({
@@ -71,6 +78,11 @@ export const SandpackCodeViewer = defineComponent({
       required: false,
       default: undefined,
     },
+    additionalLanguages: {
+      type: Array as PropType<CustomLanguage[]>,
+      required: false,
+      default: undefined,
+    },
   },
   // @ts-ignore
   setup(props: CodeViewerProps) {
@@ -89,6 +101,7 @@ export const SandpackCodeViewer = defineComponent({
           <CodeEditor
             ref={sandpackCodeViewerRef}
             code={props.code ?? activeCode.value}
+            additionalLanguages={props.additionalLanguages}
             decorators={props.decorators}
             filePath={sandpack.activeFile}
             initMode={props.initMode || sandpack.initMode}
