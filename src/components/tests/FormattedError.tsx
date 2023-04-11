@@ -3,7 +3,7 @@ import type { TestError } from '@codesandbox/sandpack-client';
 import { defineComponent, PropType } from 'vue';
 
 import { css } from '../../styles';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 
 import {
   failTextClassName,
@@ -37,9 +37,11 @@ export const FormattedError = defineComponent({
     },
   },
   setup(props: Props) {
+    const classNames = useClassNames();
+
     return () => (
       <div
-        class={classNames(containerClassName)}
+        class={classNames('test-error', [containerClassName])}
         v-html={formatDiffMessage(props.error, props?.path)}
       />
     );

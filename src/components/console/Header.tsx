@@ -2,7 +2,7 @@ import { defineComponent, PropType } from 'vue';
 import { ConsoleIcon } from '../../icons';
 import { css } from '../../styles';
 import { buttonClassName, roundedButtonClassName } from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 
 const wrapperClassName = css({
   justifyContent: 'space-between',
@@ -21,12 +21,6 @@ const flexClassName = css({
   alignItems: 'center',
   gap: '$space$2',
 });
-
-const buttonsClassName = classNames(
-  buttonClassName,
-  roundedButtonClassName,
-  css({ padding: '$space$1 $space$3' }),
-);
 
 interface Prop {
   currentTab: 'server' | 'client';
@@ -52,28 +46,40 @@ export const Header = defineComponent({
     },
   },
   setup(props: Prop) {
+    const classNames = useClassNames();
+
+    const buttonsClassName = classNames('console-header-button', [
+      buttonClassName,
+      roundedButtonClassName,
+      css({ padding: '$space$1 $space$3' }),
+    ]);
+
     return () => (
-      <div class={classNames(wrapperClassName, flexClassName)}>
+      <div
+        class={classNames('console-header', [
+          wrapperClassName,
+          flexClassName,
+        ])}
+      >
         <p
-          class={classNames(
+          class={classNames('console-header-title', [
             css({
               lineHeight: 1,
               margin: 0,
               color: '$colors$base',
               fontSize: '$font$size',
-
               display: 'flex',
               alignItems: 'center',
 
               gap: '$space$2',
             }),
-          )}
+          ])}
         >
           <ConsoleIcon />
           <span>Terminal</span>
           {
             props.node && (
-              <div class={classNames(flexClassName)}>
+              <div class={classNames('console-header-actions', [flexClassName])}>
                 <button
                   class={buttonsClassName}
                   data-active={props.currentTab === 'server'}

@@ -1,4 +1,3 @@
-import { classNames } from '../utils/classNames';
 import {
   computed,
   DefineComponent,
@@ -8,12 +7,11 @@ import {
   ref,
   watch,
 } from 'vue';
-import { css, THEME_PREFIX } from '../styles';
+import { css } from '../styles';
 import { FADE_ANIMATION_DURATION, useLoadingOverlayState } from '../hooks/useLoadingOverlayState';
 import { Loading } from './Loading';
 import { RestartIcon } from '../icons';
 import { StdoutList } from '../components/console/StdoutList';
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpackPreviewProgress } from '../hooks/useSandpackPreviewProgress';
 import { useSandpack } from '../contexts/sandpackContext';
 import { useSandpackShellStdout } from '../hooks/useSandpackShellStdout';
@@ -27,6 +25,7 @@ import {
   roundedButtonClassName,
 } from '../styles/shared';
 import { useSandpackShell } from '../hooks';
+import { useClassNames } from '..';
 
 export interface LoadingOverlayProps {
   clientId?: string;
@@ -57,7 +56,7 @@ export const LoadingOverlay = defineComponent({
     let timer: NodeJS.Timer;
     const { sandpack } = useSandpack();
     const { restart } = useSandpackShell();
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
     const shouldShowStdout = ref(false);
 
     const loadingOverlayState = useLoadingOverlayState(props);
@@ -71,15 +70,15 @@ export const LoadingOverlay = defineComponent({
 
     const timeoutLayout = () => (
       <div
-        class={classNames(
-          c('overlay', 'error'),
+        class={classNames('overlay', [
+          classNames('error'),
           absoluteClassName,
           errorBundlerClassName,
           attrs?.class || '',
-        )}
+        ])}
       >
-        <div class={classNames(c('error-message'), errorMessageClassName)}>
-          <p class={classNames(css({ fontWeight: 'bold' }))}>
+        <div class={classNames(classNames('error-message', [errorMessageClassName]))}>
+          <p class={classNames('error-title', [css({ fontWeight: 'bold' })])}>
             Couldn't connect to server
           </p>
 
@@ -108,12 +107,12 @@ export const LoadingOverlay = defineComponent({
 
           <div>
             <button
-              class={classNames(
-                c('button', 'icon-standalone'),
+              class={classNames('button', [
+                classNames('icon-standalone'),
                 buttonClassName,
                 iconStandaloneClassName,
                 roundedButtonClassName,
-              )}
+              ])}
               onClick={() => {
                 restart();
                 if (sandpack) sandpack.runSandpack();
@@ -159,12 +158,12 @@ export const LoadingOverlay = defineComponent({
               : isLoading.value ? (
                 <>
                   <div
-                    class={classNames(
-                      c('overlay', 'loading'),
+                    class={classNames('overlay', [
+                      classNames('loading'),
                       absoluteClassName,
                       loadingClassName,
                       attrs?.class || '',
-                    )}
+                    ])}
                     style={{
                       ...(attrs.style || {}),
                       opacity: sandpack && stillLoading.value && (sandpack.status && sandpack.status !== 'idle') ? 1 : 0,

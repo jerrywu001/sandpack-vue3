@@ -1,5 +1,5 @@
 import { dequal as deepEqual } from 'dequal';
-import { ClasserProvider } from 'code-hike-classer-vue3';
+import { ClassNamesProvider } from './classNames';
 import { convertedFilesToBundlerFiles, getSandpackStateFromProps } from '../utils/sandpackUtils';
 import { generateRandomId } from '../utils/stringUtils';
 import {
@@ -41,7 +41,9 @@ import type {
   SandpackClientDispatch,
 } from '../types';
 
-export interface ClientPropsOverride { startRoute?: string }
+export interface ClientPropsOverride {
+  startRoute?: string;
+}
 
 export interface UseSandpack {
   sandpack: SandpackState;
@@ -687,7 +689,7 @@ const SandpackProvider = defineComponent({
     });
 
     return () => (
-      <ClasserProvider classes={props.options?.classes}>
+      <ClassNamesProvider classes={props.options?.classes}>
         <SandpackThemeProvider
           style={(attrs?.style || {}) as StyleValue}
           class={attrs?.class || ''}
@@ -695,7 +697,7 @@ const SandpackProvider = defineComponent({
         >
           { slots.default ? slots.default() : null }
         </SandpackThemeProvider>
-      </ClasserProvider>
+      </ClassNamesProvider>
     );
   },
 }) as DefineComponent<SandpackProviderProps>;

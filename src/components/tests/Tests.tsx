@@ -1,4 +1,3 @@
-import { classNames } from '../../utils/classNames';
 import { css } from '../../styles';
 import {
   DefineComponent,
@@ -12,6 +11,7 @@ import {
   passTextClassName,
   skipTextClassName,
 } from './style';
+import { useClassNames } from '../..';
 
 const testContainerClassName = css({
   marginLeft: '$space$4',
@@ -59,29 +59,53 @@ export const Tests = defineComponent({
     },
   },
   setup(props: SandpackTests) {
+    const classNames = useClassNames();
+
     return () => (
-      <div class={classNames(testContainerClassName)}>
+      <div class={classNames('test', [testContainerClassName])}>
         {
           props.tests.map((test) => (
-            <div key={test.name} class={classNames(containerClassName)}>
+            <div
+              key={test.name}
+              class={classNames('test-result', [containerClassName])}
+            >
               {test.status === 'pass' && (
-                <span class={classNames(passTextClassName, gapRightClassName)}>
+                <span
+                  class={classNames('test-pass-text', [
+                    passTextClassName,
+                    gapRightClassName,
+                  ])}
+                >
                   ✓
                 </span>
               )}
               {test.status === 'fail' && (
-                <span class={classNames(failTextClassName, gapRightClassName)}>
+                <span
+                  class={classNames('test-fail-text', [
+                    failTextClassName,
+                    gapRightClassName,
+                  ])}
+                >
                   ✕
                 </span>
               )}
               {test.status === 'idle' && (
-                <span class={classNames(skipTextClassName, gapRightClassName)}>
+                <span
+                  class={classNames('test-idle-text', [
+                    skipTextClassName,
+                    gapRightClassName,
+                  ])}
+                >
                   ○
                 </span>
               )}
-              <span class={classNames(testClassName)}>{test.name}</span>
+              <span class={classNames('test-name-text', [testClassName])}>
+                {test.name}
+              </span>
               {test.duration !== undefined && (
-                <span class={classNames(durationClassName)}>
+                <span
+                  class={classNames('test-duration-text', [durationClassName])}
+                >
                   ({test.duration} ms)
                 </span>
               )}

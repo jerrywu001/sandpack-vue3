@@ -1,9 +1,8 @@
 import { DefineComponent, defineComponent, PropType } from 'vue';
 
-import { ConsoleIcon } from '../..';
+import { ConsoleIcon, useClassNames } from '../..';
 import { css } from '../../styles';
 import { buttonClassName, roundedButtonClassName } from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
 
 import type { Status } from './SandpackTests';
 
@@ -24,12 +23,6 @@ const flexClassName = css({
   alignItems: 'center',
   gap: '$space$2',
 });
-
-const buttonsClassName = classNames(
-  buttonClassName,
-  roundedButtonClassName,
-  css({ padding: '$space$1 $space$3' }),
-);
 
 interface Props {
   setVerbose: () => void;
@@ -96,30 +89,39 @@ export const Header = defineComponent({
   },
   // @ts-ignore
   setup(props: Props) {
+    const classNames = useClassNames();
+
+    const buttonsClassName = classNames('test-header-button', [
+      buttonClassName,
+      roundedButtonClassName,
+      css({ padding: '$space$1 $space$3' }),
+    ]);
+
     return () => (
-      <div class={classNames(wrapperClassName, flexClassName)}>
-        <div class={classNames(flexClassName)}>
+      <div
+        class={classNames('test-header', [wrapperClassName, flexClassName])}
+      >
+        <div class={classNames('test-header-wrapper', [flexClassName])}>
           <p
-            class={classNames(
+            class={classNames('test-header-title', [
               css({
                 lineHeight: 1,
                 margin: 0,
                 color: '$colors$base',
                 fontSize: '$font$size',
-
                 display: 'flex',
                 alignItems: 'center',
 
                 gap: '$space$2',
               }),
-            )}
+            ])}
           >
             <ConsoleIcon />
             Tests
           </p>
         </div>
 
-        <div class={classNames(flexClassName)}>
+        <div class={classNames('test-header-actions', [flexClassName])}>
           {props.showSuitesOnly && (
             <button
               class={buttonsClassName}

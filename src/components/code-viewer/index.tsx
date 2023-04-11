@@ -5,6 +5,7 @@ import {
   FileTabs,
   SandpackInitMode,
   useSandpack,
+  useClassNames,
 } from '../..';
 import {
   computed,
@@ -15,10 +16,7 @@ import {
 } from 'vue';
 import { RunButton } from '../../common/RunButton';
 import { SandpackStack } from '../../common/Stack';
-import { THEME_PREFIX } from '../../styles';
 import { useActiveCode } from '../../hooks/useActiveCode';
-import { useClasser } from 'code-hike-classer-vue3';
-import { classNames } from '../../utils/classNames';
 import { editorClassName } from '../code-editor/styles';
 
 export interface CodeViewerProps {
@@ -88,16 +86,16 @@ export const SandpackCodeViewer = defineComponent({
   setup(props: CodeViewerProps) {
     const { sandpack } = useSandpack();
     const { code: activeCode } = useActiveCode();
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     const sandpackCodeViewerRef = ref();
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.visibleFiles?.length > 1));
 
     return () => (
-      <SandpackStack class={c('editor-viewer')}>
+      <SandpackStack class={classNames('editor-viewer')}>
         {shouldShowTabs.value ? <FileTabs /> : null}
 
-        <div class={classNames(c('code-editor'), editorClassName)}>
+        <div class={classNames('code-editor', [editorClassName])}>
           <CodeEditor
             ref={sandpackCodeViewerRef}
             code={props.code ?? activeCode.value}

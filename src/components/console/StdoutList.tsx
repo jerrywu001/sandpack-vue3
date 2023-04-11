@@ -1,7 +1,7 @@
 import Ansi from 'ansi-to-vue3';
 import { type PropType, defineComponent } from 'vue';
 import { css } from '../../styles';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 
 export const StdoutList = defineComponent({
   name: 'StdoutList',
@@ -15,11 +15,16 @@ export const StdoutList = defineComponent({
     },
   },
   setup(props) {
+    const classNames = useClassNames();
+
     return () => (
       <>
         {
           props.data.map(({ data, id }) => (
-            <div key={id} class={classNames(consoleItemClassName)}>
+            <div
+              key={id}
+              class={classNames('console-item', [consoleItemClassName])}
+            >
               <Ansi linkify>{data}</Ansi>
             </div>
           ))

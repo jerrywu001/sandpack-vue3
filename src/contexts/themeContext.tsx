@@ -1,4 +1,3 @@
-import { classNames } from '../utils/classNames';
 import {
   DefineComponent,
   defineComponent,
@@ -15,10 +14,9 @@ import {
   css,
   standardizeStitchesTheme,
   standardizeTheme,
-  THEME_PREFIX,
 } from '../styles';
 import { SandpackTheme, SandpackThemeProp } from '../types';
-import { useClasser } from 'code-hike-classer-vue3';
+import { useClassNames } from './classNames';
 
 interface SandpackThemeProviderContext {
   theme: SandpackTheme;
@@ -74,7 +72,7 @@ const SandpackThemeProvider = defineComponent({
   },
   setup(props, { slots, attrs }) {
     const { theme, id = '', mode = 'light' } = standardizeTheme(props.theme);
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
     const themeClassName = ref({} as any);
     const context = reactive({ theme, id, mode });
 
@@ -101,10 +99,12 @@ const SandpackThemeProvider = defineComponent({
     return () => (
       <div
         class={classNames(
-          c('wrapper'),
-          themeClassName.value.toString(),
-          wrapperClassName({ variant: mode }),
-          attrs?.class || '',
+          'wrapper',
+          [
+            themeClassName.value.toString(),
+            wrapperClassName({ variant: mode }),
+            attrs?.class || '',
+          ],
         )}
       >
         { slots.default ? slots.default() : null }

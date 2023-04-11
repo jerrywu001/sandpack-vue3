@@ -1,4 +1,3 @@
-import { useClasser } from 'code-hike-classer-vue3';
 import { DefineComponent, defineComponent, onUnmounted, onMounted, ref, PropType, computed } from 'vue';
 import { ErrorOverlay } from '../../common/ErrorOverlay';
 import { LoadingOverlay } from '../../common/LoadingOverlay';
@@ -7,8 +6,7 @@ import { useSandpack } from '../../contexts/sandpackContext';
 import { Decorators } from '../code-editor';
 import { SandpackInitMode } from '../../types';
 import { css, THEME_PREFIX } from '../../styles';
-import { classNames } from '../../utils/classNames';
-import { stackClassName } from '../..';
+import { stackClassName, useClassNames } from '../..';
 
 const transpiledCodeClassName = css({
   display: 'flex',
@@ -61,7 +59,7 @@ export const SandpackTranspiledCode = defineComponent({
   // @ts-ignore
   setup(props: CodeViewerProps, { attrs }) {
     const { sandpack } = useSandpack();
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
     const hiddenIframeRef = ref<HTMLIFrameElement | null>(null);
 
     const bundlerState = computed(() => sandpack.bundlerState);
@@ -84,12 +82,11 @@ export const SandpackTranspiledCode = defineComponent({
 
     return () => (
       <div
-        class={classNames(
-          c('transpiled-code'),
+        class={classNames('transpiled-code', [
           stackClassName,
           transpiledCodeClassName,
           attrs?.class || '',
-        )}
+        ])}
       >
         <SandpackCodeViewer
           {...props}

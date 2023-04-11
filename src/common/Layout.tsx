@@ -1,9 +1,8 @@
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../contexts/sandpackContext';
 import { defineComponent, Ref, ref, watch } from 'vue';
 import { css, THEME_PREFIX } from '../styles';
 import { stackClassName } from './Stack';
-import { classNames } from '../utils/classNames';
+import { useClassNames } from '..';
 
 export const layoutClassName = css({
   border: '1px solid $colors$surface2',
@@ -53,7 +52,7 @@ export const SandpackLayout = defineComponent({
   setup(_, { slots, attrs }) {
     const lazyAnchorRef = ref<HTMLDivElement>();
     const { sandpack } = useSandpack();
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     watch(lazyAnchorRef, () => {
       if (sandpack && lazyAnchorRef.value) {
@@ -64,7 +63,7 @@ export const SandpackLayout = defineComponent({
     return () => (
       <div
         ref={lazyAnchorRef}
-        class={classNames(c('layout'), layoutClassName, attrs?.class || '')}
+        class={classNames('layout', [layoutClassName, attrs?.class || ''])}
       >
         { slots.default ? slots.default() : null }
       </div>

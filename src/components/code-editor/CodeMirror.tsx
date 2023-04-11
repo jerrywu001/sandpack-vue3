@@ -3,7 +3,6 @@ import useDelayCodeEditor from './data/useDelayCodeEditor';
 import { CodeMirrorProps } from '.';
 import { defineComponent, nextTick, onBeforeUnmount, onMounted, onUnmounted, watch } from 'vue';
 import { getFileName } from '../../utils/stringUtils';
-import { useClasser } from 'code-hike-classer-vue3';
 import type { DefineComponent } from 'vue';
 import type { EditorState as SandpackEditorState } from '../../types';
 import { Annotation, EditorSelection } from '@codemirror/state';
@@ -11,7 +10,7 @@ import type { SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack
 import { EditorView } from '@codemirror/view';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { THEME_PREFIX } from '../../styles';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 import { cmClassName, placeholderClassName, readOnlyClassName, tokensClassName } from './styles';
 
 /**
@@ -33,7 +32,7 @@ const CodeMirror = defineComponent({
       syntaxHighlightRender,
     } = useDelayCodeEditor(props);
 
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
     const { listen } = useSandpack();
 
     // ======= methods ===========
@@ -162,15 +161,16 @@ const CodeMirror = defineComponent({
       <>
         <pre
           ref={wrapperRef}
-          class={classNames(
-            c('cm', props.editorState as SandpackEditorState, languageExtension),
+          class={classNames('cm', [
+            classNames(props.editorState as SandpackEditorState),
+            classNames(languageExtension),
             cmClassName,
             tokensClassName,
-          )}
+          ])}
           translate="no"
         >
           <code
-            class={classNames(c('pre-placeholder'), placeholderClassName)}
+            class={classNames('pre-placeholder', [placeholderClassName])}
             style={{ marginLeft: gutterLineOffset() }}
           >
             {syntaxHighlightRender}
@@ -178,7 +178,7 @@ const CodeMirror = defineComponent({
         </pre>
 
         {props.readOnly && props.showReadOnly && (
-          <span class={classNames(c('read-only'), readOnlyClassName)}>
+          <span class={classNames('read-only', [readOnlyClassName])}>
             Read-only
           </span>
         )}
@@ -193,17 +193,18 @@ const CodeMirror = defineComponent({
         }
         aria-multiline="true"
         onKeydown={handleContainerKeyDown}
-        class={classNames(
-          c('cm', props.editorState as SandpackEditorState, languageExtension),
+        class={classNames('cm', [
+          classNames(props.editorState as SandpackEditorState),
+          classNames(languageExtension),
           cmClassName,
           tokensClassName,
-        )}
+        ])}
         role="textbox"
         tabindex={0}
         translate="no"
       >
        <pre
-          class={classNames(c('pre-placeholder'), placeholderClassName)}
+          class={classNames('pre-placeholder', [placeholderClassName])}
           style={{ marginLeft: gutterLineOffset() }}
         >
           {syntaxHighlightRender}

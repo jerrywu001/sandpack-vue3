@@ -1,5 +1,5 @@
-import { classNames } from '../../utils/classNames';
-import { css, THEME_PREFIX } from '../../styles';
+import { useClassNames } from '../..';
+import { css } from '../../styles';
 import {
   computed,
   DefineComponent,
@@ -129,6 +129,7 @@ export const SandpackTests = defineComponent({
 
     const theme = useSandpackTheme();
     const { getClient, iframe, listen, sandpack } = useSandpackClient();
+    const classNames = useClassNames();
 
     const state = ref<State>({
       ...INITIAL_STATE,
@@ -448,7 +449,7 @@ export const SandpackTests = defineComponent({
     return () => (
       <SandpackStack
         {...props}
-        class={classNames(`${THEME_PREFIX}-tests`, attrs?.class || '')}
+        class={classNames('tests', [attrs?.class || ''])}
         style={{
           ...setTestTheme(theme.mode === 'dark'),
           ...(attrs?.style || {}) as object,
@@ -493,13 +494,13 @@ export const SandpackTests = defineComponent({
           )
         }
 
-        <div class={classNames(containerClassName)}>
+        <div class={containerClassName.toString()}>
           {specs.value.length === 0 && state.value.status === 'complete' ? (
-            <div class={classNames(fileErrorContainerClassName)}>
+            <div class={fileErrorContainerClassName.toString()}>
               <p>No test files found.</p>
               <p>
                 Test match:{' '}
-                <span class={classNames(failTextClassName)}>
+                <span class={failTextClassName.toString()}>
                   {testFileRegex.toString()}
                 </span>
               </p>

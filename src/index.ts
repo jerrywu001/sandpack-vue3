@@ -5,6 +5,7 @@ export * from './presets';
 export * from './components';
 export * from './common';
 export * from './hooks';
+export { useClassNames } from './contexts/classNames';
 
 export * from './contexts/sandpackContext';
 export * from './contexts/themeContext';

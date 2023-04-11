@@ -1,23 +1,24 @@
 import { roundedButtonClassName, buttonClassName, iconStandaloneClassName } from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
 import { defineComponent } from 'vue';
 import { ExportIcon } from '../../icons';
 import { UnstyledOpenInCodeSandboxButton } from './UnstyledOpenInCodeSandboxButton';
-import { useClasser } from 'code-hike-classer-vue3';
-import { THEME_PREFIX } from '../../styles';
+import { useClassNames } from '../..';
 
 export const OpenInCodeSandboxButton = defineComponent({
   name: 'OpenInCodeSandboxButton',
   setup() {
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     return () => (
       <UnstyledOpenInCodeSandboxButton
         class={classNames(
-          c('button', 'icon-standalone'),
-          buttonClassName,
-          iconStandaloneClassName,
-          roundedButtonClassName,
+          'button',
+          [
+            classNames('icon-standalone'),
+            buttonClassName,
+            iconStandaloneClassName,
+            roundedButtonClassName,
+          ],
         )}
       >
         <ExportIcon />

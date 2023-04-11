@@ -1,12 +1,10 @@
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 import { CodeMirror } from './CodeMirror';
 import { editorClassName } from './styles';
 import { FileTabs } from '../file-tabs';
 import { RunButton } from '../../common/RunButton';
 import { SandpackStack } from '../../common';
-import { THEME_PREFIX } from '../../styles';
 import { useActiveCode } from '../../hooks';
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import {
   computed,
@@ -196,17 +194,17 @@ export const SandpackCodeEditor = defineComponent({
     const showRunButton = computed(() => !sandpack?.autorun);
 
     const sandpackCodeEditorRef = ref<InstanceType<typeof CodeMirror> | null>(null);
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     const handleCodeUpdate = (newCode: string): void => {
       sandpack.updateCurrentFile(newCode);
     };
 
     return () => (
-      <SandpackStack class={c('editor')} style={(attrs?.style || {}) as StyleValue}>
+      <SandpackStack class={classNames('editor', [attrs?.class || ''])} style={(attrs?.style || {}) as StyleValue}>
         {shouldShowTabs.value && <FileTabs closableTabs={props.closableTabs} />}
 
-        <div class={classNames(c('code-editor'), editorClassName)}>
+        <div class={classNames('code-editor', [editorClassName])}>
           <CodeMirror
             key={sandpack.activeFile}
             ref={sandpackCodeEditorRef}

@@ -1,10 +1,9 @@
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import { DefineComponent, defineComponent } from 'vue';
 import { CloseIcon } from '../../icons';
 import { calculateNearestUniquePath, getFileName } from '../../utils/stringUtils';
-import { css, THEME_PREFIX } from '../../styles';
-import { classNames } from '../../utils/classNames';
+import { css } from '../../styles';
+import { useClassNames } from '../..';
 import { buttonClassName } from '../../styles/shared';
 
 const tabsClassName = css({
@@ -68,7 +67,7 @@ export const FileTabs = defineComponent({
   },
   setup(props: FileTabsProps, { attrs }) {
     const { sandpack } = useSandpack();
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     const handleCloseFile = (ev: MouseEvent): void => {
       ev.stopPropagation();
@@ -112,22 +111,21 @@ export const FileTabs = defineComponent({
 
     return () => (
       <div
-        class={classNames(c('tabs'), tabsClassName, attrs?.class || '')}
+        class={classNames('tabs', [tabsClassName, attrs?.class || ''])}
         translate="no"
       >
         <div
           aria-label="Select active file"
-          class={classNames(
-            c('tabs-scrollable-container'),
+          class={classNames('tabs-scrollable-container', [
             tabsScrollableClassName,
-          )}
+          ])}
           role="tablist"
         >
           {(sandpack.visibleFiles || []).map((filePath) => (
             <button
               key={filePath}
               aria-selected={filePath === sandpack.activeFile}
-              class={classNames(c('tab-button'), buttonClassName, tabButton)}
+              class={classNames('tab-button', [buttonClassName, tabButton])}
               data-active={filePath === sandpack.activeFile}
               onClick={(): void => sandpack.setActiveFile(filePath)}
               role="tab"
@@ -138,7 +136,7 @@ export const FileTabs = defineComponent({
               {getTriggerText(filePath)}
               {props.closableTabs && sandpack.visibleFiles.length > 1 && (
                 <span
-                  class={classNames(c('close-button'), closeButtonClassName)}
+                  class={classNames('close-button', [closeButtonClassName])}
                   onClick={handleCloseFile}
                 >
                   <CloseIcon />

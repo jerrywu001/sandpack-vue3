@@ -1,5 +1,4 @@
 /* eslint-disable vue/one-component-per-file */
-import { classNames } from '../utils/classNames';
 import { ConsoleIcon } from '../icons';
 import { SandpackTests } from '../components/tests';
 import { css, THEME_PREFIX } from '../styles';
@@ -31,7 +30,7 @@ import {
   SandpackThemeProp,
   TemplateFiles,
 } from '../types';
-import { SANDBOX_TEMPLATES } from '..';
+import { SANDBOX_TEMPLATES, useClassNames } from '..';
 import { SandpackRender } from './SandpackRender';
 
 const SandpackPropValues = {
@@ -209,6 +208,8 @@ const Sandpack = defineComponent({
       }
     };
 
+    const classNames = useClassNames();
+
     watch(
       [() => props.options?.showConsole],
       () => {
@@ -250,7 +251,7 @@ const Sandpack = defineComponent({
         theme={props.theme}
       >
         <SandpackLayout
-          class={rtlLayout.value ? classNames(rtlLayoutClassName) : ''}
+          class={rtlLayout.value ? classNames('rtl-layout', [rtlLayoutClassName]) : ''}
         >
           <SandpackCodeEditor
             {...codeEditorOptions.value}
@@ -265,10 +266,9 @@ const Sandpack = defineComponent({
 
           {resizablePanels.value && (
             <div
-              class={classNames(
+              class={classNames('resize-handler', [
                 dragHandler({ direction: 'horizontal' }),
-                THEME_PREFIX + '-resize-handler',
-              )}
+              ])}
               data-direction="horizontal"
               onMousedown={(event) => {
                 dragEventTargetRef.value = event.target;
@@ -310,10 +310,9 @@ const Sandpack = defineComponent({
               <>
                 {resizablePanels.value && consoleVisibility.value && (
                   <div
-                    class={classNames(
+                    class={classNames('resize-handler', [
                       dragHandler({ direction: 'vertical' }),
-                      THEME_PREFIX + '-resize-handler',
-                    )}
+                    ])}
                     data-direction="vertical"
                     onMousedown={(event) => {
                       dragEventTargetRef.value = event.target;
@@ -323,7 +322,7 @@ const Sandpack = defineComponent({
                 )}
 
                 <div
-                  class={classNames(consoleWrapper)}
+                  class={classNames('console-wrapper', [consoleWrapper])}
                   style={{
                     flexGrow: consoleVisibility.value ? 100 - verticalSize.value : 0,
                     flexShrink: consoleVisibility.value ? 100 - verticalSize.value : 0,

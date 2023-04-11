@@ -1,10 +1,9 @@
-import { classNames } from '../../utils/classNames';
-import { css, THEME_PREFIX } from '../../styles';
+import { useClassNames, stackClassName } from '../..';
+import { css } from '../../styles';
 import { computed, DefineComponent, defineComponent, onBeforeUnmount, onUnmounted, PropType, watch } from 'vue';
 import { Directory } from './Directory';
 import { File } from './File';
 import { ModuleList } from './ModuleList';
-import { stackClassName } from '../..';
 import { useSandpack } from '../../contexts/sandpackContext';
 import type { SandpackBundlerFiles, UnsubscribeFunction } from '@codesandbox/sandpack-client';
 
@@ -48,6 +47,7 @@ export const SandpackFileExplorer = defineComponent({
   setup(props, { attrs }) {
     let unsubscribe: UnsubscribeFunction;
     const { sandpack, listen } = useSandpack();
+    const classNames = useClassNames();
 
     const orderedFiles = computed(() => Object.keys(sandpack.files)
       .sort()
@@ -87,13 +87,11 @@ export const SandpackFileExplorer = defineComponent({
 
     return () => (
       <div
-        class={classNames(
-          stackClassName,
-          `${THEME_PREFIX}-file-explorer`,
-          attrs?.class || '',
-        )}
+        class={classNames('file-explorer', [stackClassName, attrs?.class || ''])}
       >
-        <div class={classNames(fileExplorerClassName)}>
+        <div
+          class={classNames('file-explorer-list', [fileExplorerClassName])}
+        >
           <ModuleList
             activeFile={sandpack.activeFile}
             autoHiddenFiles={props.autoHiddenFiles}

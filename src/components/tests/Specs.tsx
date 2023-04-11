@@ -3,7 +3,7 @@ import type { TestError } from '@codesandbox/sandpack-client';
 
 import { css } from '../../styles';
 import { buttonClassName } from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 
 import type { Describe } from './Describes';
 import { Describes } from './Describes';
@@ -100,14 +100,22 @@ export const Specs = defineComponent({
     },
   },
   setup(props: Props) {
+    const classNames = useClassNames();
+
     return () => (
       <>
         {props.specs.map((spec) => {
           if (spec.error) {
             return (
-              <div key={spec.name} class={classNames(gapBottomClassName)}>
+              <div
+                key={spec.name}
+                class={classNames('test-spec', [gapBottomClassName])}
+              >
                 <SpecLabel
-                  class={classNames(labelClassName, failBackgroundClassName)}
+                  class={classNames('test-spec-error', [
+                    labelClassName,
+                    failBackgroundClassName,
+                  ])}
                 >
                   Error
                 </SpecLabel>
@@ -129,31 +137,41 @@ export const Specs = defineComponent({
           const stats = getSpecTestResults(spec);
 
           return (
-            <div key={spec.name} class={classNames(gapBottomClassName)}>
-              <div class={classNames(fileContainer)}>
+            <div
+              key={spec.name}
+              class={classNames('test-spec-name', [gapBottomClassName])}
+            >
+              <div
+                class={classNames('test-spec-name-container', [
+                  fileContainer,
+                ])}
+              >
                 {props.status === 'complete' ? (
                   stats.fail > 0 ? (
                     <SpecLabel
-                      class={classNames(
+                      class={classNames('test-spec-complete', [
                         labelClassName,
                         failBackgroundClassName,
-                      )}
+                      ])}
                     >
                       Fail
                     </SpecLabel>
                   ) : (
                     <SpecLabel
-                      class={classNames(
+                      class={classNames('test-spec-pass', [
                         labelClassName,
                         passBackgroundClassName,
-                      )}
+                      ])}
                     >
                       Pass
                     </SpecLabel>
                   )
                 ) : (
                   <SpecLabel
-                    class={classNames(labelClassName, runBackgroundClassName)}
+                    class={classNames('test-spec-run', [
+                      labelClassName,
+                      runBackgroundClassName,
+                    ])}
                   >
                     Run
                   </SpecLabel>
@@ -176,10 +194,15 @@ export const Specs = defineComponent({
               {!props.hideTestsAndSupressLogs && getFailingTests(spec).map((test) => (
                 <div
                   key={`failing-${test.name}`}
-                  class={classNames(gapBottomClassName)}
+                  class={classNames('test-spec-error', [
+                    gapBottomClassName,
+                  ])}
                 >
                   <div
-                    class={classNames(failTestClassName, failTextClassName)}
+                    class={classNames('test-spec-error-text', [
+                      failTestClassName,
+                      failTextClassName,
+                    ])}
                   >
                     ● {test.blocks.join(' › ')} › {test.name}
                   </div>
@@ -203,8 +226,12 @@ export const Specs = defineComponent({
 export const SpecLabel = defineComponent({
   name: 'SpecLabel',
   setup(_, { slots, attrs }) {
+    const classNames = useClassNames();
+
     return () => (
-      <span class={classNames(specLabelClassName, attrs?.class || '')}>
+      <span
+        class={classNames('test-spec-label', [specLabelClassName, attrs?.class || ''])}
+      >
         {
           slots.default ? slots.default() : null
         }
@@ -230,15 +257,23 @@ export const FilePath = defineComponent({
     const parts = computed(() => props.path.split('/'));
     const basePath = computed(() => parts.value.slice(0, parts.value.length - 1).join('/') + '/');
     const fileName = computed(() => parts.value[parts.value.length - 1]);
+    const classNames = useClassNames();
 
     return () => (
       <button
-        class={classNames(buttonClassName, filePathButtonClassName)}
+        class={classNames('test-filename', [
+          buttonClassName,
+          filePathButtonClassName,
+        ])}
         onClick={() => { props.onClick(); }}
         type="button"
       >
-        <span class={classNames(filePathClassName)}>{basePath.value}</span>
-        <span class={classNames(fileNameClassName)}>{fileName.value}</span>
+        <span class={classNames('test-filename-base', [filePathClassName])}>
+          {basePath.value}
+        </span>
+        <span class={classNames('test-filename-file', [fileNameClassName])}>
+          {fileName.value}
+        </span>
       </button>
     );
   },

@@ -2,7 +2,7 @@ import { defineComponent, Fragment, PropType } from 'vue';
 
 import { CodeEditor } from '..';
 import { css, THEME_PREFIX } from '../../styles';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 
 import { fromConsoleToString } from './utils/fromConsoleToString';
 import type { SandpackConsoleData } from './utils/getType';
@@ -20,6 +20,8 @@ export const ConsoleList = defineComponent({
     },
   },
   setup(props) {
+    const classNames = useClassNames();
+
     return () => (
       <>
         {props.data.map(({ data, id, method }, logIndex, references) => {
@@ -37,9 +39,9 @@ export const ConsoleList = defineComponent({
                 return (
                   <div
                     key={`${id}-${msgIndex}`}
-                    class={classNames(
+                    class={classNames('console-item', [
                       consoleItemClassName({ variant: getType(method) }),
-                    )}
+                    ])}
                   >
                     <CodeEditor
                       code={

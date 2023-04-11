@@ -1,7 +1,6 @@
-import { useClasser } from 'code-hike-classer-vue3';
 import { css, THEME_PREFIX } from '../styles';
 import { defineComponent, StyleValue } from 'vue';
-import { classNames } from '../utils/classNames';
+import { useClassNames } from '..';
 
 export const stackClassName = css({
   display: 'flex',
@@ -19,11 +18,11 @@ export const stackClassName = css({
 export const SandpackStack = defineComponent({
   name: 'SandpackStack',
   setup(_, { slots, attrs }) {
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     return () => (
       <div
-        class={classNames(c('stack'), stackClassName, attrs?.class || '')}
+        class={classNames('stack', [stackClassName, attrs?.class || ''])}
         style={(attrs?.style || {}) as StyleValue}
       >
         { slots.default ? slots.default() : null }

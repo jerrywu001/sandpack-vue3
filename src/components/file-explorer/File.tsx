@@ -1,9 +1,8 @@
 import { buttonClassName } from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 import { computed, DefineComponent, defineComponent, StyleValue } from 'vue';
-import { css, THEME_PREFIX } from '../../styles';
+import { css } from '../../styles';
 import { DirectoryIconOpen, DirectoryIconClosed, FileIcon } from '../../icons';
-import { useClasser } from 'code-hike-classer-vue3';
 
 const explorerClassName = css({
   borderRadius: '0',
@@ -66,7 +65,7 @@ export const File = defineComponent({
   },
   // @ts-ignore
   setup(props: Props) {
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
     const fileName = computed(() => props.path.split('/').filter(Boolean).pop());
 
     const onClickButton = (event: MouseEvent): void => {
@@ -80,11 +79,11 @@ export const File = defineComponent({
 
     return () => (
       <button
-        class={classNames(
-          c('button', 'explorer'),
+        class={classNames('button', [
+          classNames('explorer'),
           buttonClassName,
           explorerClassName,
-        )}
+        ])}
         data-active={props.active}
         onClick={onClickButton}
         style={{ paddingLeft: 9 * props.depth + 'px' } as StyleValue}

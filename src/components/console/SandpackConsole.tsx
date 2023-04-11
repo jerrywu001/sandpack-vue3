@@ -1,4 +1,4 @@
-import { classNames } from '../../utils/classNames';
+import { useClassNames, useSandpack, useSandpackClient, useSandpackShell } from '../..';
 import { CleanIcon, RestartIcon } from '../../icons';
 import { ConsoleList } from './ConsoleList';
 import { css, THEME_PREFIX } from '../../styles';
@@ -7,7 +7,6 @@ import { RoundedButton } from '../../common/RoundedButton';
 import { SandpackConsoleData } from './utils/getType';
 import { DependenciesProgress, SandpackStack } from '../../common';
 import { StdoutList } from './StdoutList';
-import { useSandpack, useSandpackClient, useSandpackShell } from '../..';
 import { useSandpackConsole } from './useSandpackConsole';
 import { useSandpackShellStdout } from '../../hooks/useSandpackShellStdout';
 import {
@@ -92,6 +91,7 @@ export const SandpackConsole = defineComponent({
     const wrapperRef = ref<HTMLDivElement>();
     const { iframe, clientId: internalClientId } = useSandpackClient();
     const { restart } = useSandpackShell();
+    const classNames = useClassNames();
 
     const currentTab = ref<'server' | 'client'>(environment === 'node' ? 'server' : 'client');
     const clientId = computed(() => props.standalone ? internalClientId.value : undefined);
@@ -143,12 +143,11 @@ export const SandpackConsole = defineComponent({
     return () => (
       <SandpackStack
         {...props}
-        class={classNames(
+        class={classNames('console', [
           css({
             height: '100%',
             background: '$surface1',
             iframe: { display: 'none' },
-
             [`.${THEME_PREFIX}-bridge-frame`]: {
               display: 'block',
               border: 0,
@@ -162,9 +161,8 @@ export const SandpackConsole = defineComponent({
               pointerEvents: 'none',
             },
           }),
-          `${THEME_PREFIX}-console`,
           attrs?.class || '',
-        )}
+        ])}
       >
         {
           props.showHeader && isNodeEnvironment.value && (
@@ -178,9 +176,9 @@ export const SandpackConsole = defineComponent({
 
         <div
           ref={wrapperRef}
-          class={classNames(
+          class={classNames('console-list', [
             css({ overflow: 'auto', scrollBehavior: 'smooth' }),
-          )}
+          ])}
         >
           {
             isServerTab.value ? (
@@ -192,7 +190,7 @@ export const SandpackConsole = defineComponent({
         </div>
 
         <div
-          class={classNames(
+          class={classNames('console-actions', [
             css({
               position: 'absolute',
               bottom: '$space$2',
@@ -200,7 +198,7 @@ export const SandpackConsole = defineComponent({
               display: 'flex',
               gap: '$space$2',
             }),
-          )}
+          ])}
         >
           {
             slots.actionsChildren

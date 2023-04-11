@@ -1,7 +1,7 @@
 import { BackwardIcon, ForwardIcon, RefreshIcon } from '../../icons';
 import { buttonClassName, iconClassName } from '../../styles/shared';
-import { classNames } from '../../utils/classNames';
-import { css, THEME_PREFIX } from '../../styles';
+import { useClassNames } from '../..';
+import { css } from '../../styles';
 import {
   DefineComponent,
   defineComponent,
@@ -11,7 +11,6 @@ import {
   ref,
   watch,
 } from 'vue';
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpack } from '../../contexts/sandpackContext';
 import type { UnsubscribeFunction } from '@codesandbox/sandpack-client';
 
@@ -94,7 +93,7 @@ export const Navigator = defineComponent({
     const backEnabled = ref(false);
     const forwardEnabled = ref(false);
 
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     watch(
       () => props.clientId,
@@ -150,15 +149,15 @@ export const Navigator = defineComponent({
       dispatch({ type: 'urlforward' });
     };
 
-    const buttonsClassNames = classNames(
-      c('button', 'icon'),
+    const buttonsClassNames = classNames('button', [
+      classNames('icon'),
       buttonClassName,
       iconClassName,
       css({
         minWidth: '$space$6',
         justifyContent: 'center',
       }),
-    );
+    ]);
 
     onBeforeUnmount(() => {
       if (unsub) unsub();
@@ -170,7 +169,7 @@ export const Navigator = defineComponent({
 
     return () => (
       <div
-        class={classNames(c('navigator'), navigatorClassName, attrs?.class || '')}
+        class={classNames('navigator', [navigatorClassName, attrs?.class || ''])}
       >
         <button
           aria-label="Go back one page"
@@ -201,7 +200,7 @@ export const Navigator = defineComponent({
 
         <input
           aria-label="Current Sandpack URL"
-          class={classNames(c('input'), inputClassName)}
+          class={classNames('input', [inputClassName])}
           name="Current Sandpack URL"
           onChange={handleInputChange}
           onKeydown={handleKeyDown}

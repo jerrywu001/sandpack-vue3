@@ -1,10 +1,9 @@
-import { useClasser } from 'code-hike-classer-vue3';
 import { defineComponent } from 'vue';
-import { css, THEME_PREFIX, keyframes } from '../styles';
+import { css, keyframes } from '../styles';
 import { buttonClassName } from '../styles/shared';
-import { classNames } from '../utils/classNames';
 
 import { OpenInCodeSandboxButton } from './OpenInCodeSandboxButton';
+import { useClassNames } from '..';
 
 const cubeClassName = css({
   transform: 'translate(-4px, 9px) scale(0.13, 0.13)',
@@ -85,16 +84,16 @@ export const Loading = defineComponent({
     },
   },
   setup(props, { attrs }) {
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     return () => (
       <div
-        class={classNames(c('cube-wrapper'), wrapperClassName, attrs?.class || '')}
+        class={classNames('cube-wrapper', [wrapperClassName, attrs?.class || ''])}
         title="Open in CodeSandbox"
       >
         { props.showOpenInCodeSandbox && <OpenInCodeSandboxButton /> }
-        <div class={classNames(c('cube'), cubeClassName)}>
-          <div class={classNames(c('sides'), sidesClassNames)}>
+        <div class={classNames('cube', [cubeClassName])}>
+          <div class={classNames('sides', [sidesClassNames])}>
             <div class="top" />
             <div class="right" />
             <div class="bottom" />

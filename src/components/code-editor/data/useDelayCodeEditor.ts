@@ -217,6 +217,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     });
 
     view.contentDOM.setAttribute('data-gramm', 'false');
+    view.contentDOM.setAttribute('data-lt-active', 'false');
     view.contentDOM.setAttribute(
       'aria-label',
       props.filePath ? `Code Editor for ${getFileName(props.filePath)}` : 'Code Editor',

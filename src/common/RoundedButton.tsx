@@ -1,11 +1,10 @@
-import { classNames } from '../utils/classNames';
 import { defineComponent, PropType } from 'vue';
-import { useClasser } from 'code-hike-classer-vue3';
 import {
   buttonClassName,
   iconStandaloneClassName,
   roundedButtonClassName,
 } from '../styles/shared';
+import { useClassNames } from '..';
 
 export const RoundedButton = defineComponent({
   name: 'RoundedButton',
@@ -22,18 +21,18 @@ export const RoundedButton = defineComponent({
     },
   },
   setup(props, { slots, attrs }) {
-    const c = useClasser('sp');
+    const classNames = useClassNames();
 
     return () => (
       <button
         title={props.title}
-        class={classNames(
-          c('button', 'icon-standalone'),
+        class={classNames('button', [
+          classNames('icon-standalone'),
           buttonClassName,
           iconStandaloneClassName,
           roundedButtonClassName,
           attrs?.class || '',
-        )}
+        ])}
         onClick={props.onClick}
         type="button"
       >

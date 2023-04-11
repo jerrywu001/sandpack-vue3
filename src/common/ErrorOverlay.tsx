@@ -7,14 +7,13 @@ import {
   iconStandaloneClassName,
   roundedButtonClassName,
 } from '../styles/shared';
-import { classNames } from '../utils/classNames';
-import { css, THEME_PREFIX } from '../styles';
+import { css } from '../styles';
 import { computed, defineComponent } from 'vue';
 import { RestartIcon } from '../icons';
-import { useClasser } from 'code-hike-classer-vue3';
 import { useErrorMessage } from '../hooks/useErrorMessage';
 import { useSandpackShell } from '../hooks';
 import { useSandpack } from '../contexts/sandpackContext';
+import { useClassNames } from '..';
 
 const mapBundlerErrors = (originalMessage: string): string => {
   const errorMessage = originalMessage.replace('[sandpack-client]: ', '');
@@ -48,7 +47,7 @@ export const ErrorOverlay = defineComponent({
     const error = useErrorMessage();
     const { restart } = useSandpackShell();
     const { sandpack } = useSandpack();
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     const isSandpackBundlerError = computed(() => error.value?.message?.startsWith('[sandpack-client]'));
 
@@ -57,28 +56,28 @@ export const ErrorOverlay = defineComponent({
         {
           (isSandpackBundlerError.value && error.value?.message) ? (
             <div
-              class={classNames(
-                c('overlay', 'error'),
+              class={classNames('overlay', [
+                classNames('error'),
                 absoluteClassName,
                 errorBundlerClassName,
                 attrs?.class || '',
-              )}
+              ])}
               {...props}
             >
-              <div class={classNames(c('error-message'), errorMessageClassName)}>
-                <p class={classNames(css({ fontWeight: 'bold' }))}>
+              <div class={classNames('error-message', [errorMessageClassName])}>
+                <p class={classNames('error-title', [css({ fontWeight: 'bold' })])}>
                   Couldn't connect to server
                 </p>
                 <p>{mapBundlerErrors(error.value?.message)}</p>
 
                 <div>
                   <button
-                    class={classNames(
-                      c('button', 'icon-standalone'),
+                    class={classNames('button', [
+                      classNames('icon-standalone'),
                       buttonClassName,
                       iconStandaloneClassName,
                       roundedButtonClassName,
-                    )}
+                    ])}
                     onClick={() => {
                       restart();
                       if (sandpack) sandpack.runSandpack();
@@ -93,15 +92,15 @@ export const ErrorOverlay = defineComponent({
             </div>
           ) : !error.value.message && !slots.default ? null : (
             <div
-              class={classNames(
-                c('overlay', 'error'),
+              class={classNames('overlay', [
+                classNames('error'),
                 absoluteClassName,
                 errorClassName,
                 attrs?.class || '',
-              )}
+              ])}
               translate="no"
             >
-              <div class={classNames(c('error-message'), errorMessageClassName)}>
+              <div class={classNames('error-message', [errorMessageClassName])}>
                 {error.value?.message || (slots.default ? slots.default() : null) }
               </div>
               {/* <RoundedButton onClick={() => dispatch({ type: 'refresh' }, props.clientId)}>

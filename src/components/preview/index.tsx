@@ -1,4 +1,4 @@
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 import { css, THEME_PREFIX } from '../../styles';
 import { LoadingOverlay } from '../../common/LoadingOverlay';
 import { Navigator } from '../navigator';
@@ -6,7 +6,6 @@ import { OpenInCodeSandboxButton } from '../../common/OpenInCodeSandboxButton';
 import { RefreshIcon, RestartIcon } from '../../icons';
 import { RoundedButton } from '../../common/RoundedButton';
 import { SandpackStack } from '../../common/Stack';
-import { useClasser } from 'code-hike-classer-vue3';
 import { useSandpackClient, useSandpackNavigation, useSandpackShell } from '../../hooks';
 import {
   DefineComponent,
@@ -139,7 +138,7 @@ export const SandpackPreview = defineComponent({
 
     let unsubscribe: UnsubscribeFunction;
 
-    const c = useClasser(THEME_PREFIX);
+    const classNames = useClassNames();
 
     const { refresh } = useSandpackNavigation(clientId.value);
     const { restart } = useSandpackShell(clientId.value);
@@ -184,7 +183,7 @@ export const SandpackPreview = defineComponent({
     return () => (
       <SandpackStack
         { ...props }
-        class={classNames(`${THEME_PREFIX}-preview`, attrs?.class || '')}
+        class={classNames('preview', [attrs?.class || ''])}
       >
         {
           props.showNavigator && (
@@ -192,10 +191,10 @@ export const SandpackPreview = defineComponent({
           )
         }
 
-        <div class={classNames(c('preview-container'), previewClassName)}>
+        <div class={classNames('preview-container', [previewClassName])}>
           <iframe
             ref={iframe}
-            class={classNames(c('preview-iframe'), previewIframe)}
+            class={classNames('preview-iframe', [previewIframe])}
             style={{
               // set height based on the content only in auto mode
               // and when the computed height was returned by the bundler
@@ -205,10 +204,7 @@ export const SandpackPreview = defineComponent({
           />
 
           <div
-            class={classNames(
-              c('preview-actions'),
-              previewActionsClassName,
-            )}
+            class={classNames('preview-actions', [previewActionsClassName])}
           >
             {
               slots.actionsChildren

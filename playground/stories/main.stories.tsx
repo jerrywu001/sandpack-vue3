@@ -342,7 +342,11 @@ console.log("foo");`,
 };
 
 export const Basic = () => (
-  <Sandpack template="nextjs" theme={themes.sandpackDark} />
+  <Sandpack
+    options={{ classes: { 'sp-layout': 'fooo' } }}
+    template="react-ts"
+    theme={themes.cobalt2}
+  />
 );
 
 export const FileContent = () => {

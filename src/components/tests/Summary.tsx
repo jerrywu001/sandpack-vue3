@@ -1,4 +1,4 @@
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 import { css } from '../../styles';
 import { DefineComponent, defineComponent, PropType } from 'vue';
 import {
@@ -58,6 +58,7 @@ export const Summary = defineComponent({
     },
   },
   setup(props: Props) {
+    const classNames = useClassNames();
     const widestLabel = 'Test suites: ';
 
     const withMargin = (label: string): string => {
@@ -67,43 +68,61 @@ export const Summary = defineComponent({
     };
 
     return () => (
-      <div class={classNames(containerClassName)}>
-        <div class={classNames(gapBottomClassName)}>
-          <span class={classNames(labelClassName)}>{widestLabel}</span>
+      <div class={classNames('test-summary', [containerClassName])}>
+        <div class={classNames('test-summary', [gapBottomClassName])}>
+          <span
+            class={classNames('test-summary-suites-label', [labelClassName])}
+          >
+            {widestLabel}
+          </span>
           {props.suites.fail > 0 && (
-            <span class={classNames(failTextClassName)}>
+            <span
+              class={classNames('test-summary-suites-fail', [
+                failTextClassName,
+              ])}
+            >
               {props.suites.fail} failed,{' '}
             </span>
           )}
           {props.suites.pass > 0 && (
-            <span class={classNames(passTextClassName)}>
+            <span
+              class={classNames('test-summary-suites-pass', [
+                passTextClassName,
+              ])}
+            >
               {props.suites.pass} passed,{' '}
             </span>
           )}
           <span>{props.suites.total} total</span>
         </div>
-        <div class={classNames(gapBottomClassName)}>
-          <span class={classNames(labelClassName)}>
+        <div class={classNames('test-summary', [gapBottomClassName])}>
+          <span class={classNames('test-summary-label', [labelClassName])}>
             {withMargin('Tests:')}
           </span>
           {props.tests.fail > 0 && (
-            <span class={classNames(failTextClassName)}>
+            <span
+              class={classNames('test-summary-fail', [failTextClassName])}
+            >
               {props.tests.fail} failed,{' '}
             </span>
           )}
           {props.tests.skip > 0 && (
-            <span class={classNames(skipTextClassName)}>
+            <span
+              class={classNames('test-summary-skip', [skipTextClassName])}
+            >
               {props.tests.skip} skipped,{' '}
             </span>
           )}
           {props.tests.pass > 0 && (
-            <span class={classNames(passTextClassName)}>
+            <span
+              class={classNames('test-summary-pass', [passTextClassName])}
+            >
               {props.tests.pass} passed,{' '}
             </span>
           )}
           <span>{props.tests.total} total</span>
         </div>
-        <div class={classNames(labelClassName)}>
+        <div class={classNames('test-summary-curation', [labelClassName])}>
           {withMargin('Time:')}
           {props.duration / 1000}s
         </div>

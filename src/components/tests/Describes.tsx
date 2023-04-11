@@ -1,7 +1,7 @@
 import { DefineComponent, defineComponent, PropType } from 'vue';
 
 import { css } from '../../styles';
-import { classNames } from '../../utils/classNames';
+import { useClassNames } from '../..';
 
 import type { Test } from './Tests';
 import { Tests } from './Tests';
@@ -31,6 +31,8 @@ export const Describes = defineComponent({
     },
   },
   setup(props) {
+    const classNames = useClassNames();
+
     return () => (
       <>
         {props.describes.map((describe) => {
@@ -42,8 +44,13 @@ export const Describes = defineComponent({
           const describes = Object.values(describe.describes);
 
           return (
-            <div key={describe.name} class={classNames(containerClassName)}>
-              <div class={classNames(nameClassName)}>{describe.name}</div>
+            <div
+              key={describe.name}
+              class={classNames('test-describe', [containerClassName])}
+            >
+              <div class={classNames('test-name', [nameClassName])}>
+                {describe.name}
+              </div>
 
               <Tests tests={tests} />
 
