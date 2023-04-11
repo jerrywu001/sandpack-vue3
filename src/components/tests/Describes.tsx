@@ -40,8 +40,8 @@ export const Describes = defineComponent({
             return null;
           }
 
-          const tests = Object.values(describe.tests);
-          const describes = Object.values(describe.describes);
+          const tests = Object.values(describe?.tests || {});
+          const describes = Object.values(describe?.describes || {});
 
           return (
             <div

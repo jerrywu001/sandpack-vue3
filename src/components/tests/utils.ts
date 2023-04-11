@@ -52,8 +52,8 @@ export const getAllSuiteResults = (specs: Spec[]): SuiteResults => specs
 export const getDuration
   = (specs: Spec[]): number => flatMap(specs, getTests).reduce((acc, test) => acc + (test.duration || 0), 0);
 
-export const isEmpty = (block: Spec | Describe): boolean => Object.values(block.describes).length === 0 &&
-  Object.values(block.tests).length === 0;
+export const isEmpty = (block: Spec | Describe): boolean => Object.values(block?.describes || {}).length === 0 &&
+  Object.values(block?.tests || {}).length === 0;
 
 export const splitTail = <A>(as: A[]): [A[], A | undefined] => {
   const lastIndex = as.length - 1;
