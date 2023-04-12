@@ -19,6 +19,7 @@ import {
   absoluteClassName,
   buttonClassName,
   errorBundlerClassName,
+  errorClassName,
   errorMessageClassName,
   fadeIn,
   iconStandaloneClassName,
@@ -73,6 +74,7 @@ export const LoadingOverlay = defineComponent({
         class={classNames('overlay', [
           classNames('error'),
           absoluteClassName,
+          errorClassName,
           errorBundlerClassName,
           attrs?.class || '',
         ])}
@@ -82,28 +84,34 @@ export const LoadingOverlay = defineComponent({
             Couldn't connect to server
           </p>
 
-          <p>
-            This means sandpack cannot connect to the runtime or your network is
-            having some issues. Please check the network tab in your browser and
-            try again. If the problem persists, report it via{' '}
-            <a href="mailto:hello@codesandbox.io?subject=Sandpack Timeout Error">
-              email
-            </a>{' '}
-            or submit an issue on{' '}
-            <a
-              href="https://github.com/codesandbox/sandpack/issues"
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              GitHub.
-            </a>
-          </p>
+          <div class={classNames('error-message', [errorMessageClassName])}>
+            <p>
+              This means sandpack cannot connect to the runtime or your network
+              is having some issues. Please check the network tab in your
+              browser and try again. If the problem persists, report it via{' '}
+              <a href="mailto:hello@codesandbox.io?subject=Sandpack Timeout Error">
+                email
+              </a>{' '}
+              or submit an issue on{' '}
+              <a
+                href="https://github.com/codesandbox/sandpack/issues"
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                GitHub.
+              </a>
+            </p>
+          </div>
 
-          <pre>
+          <p
+            class={classNames('error-message', [
+              errorMessageClassName({ errorCode: true }),
+            ])}
+          >
             ENV: {sandpack.environment}
             <br />
             ERROR: TIME_OUT
-          </pre>
+          </p>
 
           <div>
             <button

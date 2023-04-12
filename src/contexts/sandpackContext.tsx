@@ -114,6 +114,7 @@ const SandpackProvider = defineComponent({
       visibleFilesFromProps: visibleFiles,
       shouldUpdatePreview: true,
       editorState: 'pristine',
+      teamId: props.teamId,
       openFile,
       resetFile,
       resetAllFiles,
@@ -365,7 +366,9 @@ const SandpackProvider = defineComponent({
     }
 
     function handleMessage(msg: SandpackMessage) {
-      if (msg.type === 'state') {
+      if (msg.type === 'start') {
+        state.error = null;
+      } else if (msg.type === 'state') {
         state.bundlerState = msg.state;
       } else if ((msg.type === 'done' && !msg.compilatonError) || msg.type === 'connected') {
         if (timeoutHook.value) {
@@ -416,12 +419,8 @@ const SandpackProvider = defineComponent({
           showErrorScreen: state.errorScreenRegisteredRef,
           showLoadingScreen: state.loadingScreenRegisteredRef,
           reactDevTools: state.reactDevTools,
-          customNpmRegistries: customSetup?.npmRegistries?.map(
-            (config) => ({
-              ...config,
-              proxyEnabled: false, // force
-            } ?? []),
-          ),
+          customNpmRegistries: customSetup?.npmRegistries,
+          teamId: props.teamId,
         },
       );
 
@@ -511,7 +510,7 @@ const SandpackProvider = defineComponent({
       }
 
       if (state.lazyAnchorRef && state.initMode === 'lazy') {
-        // If any component registerd a lazy anchor ref component, use that for the intersection observer
+        // If any component registered a lazy anchor ref component, use that for the intersection observer
         intersectionObserver.value = new IntersectionObserver((entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
             // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)

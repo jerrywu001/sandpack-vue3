@@ -178,3 +178,17 @@ export const ConsoleIcon = (): JSX.Element => (
     <path d="M10 11.5C9.72386 11.5 9.5 11.7239 9.5 12C9.5 12.2761 9.72386 12.5 10 12.5V11.5ZM14.6667 12.5C14.9428 12.5 15.1667 12.2761 15.1667 12C15.1667 11.7239 14.9428 11.5 14.6667 11.5V12.5ZM10 12.5H14.6667V11.5H10V12.5Z" />
   </SVG>
 );
+
+export const SignInIcon = (): JSX.Element => (
+  <SVG viewBox="0 0 48 48">
+    <title>Sign in</title>
+    <path d="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h14.55v3H9v30h14.55v3Zm24.3-9.25-2.15-2.15 5.1-5.1h-17.5v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z" />
+  </SVG>
+);
+
+export const SignOutIcon = (): JSX.Element => (
+  <SVG viewBox="0 0 48 48">
+    <title>Sign out</title>
+    <path d="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h14.55v3H9v30h14.55v3Zm24.3-9.25-2.15-2.15 5.1-5.1h-17.5v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z" />
+  </SVG>
+);

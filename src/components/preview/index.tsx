@@ -1,11 +1,13 @@
-import { useClassNames } from '../..';
+import { buttonClassName, iconStandaloneClassName, roundedButtonClassName } from '../../styles/shared';
 import { css, THEME_PREFIX } from '../../styles';
+import { ErrorOverlay } from '../../common';
 import { LoadingOverlay } from '../../common/LoadingOverlay';
 import { Navigator } from '../navigator';
 import { OpenInCodeSandboxButton } from '../../common/OpenInCodeSandboxButton';
-import { RefreshIcon, RestartIcon } from '../../icons';
+import { RefreshIcon, RestartIcon, SignOutIcon } from '../../icons';
 import { RoundedButton } from '../../common/RoundedButton';
 import { SandpackStack } from '../../common/Stack';
+import { useClassNames } from '../..';
 import { useSandpackClient, useSandpackNavigation, useSandpackShell } from '../../hooks';
 import {
   DefineComponent,
@@ -18,7 +20,6 @@ import {
   ref,
 } from 'vue';
 import type { SandpackClient, SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
-import { ErrorOverlay } from '../../common';
 
 export interface PreviewProps {
   showNavigator?: boolean;
@@ -133,7 +134,14 @@ export const SandpackPreview = defineComponent({
   },
   // @ts-ignore
   setup(props: PreviewProps, { slots, attrs, expose }) {
-    const { sandpack, listen, iframe, getClient, clientId } = useSandpackClient({ startRoute: props?.startRoute });
+    const {
+      sandpack,
+      listen,
+      iframe,
+      getClient,
+      clientId,
+      dispatch,
+    } = useSandpackClient({ startRoute: props?.startRoute });
     const iframeComputedHeight = ref<number | null>(null);
 
     let unsubscribe: UnsubscribeFunction;
@@ -224,6 +232,22 @@ export const SandpackPreview = defineComponent({
               <RoundedButton onClick={refresh}>
                 <RefreshIcon />
               </RoundedButton>
+            )}
+
+            {sandpack.teamId && (
+              <button
+                class={classNames('button', [
+                  classNames('icon-standalone'),
+                  buttonClassName,
+                  iconStandaloneClassName,
+                  roundedButtonClassName,
+                ])}
+                onClick={() => dispatch({ type: 'sign-out' })}
+                title="Sign out"
+                type="button"
+              >
+                <SignOutIcon />
+              </button>
             )}
 
             { props.showOpenInCodeSandbox && <OpenInCodeSandboxButton /> }

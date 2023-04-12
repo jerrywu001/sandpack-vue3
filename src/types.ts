@@ -73,6 +73,12 @@ export interface SandpackProps {
    * of the sandbox, such as initialization mode, recompile mode, files resolver, etc.
    */
   options?: SandpackOptions;
+
+  /**
+   * CodeSandbox team id: with this information, bundler can connect to CodeSandbox
+   * and unlock a few capabilities, like private dependencies.
+   */
+  teamId?: string;
 }
 
 /**
@@ -231,7 +237,7 @@ export interface SandpackSetup {
    * }
    * ```
    */
-  npmRegistries?: Array<Omit<NpmRegistry, 'proxyEnabled'>>;
+  npmRegistries?: NpmRegistry[];
 }
 
 /**
@@ -418,6 +424,7 @@ interface SandpackRootProps<
   customSetup?: SandpackSetup;
   theme?: SandpackThemeProp;
   className?: string;
+  teamId?: string;
   /**
    * @default false
    */
@@ -562,6 +569,7 @@ export interface SandpackState {
    * otherwise, it'll return `pristine`
    */
   editorState: EditorState;
+  teamId?: string;
   error: SandpackError | null;
   files: SandpackBundlerFiles;
   environment?: SandboxEnvironment;

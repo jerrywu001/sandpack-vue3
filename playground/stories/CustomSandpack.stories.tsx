@@ -1,3 +1,4 @@
+import { NpmRegistry } from '@codesandbox/sandpack-client';
 import {
   CustomCodeEditor,
   CustomOpenInCSB,
@@ -225,7 +226,7 @@ export const CustomNpmRegistries = () => (
           limitToScopes: true,
           registryUrl: 'https://xywctu-4000.preview.csb.app',
         },
-      ],
+      ] as NpmRegistry[],
     }}
     files={{
       '/App.js': `import { Button } from "@codesandbox/test-package"
