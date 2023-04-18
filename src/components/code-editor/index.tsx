@@ -196,8 +196,8 @@ export const SandpackCodeEditor = defineComponent({
     const sandpackCodeEditorRef = ref<InstanceType<typeof CodeMirror> | null>(null);
     const classNames = useClassNames();
 
-    const handleCodeUpdate = (newCode: string): void => {
-      sandpack.updateCurrentFile(newCode);
+    const handleCodeUpdate = (newCode: string, shouldUpdatePreview = true) => {
+      sandpack.updateCurrentFile(newCode, shouldUpdatePreview);
     };
 
     return () => (
@@ -214,7 +214,9 @@ export const SandpackCodeEditor = defineComponent({
             extensionsKeymap={props.extensionsKeymap}
             filePath={sandpack.activeFile}
             initMode={props.initMode || sandpack.initMode}
-            onCodeUpdate={handleCodeUpdate}
+            onCodeUpdate={(newCode: string) => {
+              handleCodeUpdate(newCode, sandpack.autoReload ?? true);
+            }}
             readOnly={props.readOnly || readOnlyFile.value}
             showInlineErrors={props.showInlineErrors}
             showLineNumbers={props.showLineNumbers}
@@ -224,7 +226,7 @@ export const SandpackCodeEditor = defineComponent({
           />
 
           {
-            (!sandpack.autoReload || (showRunButton.value && sandpack.status === 'idle')) ? <RunButton /> : null
+            (showRunButton.value && (!sandpack.autoReload || sandpack.status === 'idle')) ? <RunButton /> : null
           }
         </div>
       </SandpackStack>

@@ -190,8 +190,8 @@ const SandpackProvider = defineComponent({
       state.shouldUpdatePreview = shouldUpdatePreview;
     }
 
-    function updateCurrentFile(code: string) {
-      updateFile(state.activeFile, code);
+    function updateCurrentFile(code: string, shouldUpdatePreview = true) {
+      updateFile(state.activeFile, code, shouldUpdatePreview);
     }
 
     function closeFile(path: string) {
