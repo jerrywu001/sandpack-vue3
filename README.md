@@ -4,7 +4,7 @@
 
 Vue3 components that give you the power of editable sandboxes that run in the browser.
 
-TIPS: There have been some issues using `volar@1.x` about `TS static type checking` in a `single vue file`, see: https://github.com/johnsoncodehk/volar/issues/2206
+TIPS: Works better with **`volar@1.4.x`**.
 
 ```jsx
 import { Sandpack } from 'sandpack-vue3';
