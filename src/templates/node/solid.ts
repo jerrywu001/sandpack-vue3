@@ -75,7 +75,7 @@ export default defineConfig({
           'solid-js': '^1.6.15',
         },
         devDependencies: {
-          vite: '^4.2.1',
+          vite: '4.0.0',
           typescript: '^5.0.2',
           'vite-plugin-solid': '^2.6.1',
           'esbuild-wasm': '^0.17.12',

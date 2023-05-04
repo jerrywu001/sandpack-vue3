@@ -99,7 +99,7 @@ export default defineConfig({
         },
         devDependencies: {
           '@vitejs/plugin-vue': '^4.0.0',
-          vite: '^4.2.1',
+          vite: '4.0.0',
           'vue-tsc': '^1.2.0',
           typescript: '^5.0.2',
           'esbuild-wasm': '^0.17.12',

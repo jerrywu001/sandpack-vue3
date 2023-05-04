@@ -92,7 +92,7 @@ root.render(
           '@vitejs/plugin-react': '^3.1.0',
           'vite-plugin-checker': '^0.5.6',
           typescript: '^5.0.2',
-          vite: '^4.2.1',
+          vite: '4.0.0',
           'esbuild-wasm': '^0.17.12',
         },
       }, null, 2),

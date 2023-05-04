@@ -18,3 +18,5 @@ playground/storybook-static
 
 __unconfig_vite.config.ts
 .vercel
+
+.vercel

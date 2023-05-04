@@ -20,6 +20,7 @@ export default defineConfig({
     'cjs',
     'esm',
   ],
+  treeshake: true,
   minify: true,
   shims: false,
   clean: true,

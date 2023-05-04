@@ -97,7 +97,7 @@ const SandpackProvider = defineComponent({
 
     const intersectionObserver = ref<IntersectionObserver | null>(null);
     const initializeSandpackIframeHook = ref<NodeJS.Timer | null>(null);
-    const preregisteredIframes = ref<Record<
+    const registeredIframes = ref<Record<
     string,
     { iframe: HTMLIFrameElement; clientPropsOverride?: ClientPropsOverride }
     >>({});
@@ -324,13 +324,14 @@ const SandpackProvider = defineComponent({
       clientId: string,
       clientPropsOverride?: ClientPropsOverride,
     ) {
+      // Store the iframe info so it can be
+      // used later to manually run sandpack
+      registeredIframes.value[clientId] = {
+        iframe,
+        clientPropsOverride,
+      };
       if (state.status === 'running') {
-        state.clients[clientId] = await createClient(iframe, clientId, clientPropsOverride);
-      } else {
-        preregisteredIframes.value[clientId] = {
-          iframe,
-          clientPropsOverride,
-        };
+        await createClient(iframe, clientId, clientPropsOverride);
       }
     }
 
@@ -341,9 +342,9 @@ const SandpackProvider = defineComponent({
         client.iframe.contentWindow?.location.replace('about:blank');
         client.iframe.removeAttribute('src');
         delete state.clients[clientId];
-      } else {
-        delete preregisteredIframes.value[clientId];
       }
+
+      delete registeredIframes.value[clientId];
 
       if (timeoutHook.value) {
         clearTimeout(timeoutHook.value);
@@ -390,7 +391,13 @@ const SandpackProvider = defineComponent({
       iframe: HTMLIFrameElement,
       clientId: string,
       clientPropsOverride?: ClientPropsOverride,
-    ): Promise<SandpackClient> {
+    ): Promise<void> {
+      // Clean up any existing clients that
+      // have been created with the given id
+      if (state.clients[clientId]) {
+        state.clients[clientId].destroy();
+      }
+
       const customSetup = props?.customSetup ?? { npmRegistries: [] };
       const timeOut = props?.options?.bundlerTimeOut ?? BUNDLER_TIMEOUT;
 
@@ -398,9 +405,19 @@ const SandpackProvider = defineComponent({
         clearTimeout(timeoutHook.value);
       }
 
-      timeoutHook.value = setTimeout(() => {
-        state.status = 'timeout';
-      }, timeOut);
+      /**
+       * Subscribe inside the context with the first client that gets instantiated.
+       * This subscription is for global states like error and timeout, so no need for a per client listen
+       * Also, set the timeout timer only when the first client is instantiated
+       */
+      const shouldSetTimeout = typeof unsubscribe.value !== 'function';
+
+      if (shouldSetTimeout) {
+        timeoutHook.value = setTimeout(() => {
+          unregisterAllClients();
+          state.status = 'timeout';
+        }, timeOut);
+      }
 
       const client = await loadSandpackClient(
         iframe,
@@ -424,11 +441,6 @@ const SandpackProvider = defineComponent({
         },
       );
 
-      /**
-       * Subscribe inside the context with the first client that gets instantiated.
-       * This subscription is for global states like error and timeout, so no need for a per client listen
-       * Also, set the timeout timer only when the first client is instantiated
-       */
       if (typeof unsubscribe.value !== 'function') {
         unsubscribe.value = client.listen(handleMessage);
       }
@@ -465,7 +477,7 @@ const SandpackProvider = defineComponent({
          */
       });
 
-      return client;
+      state.clients[clientId] = client;
     }
 
     function unregisterAllClients() {
@@ -479,15 +491,11 @@ const SandpackProvider = defineComponent({
 
     async function runSandpack() {
       await Promise.all(
-        Object.keys(preregisteredIframes.value).map(async (clientId) => {
-          // There's already a client if the same id, so we should destroy it
-          if (state.clients[clientId]) {
-            state.clients[clientId].destroy();
-          }
-
-          const { iframe, clientPropsOverride = {} } = preregisteredIframes.value[clientId];
-          state.clients[clientId] = await createClient(iframe, clientId, clientPropsOverride);
-        }),
+        Object.entries(registeredIframes.value).map(
+          async ([clientId, { iframe, clientPropsOverride = {} }]) => {
+            await createClient(iframe, clientId, clientPropsOverride);
+          },
+        ),
       );
 
       state.error = null;

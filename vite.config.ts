@@ -22,6 +22,7 @@ export default defineConfig({
     __UNSTYLED_COMPONENTS__: true,
   },
   build: {
+    target: ['chrome52'],
     minify: true,
     lib: {
       fileName: (type) => {

@@ -114,7 +114,7 @@ export default defineConfig({
   },
   "devDependencies": {
     "typescript": "^5.0.2",
-    "vite": "^4.1.4",
+    "vite": "4.0.0",
     "esbuild-wasm": "^0.17.12"
   }
 }

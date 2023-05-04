@@ -111,7 +111,7 @@ export default defineConfig({
           'svelte-check': '^2.10.3',
           typescript: '^5.0.2',
           tslib: '^2.5.0',
-          vite: '^4.2.1',
+          vite: '4.0.0',
           'esbuild-wasm': '^0.17.12',
         },
       }, null, 2),
