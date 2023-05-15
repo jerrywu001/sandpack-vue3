@@ -3,7 +3,6 @@ import useDelayCodeEditor from './data/useDelayCodeEditor';
 import { CodeMirrorProps } from '.';
 import { defineComponent, nextTick, onBeforeUnmount, onMounted, onUnmounted, watch } from 'vue';
 import { getFileName } from '../../utils/stringUtils';
-import type { DefineComponent } from 'vue';
 import type { EditorState as SandpackEditorState } from '../../types';
 import { Annotation, EditorSelection } from '@codemirror/state';
 import type { SandpackMessage, UnsubscribeFunction } from '@codesandbox/sandpack-client';
@@ -212,6 +211,6 @@ const CodeMirror = defineComponent({
       </div>
     );
   },
-}) as DefineComponent<CodeMirrorProps>;
+});
 
 export { CodeMirror };

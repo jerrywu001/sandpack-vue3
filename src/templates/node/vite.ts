@@ -36,8 +36,8 @@ document.getElementById("app").innerHTML = \`
           preview: 'vite preview',
         },
         devDependencies: {
-          vite: '4.0.0',
-          'esbuild-wasm': '^0.17.12',
+          vite: '4.2.2',
+          'esbuild-wasm': '^0.17.19',
         },
       }, null, 2),
     },

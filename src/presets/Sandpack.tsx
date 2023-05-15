@@ -12,7 +12,6 @@ import {
 } from '../components';
 import {
   computed,
-  DefineComponent,
   defineComponent,
   PropType,
   ref,
@@ -368,7 +367,7 @@ const ConsoleCounterButton = defineComponent({
       </RoundedButton>
     );
   },
-}) as DefineComponent<IConsoleCounterButtonProp>;
+});
 
 const dragHandler = css({
   position: 'absolute',

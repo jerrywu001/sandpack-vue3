@@ -1,5 +1,4 @@
 import {
-  DefineComponent,
   defineComponent,
   PropType,
   ref,
@@ -94,4 +93,4 @@ export const Directory = defineComponent({
       </div>
     );
   },
-}) as DefineComponent<Props>;
+});

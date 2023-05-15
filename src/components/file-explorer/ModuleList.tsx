@@ -1,7 +1,6 @@
 import {
   computed,
   ComputedRef,
-  DefineComponent,
   defineComponent,
   PropType,
 } from 'vue';
@@ -101,4 +100,4 @@ export const ModuleList = defineComponent({
       </div>
     );
   },
-}) as DefineComponent<ModuleListProps>;
+});

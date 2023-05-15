@@ -62,12 +62,12 @@ export default defineConfig({
           preview: 'vite preview',
         },
         dependencies: {
-          vue: '^3.2.47',
+          vue: '^3.3.2',
         },
         devDependencies: {
-          '@vitejs/plugin-vue': '^4.0.0',
-          vite: '4.0.0',
-          'esbuild-wasm': '^0.17.12',
+          '@vitejs/plugin-vue': '^4.2.3',
+          vite: '4.2.2',
+          'esbuild-wasm': '^0.17.19',
         },
       }, null, 2),
     },

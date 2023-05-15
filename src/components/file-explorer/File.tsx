@@ -1,6 +1,6 @@
 import { buttonClassName } from '../../styles/shared';
 import { useClassNames } from '../..';
-import { computed, DefineComponent, defineComponent, StyleValue } from 'vue';
+import { computed, defineComponent, StyleValue } from 'vue';
 import { css } from '../../styles';
 import { DirectoryIconOpen, DirectoryIconClosed, FileIcon } from '../../icons';
 
@@ -98,4 +98,4 @@ export const File = defineComponent({
       </button>
     );
   },
-}) as DefineComponent<Props>;
+});

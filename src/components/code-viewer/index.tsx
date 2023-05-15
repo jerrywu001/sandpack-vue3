@@ -9,7 +9,6 @@ import {
 } from '../..';
 import {
   computed,
-  DefineComponent,
   defineComponent,
   PropType,
   ref,
@@ -114,4 +113,4 @@ export const SandpackCodeViewer = defineComponent({
       </SandpackStack>
     );
   },
-}) as DefineComponent<CodeViewerProps>;
+});

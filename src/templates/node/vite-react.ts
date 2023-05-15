@@ -53,9 +53,9 @@ root.render(
           'react-dom': '^18.2.0',
         },
         devDependencies: {
-          '@vitejs/plugin-react': '3.1.0',
-          vite: '4.0.0',
-          'esbuild-wasm': '^0.17.12',
+          '@vitejs/plugin-react': '^3.1.0',
+          vite: '4.2.2',
+          'esbuild-wasm': '^0.17.19',
         },
       }, null, 2),
     },

@@ -277,4 +277,4 @@ export const FilePath = defineComponent({
       </button>
     );
   },
-}) as DefineComponent<{ onClick: () => void; path: string }>;
+});

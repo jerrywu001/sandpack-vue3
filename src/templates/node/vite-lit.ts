@@ -110,12 +110,12 @@ export default defineConfig({
     "build": "tsc && vite build"
   },
   "dependencies": {
-    "lit": "^2.6.1"
+    "lit": "^2.7.4"
   },
   "devDependencies": {
-    "typescript": "^5.0.2",
-    "vite": "4.0.0",
-    "esbuild-wasm": "^0.17.12"
+    "typescript": "^5.0.4",
+    "vite": "4.2.2",
+    "esbuild-wasm": "^0.17.19"
   }
 }
 `,

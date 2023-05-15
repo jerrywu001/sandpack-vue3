@@ -1,4 +1,4 @@
-import { DefineComponent, defineComponent, PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 import { ConsoleIcon, useClassNames } from '../..';
 import { css } from '../../styles';
@@ -163,4 +163,4 @@ export const Header = defineComponent({
       </div>
     );
   },
-}) as DefineComponent<Props>;
+});

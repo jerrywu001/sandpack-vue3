@@ -60,14 +60,14 @@ declare module "*.vue" {
           build: 'vue-cli-service build',
         },
         dependencies: {
-          'core-js': '^3.26.1',
-          vue: '^3.2.45',
+          'core-js': '^3.30.2',
+          vue: '^3.3.2',
         },
         devDependencies: {
           '@vue/cli-plugin-babel': '^5.0.8',
           '@vue/cli-plugin-typescript': '^5.0.8',
           '@vue/cli-service': '^5.0.8',
-          typescript: '^4.9.3',
+          typescript: '^4.9.5',
         },
       }, null, 2),
     },

@@ -43,7 +43,7 @@ export interface SandpackProps {
    * }
    * ```
    */
-  files?: Record<string, string> | SandpackFile;
+  files?: SandpackFiles;
 
   /**
    * Set of presets to easily initialize sandboxes. Each template contains

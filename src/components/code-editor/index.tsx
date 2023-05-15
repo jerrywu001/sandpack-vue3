@@ -8,7 +8,6 @@ import { useActiveCode } from '../../hooks';
 import { useSandpack } from '../../contexts/sandpackContext';
 import {
   computed,
-  DefineComponent,
   defineComponent,
   PropType,
   ref,
@@ -193,7 +192,7 @@ export const SandpackCodeEditor = defineComponent({
     const shouldShowTabs = computed(() => (props.showTabs ?? sandpack?.visibleFiles?.length > 1));
     const showRunButton = computed(() => !sandpack?.autorun);
 
-    const sandpackCodeEditorRef = ref<InstanceType<typeof CodeMirror> | null>(null);
+    const sandpackCodeEditorRef = ref<{ getCodemirror: () => EditorView | undefined; } | null >(null);
     const classNames = useClassNames();
 
     const handleCodeUpdate = (newCode: string, shouldUpdatePreview = true) => {
@@ -232,6 +231,6 @@ export const SandpackCodeEditor = defineComponent({
       </SandpackStack>
     );
   },
-}) as DefineComponent<CodeEditorProps>;
+});
 
 export { CodeMirror as CodeEditor } from './CodeMirror';

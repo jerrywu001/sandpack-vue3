@@ -68,12 +68,12 @@ export default defineConfig({
           dev: 'vite --force',
         },
         dependencies: {
-          svelte: '^3.55.1',
+          svelte: '^3.59.1',
         },
         devDependencies: {
-          '@sveltejs/vite-plugin-svelte': '^2.0.3',
-          vite: '4.0.0',
-          'esbuild-wasm': '^0.17.12',
+          '@sveltejs/vite-plugin-svelte': '2.1.1',
+          vite: '4.2.2',
+          'esbuild-wasm': '^0.17.19',
         },
       }, null, 2),
     },
