@@ -31,8 +31,6 @@ export const useLoadingOverlayState = (props: LoadingOverlayStateProp) => {
   const state = ref<LoadingOverlayState>('LOADING');
 
   const handleListener = () => {
-    sandpack.loadingScreenRegisteredRef = true;
-
     if (unsubscribe) unsubscribe();
 
     unsubscribe = listen((message) => {

@@ -134,8 +134,6 @@ const SandpackProvider = defineComponent({
       error: { message: '' } as SandpackError | null,
       status: props.options?.autorun ?? true ? 'initial' : 'idle',
       clients: {} as Record<string, SandpackClient>,
-      loadingScreenRegisteredRef: false,
-      errorScreenRegisteredRef: false,
       lazyAnchorRef: null as HTMLDivElement | null,
       unsubscribeClientListenersRef: {} as Record<string, Record<string, UnsubscribeFunction>>,
       queuedListenersRef: { global: {} } as Record<string, Record<string, ListenerFunction>>,
@@ -433,8 +431,8 @@ const SandpackProvider = defineComponent({
           skipEval: props.options?.skipEval ?? false,
           logLevel: props.options?.logLevel,
           showOpenInCodeSandbox: false,
-          showErrorScreen: state.errorScreenRegisteredRef,
-          showLoadingScreen: state.loadingScreenRegisteredRef,
+          showErrorScreen: true,
+          showLoadingScreen: true,
           reactDevTools: state.reactDevTools,
           customNpmRegistries: customSetup?.npmRegistries,
           teamId: props.teamId,
@@ -596,10 +594,15 @@ const SandpackProvider = defineComponent({
 
         if (recompileMode === 'immediate') {
           Object.values(state.clients).forEach((client) => {
-            toRaw(client).updateSandbox({
-              files: { ...toRaw(state.files) },
-              template: toRaw(state.environment),
-            });
+            /**
+             * Avoid concurrency
+             */
+            if (client.status === 'done') {
+              toRaw(client).updateSandbox({
+                files: { ...toRaw(state.files) },
+                template: toRaw(state.environment),
+              });
+            }
           });
         }
 
@@ -609,10 +612,15 @@ const SandpackProvider = defineComponent({
           window.clearTimeout(debounceHook.value);
           debounceHook.value = window.setTimeout(() => {
             Object.values(state.clients).forEach((client) => {
-              toRaw(client).updateSandbox({
-                files: { ...toRaw(state.files) },
-                template: toRaw(state.environment),
-              });
+              /**
+               * Avoid concurrency
+               */
+              if (client.status === 'done') {
+                toRaw(client).updateSandbox({
+                  files: { ...toRaw(state.files) },
+                  template: toRaw(state.environment),
+                });
+              }
             });
           }, recompileDelay);
         }

@@ -102,7 +102,7 @@ export default defineConfig({
       code: JSON.stringify({
         type: 'module',
         scripts: {
-          dev: 'vite --force',
+          dev: 'vite',
         },
         devDependencies: {
           '@sveltejs/vite-plugin-svelte': '2.1.1',

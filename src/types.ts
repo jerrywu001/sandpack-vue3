@@ -601,14 +601,6 @@ export interface SandpackState {
    */
   lazyAnchorRef: Ref<HTMLDivElement>;
 
-  /**
-   * eg: error screen - if no component registers this, the bundler needs to show the custom error screen
-   * When the value is boolean, we only care if the components have the responsibility to render the elements,
-   * we don't need the actual element reference
-   */
-  errorScreenRegisteredRef: boolean;
-  loadingScreenRegisteredRef: boolean;
-
   unsubscribeClientListenersRef: Ref<Record<string, Record<string, UnsubscribeFunction>>>;
   queuedListenersRef: Ref<Record<string, Record<string, ListenerFunction>>>;
 }

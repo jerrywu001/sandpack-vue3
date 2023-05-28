@@ -65,7 +65,7 @@ export default defineConfig({
       code: JSON.stringify({
         type: 'module',
         scripts: {
-          dev: 'vite --force',
+          dev: 'vite',
         },
         dependencies: {
           svelte: '^3.59.1',

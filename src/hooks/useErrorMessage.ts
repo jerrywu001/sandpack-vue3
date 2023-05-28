@@ -1,5 +1,5 @@
 import { useSandpack } from '../contexts/sandpackContext';
-import { computed, ComputedRef, onMounted } from 'vue';
+import { computed, ComputedRef } from 'vue';
 import type { SandpackError } from '@codesandbox/sandpack-client';
 
 /**
@@ -9,10 +9,6 @@ export const useErrorMessage = (): ComputedRef<SandpackError> => {
   const { sandpack } = useSandpack();
 
   const error = computed(() => sandpack.error ?? { message: '' } as SandpackError);
-
-  onMounted(() => {
-    sandpack.errorScreenRegisteredRef = true;
-  });
 
   return error;
 };

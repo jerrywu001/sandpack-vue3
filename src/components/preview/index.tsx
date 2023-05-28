@@ -151,10 +151,6 @@ export const SandpackPreview = defineComponent({
     const { refresh } = useSandpackNavigation(clientId.value);
     const { restart } = useSandpackShell(clientId.value);
 
-    // SandpackPreview immediately registers the custom screens/components so the bundler does not render any of them
-    sandpack.errorScreenRegisteredRef = true;
-    sandpack.loadingScreenRegisteredRef = true;
-
     onMounted(() => {
       nextTick(() => {
         if (unsubscribe) unsubscribe();
