@@ -11,10 +11,10 @@
     "typecheck": "tsc && vue-tsc"
   },
   "dependencies": {
-    "vue-router": "^4.2.1"
+    "vue-router": "^4.2.2"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.16",
+    "@iconify-json/carbon": "^1.1.18",
     "@storybook/addon-actions": "~6.5.16",
     "@storybook/addon-docs": "~6.5.16",
     "@storybook/addon-essentials": "~6.5.16",
@@ -22,7 +22,7 @@
     "@storybook/builder-vite": "0.4.2",
     "@storybook/vue3": "~6.5.16",
     "cross-env": "^7.0.3",
-    "vite-plugin-pages": "^0.30.1"
+    "vite-plugin-pages": "^0.31.0"
   },
   "overrides": {
     "@storybook/addon-essentials": {
