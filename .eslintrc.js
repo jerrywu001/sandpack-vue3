@@ -110,6 +110,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': 'off',
     '@typescript-eslint/no-unsafe-argument': 'off',
     // vue - https://eslint.vuejs.org/rules/
+    'vue/no-setup-props-destructure': 'off',
     'vue/require-default-prop': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',
