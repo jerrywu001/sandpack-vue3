@@ -1,4 +1,5 @@
 import { shallowEqual } from './array';
+import { describe, it, expect } from 'vitest';
 
 describe('shallowEqual', () => {
   it('should be different: when the first array is longer than the second one', () => {

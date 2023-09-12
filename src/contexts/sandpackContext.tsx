@@ -345,7 +345,7 @@ const SandpackProvider = defineComponent({
       delete registeredIframes.value[clientId];
 
       if (timeoutHook.value) {
-        clearTimeout(timeoutHook.value);
+        clearTimeout(timeoutHook.value as any);
       }
 
       const unsubscribeQueuedClients = Object.values(
@@ -371,7 +371,7 @@ const SandpackProvider = defineComponent({
         state.bundlerState = msg.state;
       } else if ((msg.type === 'done' && !msg.compilatonError) || msg.type === 'connected') {
         if (timeoutHook.value) {
-          clearTimeout(timeoutHook.value);
+          clearTimeout(timeoutHook.value as any);
         }
         state.error = null;
       } else if (msg.type === 'action' && msg.action === 'show-error') {
@@ -400,7 +400,7 @@ const SandpackProvider = defineComponent({
       const timeOut = props?.options?.bundlerTimeOut ?? BUNDLER_TIMEOUT;
 
       if (timeoutHook.value) {
-        clearTimeout(timeoutHook.value);
+        clearTimeout(timeoutHook.value as any);
       }
 
       /**
@@ -540,7 +540,7 @@ const SandpackProvider = defineComponent({
             }, 50);
           } else {
             if (initializeSandpackIframeHook.value) {
-              clearTimeout(initializeSandpackIframeHook.value);
+              clearTimeout(initializeSandpackIframeHook.value as any);
             }
 
             Object.keys(state.clients).map(unregisterBundler);
@@ -683,7 +683,7 @@ const SandpackProvider = defineComponent({
       }
 
       if (timeoutHook.value) {
-        clearTimeout(timeoutHook.value);
+        clearTimeout(timeoutHook.value as any);
       }
 
       if (debounceHook.value) {
@@ -691,7 +691,7 @@ const SandpackProvider = defineComponent({
       }
 
       if (initializeSandpackIframeHook.value) {
-        clearTimeout(initializeSandpackIframeHook.value);
+        clearTimeout(initializeSandpackIframeHook.value as any);
       }
 
       if (intersectionObserver.value) {

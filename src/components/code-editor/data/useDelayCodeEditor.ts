@@ -235,7 +235,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
   const resetEditor = () => {
     cmView.value?.destroy();
     if (timer) {
-      clearTimeout(timer);
+      clearTimeout(timer as any);
     }
   };
 

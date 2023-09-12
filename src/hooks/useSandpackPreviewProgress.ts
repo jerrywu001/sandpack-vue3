@@ -71,7 +71,7 @@ export const useSandpackPreviewProgress = (
         if (message.type === 'done' && message.compilatonError === false) {
           isReady.value = true;
           loadingMessage.value = null;
-          clearTimeout(timer);
+          clearTimeout(timer as any);
         }
       }, props?.clientId);
     },
@@ -80,14 +80,14 @@ export const useSandpackPreviewProgress = (
 
   onBeforeUnmount(() => {
     if (timer) {
-      clearTimeout(timer);
+      clearTimeout(timer as any);
     }
     if (unsubscribe) unsubscribe();
   });
 
   onUnmounted(() => {
     if (timer) {
-      clearTimeout(timer);
+      clearTimeout(timer as any);
     }
     if (unsubscribe) unsubscribe();
   });

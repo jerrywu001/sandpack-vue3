@@ -89,12 +89,12 @@ export const useLoadingOverlayState = (props: LoadingOverlayStateProp) => {
       () => props.loading,
     ],
     () => {
-      if (fadeTimeout) clearTimeout(fadeTimeout);
+      if (fadeTimeout) clearTimeout(fadeTimeout as any);
 
       if (state.value === 'PRE_FADING' && !props.loading) {
         state.value = 'FADING';
       } else if (state.value === 'FADING') {
-        if (fadeTimeout) clearTimeout(fadeTimeout);
+        if (fadeTimeout) clearTimeout(fadeTimeout as any);
         fadeTimeout = setTimeout(
           () => {
             state.value = 'HIDDEN';

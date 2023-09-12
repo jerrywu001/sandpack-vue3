@@ -139,7 +139,7 @@ export const LoadingOverlay = defineComponent({
     watch(
       progressMessage,
       () => {
-        if (timer) clearTimeout(timer);
+        if (timer) clearTimeout(timer as any);
         if (progressMessage.value?.includes('Running')) {
           timer = setTimeout(() => {
             shouldShowStdout.value = true;
@@ -150,11 +150,11 @@ export const LoadingOverlay = defineComponent({
     );
 
     onBeforeUnmount(() => {
-      if (timer) clearTimeout(timer);
+      if (timer) clearTimeout(timer as any);
     });
 
     onUnmounted(() => {
-      if (timer) clearTimeout(timer);
+      if (timer) clearTimeout(timer as any);
     });
 
     return () => (

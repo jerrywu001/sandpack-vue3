@@ -1,4 +1,5 @@
 import { calculateNearestUniquePath } from './stringUtils';
+import { describe, it, expect } from 'vitest';
 
 describe('calculateNearestUniquePath', () => {
   it('strips the leading slash from the root path', () => {

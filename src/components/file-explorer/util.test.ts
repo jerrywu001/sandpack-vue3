@@ -1,5 +1,6 @@
 import type { ModuleListProps } from './ModuleList';
 import { fromPropsToModules } from './util';
+import { expect, it, describe } from 'vitest';
 
 const defaultProps: ModuleListProps = {
   files: {

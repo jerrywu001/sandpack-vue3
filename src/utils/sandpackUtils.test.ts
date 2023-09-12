@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { REACT_TEMPLATE } from '../templates/runtime/react';
+import { describe, it, expect, test } from 'vitest';
 
 import {
   getSandpackStateFromProps,
