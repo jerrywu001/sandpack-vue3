@@ -6,6 +6,8 @@ import { VITE_SOLID_TEMPLATE } from './node/solid';
 import { VITE_TEMPLATE } from './node/vite';
 import { VITE_REACT_TEMPLATE } from './node/vite-react';
 import { VITE_REACT_TS_TEMPLATE } from './node/vite-react-ts';
+import { VITE_PREACT_TEMPLATE } from './node/vite-preact';
+import { VITE_PREACT_TS_TEMPLATE } from './node/vite-preact-ts';
 import { VITE_SVELTE_TEMPLATE } from './node/vite-svelte';
 import { VITE_SVELTE_TS_TEMPLATE } from './node/vite-svelte-ts';
 import { VITE_VUE_TEMPLATE } from './node/vite-vue';
@@ -27,6 +29,8 @@ import { STATIC_TEMPLATE } from './static';
 export { VITE_TEMPLATE } from './node/vite';
 export { VITE_REACT_TEMPLATE } from './node/vite-react';
 export { VITE_REACT_TS_TEMPLATE } from './node/vite-react-ts';
+export { VITE_PREACT_TEMPLATE } from './node/vite-preact';
+export { VITE_PREACT_TS_TEMPLATE } from './node/vite-preact-ts';
 export { VITE_SVELTE_TEMPLATE } from './node/vite-svelte';
 export { VITE_SVELTE_TS_TEMPLATE } from './node/vite-svelte-ts';
 export { VITE_VUE_TEMPLATE } from './node/vite-vue';
@@ -67,6 +71,8 @@ export const SANDBOX_TEMPLATES = {
   vite: VITE_TEMPLATE,
   'vite-react': VITE_REACT_TEMPLATE,
   'vite-react-ts': VITE_REACT_TS_TEMPLATE,
+  'vite-preact': VITE_PREACT_TEMPLATE,
+  'vite-preact-ts': VITE_PREACT_TS_TEMPLATE,
   'vite-vue': VITE_VUE_TEMPLATE,
   'vite-vue-ts': VITE_VUE_TS_TEMPLATE,
   'vite-svelte': VITE_SVELTE_TEMPLATE,
