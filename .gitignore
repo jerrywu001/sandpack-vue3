@@ -20,3 +20,6 @@ __unconfig_vite.config.ts
 .vercel
 
 .vercel
+
+# Local Netlify folder
+.netlify

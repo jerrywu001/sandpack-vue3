@@ -425,6 +425,7 @@ interface SandpackRootProps<
   theme?: SandpackThemeProp;
   className?: string;
   teamId?: string;
+  sandboxId?: string;
   /**
    * @default false
    */

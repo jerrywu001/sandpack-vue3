@@ -436,6 +436,7 @@ const SandpackProvider = defineComponent({
           reactDevTools: state.reactDevTools,
           customNpmRegistries: customSetup?.npmRegistries,
           teamId: props.teamId,
+          sandboxId: props.sandboxId,
         },
       );
 

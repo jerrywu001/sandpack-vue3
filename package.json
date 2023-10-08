@@ -13,7 +13,7 @@
     "@codesandbox/sandpack-vue3",
     "codesandbox"
   ],
-  "homepage": "https://sandpack-vue3.js-bridge.com",
+  "homepage": "https://sandpack-vue3.netlify.app",
   "bugs": {
     "url": "https://github.com/jerrywu001/sandpack-vue3/issues"
   },
@@ -75,15 +75,15 @@
     "typecheck": "tsc && vue-tsc"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.9.1",
+    "@codemirror/autocomplete": "^6.9.2",
     "@codemirror/commands": "^6.3.0",
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
     "@codemirror/lang-javascript": "^6.2.1",
     "@codemirror/language": "^6.9.1",
     "@codemirror/state": "^6.2.1",
-    "@codemirror/view": "^6.21.2",
-    "@codesandbox/sandpack-client": "^2.7.1",
+    "@codemirror/view": "^6.21.3",
+    "@codesandbox/sandpack-client": "^2.9.0",
     "@lezer/highlight": "^1.1.6",
     "@stitches/core": "^1.2.8",
     "ansi-to-vue3": "^0.1.2",
@@ -105,7 +105,7 @@
     "@testing-library/user-event": "^14.5.1",
     "@testing-library/vue": "^7.0.0",
     "@types/lz-string": "^1.5.0",
-    "@types/node": "^20.8.2",
+    "@types/node": "^20.8.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-vue": "^4.4.0",
@@ -120,7 +120,7 @@
     "bumpp": "^9.2.0",
     "cssnano": "^6.0.1",
     "esbuild-plugin-babel": "^0.2.3",
-    "eslint": "^8.50.0",
+    "eslint": "^8.51.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-plugin-import": "^2.28.1",
@@ -136,7 +136,7 @@
     "vite": "^4.4.11",
     "vite-plugin-windicss": "^1.9.1",
     "vitest": "^0.34.6",
-    "vue-tsc": "^1.8.15"
+    "vue-tsc": "^1.8.16"
   },
   "peerDependencies": {
     "vue": ">=3.2.0"
