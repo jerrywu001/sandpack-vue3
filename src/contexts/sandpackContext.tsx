@@ -236,13 +236,13 @@ const SandpackProvider = defineComponent({
     ) {
       if (state.status !== 'running') {
         console.warn(
-          '[sandpack-react]: dispatch cannot be called while in idle mode',
+          '[sandpack-vue3]: dispatch cannot be called while in idle mode',
         );
         return;
       }
 
       if (clientId) {
-        toRaw(state.clients[clientId]).dispatch(message);
+        toRaw(state.clients[clientId])?.dispatch(message);
       } else {
         Object.values(state.clients).forEach((client) => {
           toRaw(client).dispatch(message);

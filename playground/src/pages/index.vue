@@ -80,6 +80,32 @@ const toggleReadOnly = () => {
     <br>
 
     <Sandpack
+      template="vanilla-ts"
+      :files="{
+        '/index.ts': `import { SimpleAffineEditor } from '@blocksuite/editor';
+import '@blocksuite/editor/themes/affine.css';
+
+const editor = new SimpleAffineEditor();
+document.body.appendChild(editor);`,
+      }"
+      :custom-setup="{
+        dependencies: {
+          yjs: 'latest',
+          '@toeverything/theme': 'latest',
+          '@blocksuite/block-std': 'nightly',
+          '@blocksuite/blocks': 'nightly',
+          '@blocksuite/editor': 'nightly',
+          '@blocksuite/global': 'nightly',
+          '@blocksuite/lit': 'nightly',
+          '@blocksuite/store': 'nightly',
+          '@blocksuite/virgo': 'nightly',
+        }
+      }"
+    />
+
+    <br>
+
+    <Sandpack
       :files="{}"
       theme="auto"
       template="vite-react"

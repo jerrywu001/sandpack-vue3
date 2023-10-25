@@ -56,7 +56,7 @@ export const LoadingOverlay = defineComponent({
   setup(props: LoadingOverlayProps, { attrs }) {
     let timer: NodeJS.Timer;
     const { sandpack } = useSandpack();
-    const { restart } = useSandpackShell();
+    const { restart } = useSandpackShell(props.clientId);
     const classNames = useClassNames();
     const shouldShowStdout = ref(false);
 
@@ -121,9 +121,9 @@ export const LoadingOverlay = defineComponent({
                 iconStandaloneClassName,
                 roundedButtonClassName,
               ])}
-              onClick={() => {
+              onClick={async () => {
+                if (sandpack) await sandpack.runSandpack();
                 restart();
-                if (sandpack) sandpack.runSandpack();
               }}
               title="Restart script"
               type="button"
