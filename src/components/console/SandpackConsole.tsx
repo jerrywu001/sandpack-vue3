@@ -25,6 +25,8 @@ interface SandpackConsoleProps {
   showHeader?: boolean;
   showSyntaxError?: boolean;
   showSetupProgress?: boolean;
+  showRestartButton?: boolean;
+  showResetConsoleButton?: boolean;
   maxMessageCount?: number;
   onLogsChange?: (logs: SandpackConsoleData) => void;
   /** Reset the console list on every preview restart */
@@ -51,6 +53,16 @@ export const SandpackConsole = defineComponent({
       type: Boolean,
       required: false,
       default: false,
+    },
+    showRestartButton: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    showResetConsoleButton: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
     resetOnPreviewRestart: {
       type: Boolean,
@@ -206,29 +218,35 @@ export const SandpackConsole = defineComponent({
               : props.actionsChildren ? props.actionsChildren : null
           }
 
-          {isServerTab.value && (
-            <RoundedButton
-              onClick={() => {
-                restart();
-                resetConsole();
-                resetStdout();
-              }}
-            >
-              <RestartIcon />
-            </RoundedButton>
-          )}
+          {
+            props.showRestartButton && isServerTab.value && (
+              <RoundedButton
+                onClick={() => {
+                  restart();
+                  resetConsole();
+                  resetStdout();
+                }}
+              >
+                <RestartIcon />
+              </RoundedButton>
+            )
+          }
 
-          <RoundedButton
-            onClick={() => {
-              if (currentTab.value === 'client') {
-                resetConsole();
-              } else {
-                resetStdout();
-              }
-            }}
-          >
-            <CleanIcon />
-          </RoundedButton>
+          {
+            props.showResetConsoleButton && (
+              <RoundedButton
+                onClick={() => {
+                  if (currentTab.value === 'client') {
+                    resetConsole();
+                  } else {
+                    resetStdout();
+                  }
+                }}
+              >
+                <CleanIcon />
+              </RoundedButton>
+            )
+          }
         </div>
 
         {props.standalone && (
