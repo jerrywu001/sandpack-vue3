@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
+import path from "path";
+import * as walk from "acorn-walk";
+import { generate } from "astring";
 
-const walk = require("acorn-walk");
-const { generate } = require("astring");
-
-module.exports = function () {
+export default function() {
   return {
     name: "remove-css",
     transform(code, id) {
@@ -48,4 +47,4 @@ module.exports = function () {
       };
     },
   };
-};
+}

@@ -4,11 +4,11 @@
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.tslint": true
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.tslint": "explicit"
   },
   "eslint.options": {
-    "overrideConfigFile": "./.eslintrc.js"
+    "overrideConfigFile": "./.eslintrc.cjs"
   },
   "eslint.validate": [
     "javascript",

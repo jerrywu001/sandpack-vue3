@@ -92,13 +92,13 @@ document.body.appendChild(editor);`,
         dependencies: {
           yjs: 'latest',
           '@toeverything/theme': 'latest',
-          '@blocksuite/block-std': 'nightly',
-          '@blocksuite/blocks': 'nightly',
-          '@blocksuite/editor': 'nightly',
-          '@blocksuite/global': 'nightly',
-          '@blocksuite/lit': 'nightly',
-          '@blocksuite/store': 'nightly',
-          '@blocksuite/virgo': 'nightly',
+          '@blocksuite/block-std': 'latest',
+          '@blocksuite/blocks': 'latest',
+          '@blocksuite/editor': 'latest',
+          '@blocksuite/global': 'latest',
+          '@blocksuite/lit': 'latest',
+          '@blocksuite/store': 'latest',
+          '@blocksuite/virgo': 'latest',
         }
       }"
     />

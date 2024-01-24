@@ -126,9 +126,9 @@ exports[`standardizeTheme > should return a custom theme merged with the default
       "warningSurface": "#FEF2C0",
     },
     "font": {
-      "body": "-apple-system, BlinkMacSystemFont, \\"Segoe UI\\", Roboto, Helvetica, Arial, sans-serif, \\"Apple Color Emoji\\", \\"Segoe UI Emoji\\", \\"Segoe UI Symbol\\"",
+      "body": "-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"",
       "lineHeight": "20px",
-      "mono": "\\"Fira Mono\\", \\"DejaVu Sans Mono\\", Menlo, Consolas, \\"Liberation Mono\\", Monaco, \\"Lucida Console\\", monospace",
+      "mono": ""Fira Mono", "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace",
       "size": "13px",
     },
     "syntax": {
@@ -169,9 +169,9 @@ exports[`standardizeTheme > should return the \`dark\` theme 1`] = `
       "warningSurface": "#3A3000",
     },
     "font": {
-      "body": "-apple-system, BlinkMacSystemFont, \\"Segoe UI\\", Roboto, Helvetica, Arial, sans-serif, \\"Apple Color Emoji\\", \\"Segoe UI Emoji\\", \\"Segoe UI Symbol\\"",
+      "body": "-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"",
       "lineHeight": "20px",
-      "mono": "\\"Fira Mono\\", \\"DejaVu Sans Mono\\", Menlo, Consolas, \\"Liberation Mono\\", Monaco, \\"Lucida Console\\", monospace",
+      "mono": ""Fira Mono", "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace",
       "size": "13px",
     },
     "syntax": {
@@ -212,9 +212,9 @@ exports[`standardizeTheme > should return the default theme 1`] = `
       "warningSurface": "#FEF2C0",
     },
     "font": {
-      "body": "-apple-system, BlinkMacSystemFont, \\"Segoe UI\\", Roboto, Helvetica, Arial, sans-serif, \\"Apple Color Emoji\\", \\"Segoe UI Emoji\\", \\"Segoe UI Symbol\\"",
+      "body": "-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"",
       "lineHeight": "20px",
-      "mono": "\\"Fira Mono\\", \\"DejaVu Sans Mono\\", Menlo, Consolas, \\"Liberation Mono\\", Monaco, \\"Lucida Console\\", monospace",
+      "mono": ""Fira Mono", "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace",
       "size": "13px",
     },
     "syntax": {

@@ -1,6 +1,7 @@
 {
   "name": "playground",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "build": "tsc && vue-tsc && vite build",
     "build:storybook": "build-storybook",
@@ -14,7 +15,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.21",
+    "@iconify-json/carbon": "^1.1.28",
     "@storybook/addon-actions": "~6.5.16",
     "@storybook/addon-docs": "~6.5.16",
     "@storybook/addon-essentials": "~6.5.16",
@@ -22,7 +23,7 @@
     "@storybook/builder-vite": "0.4.2",
     "@storybook/vue3": "~6.5.16",
     "cross-env": "^7.0.3",
-    "vite-plugin-pages": "^0.31.0"
+    "vite-plugin-pages": "^0.32.0"
   },
   "overrides": {
     "@storybook/addon-essentials": {
