@@ -20,7 +20,7 @@ jobs:
           node-version: 18
 
       - run: npm i
-
+      - run: rm -rf node_modules/@types/react
       - run: npm test
       - run: npm run lint
       - run: npm run typecheck

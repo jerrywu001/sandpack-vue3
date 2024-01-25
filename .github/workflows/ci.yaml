@@ -25,6 +25,9 @@ jobs:
       - name: Install
         run: npm i
 
+      - name: rm-react-types
+        run: rm -rf node_modules/@types/react
+
       - name: Lint
         run: npm run lint
 
