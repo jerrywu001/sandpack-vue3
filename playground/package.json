@@ -15,7 +15,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.28",
+    "@iconify-json/carbon": "^1.1.30",
     "@storybook/addon-actions": "~6.5.16",
     "@storybook/addon-docs": "~6.5.16",
     "@storybook/addon-essentials": "~6.5.16",
