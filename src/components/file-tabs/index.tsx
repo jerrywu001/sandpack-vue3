@@ -13,7 +13,8 @@ const tabsClassName = css({
 
 const tabsScrollableClassName = css({
   padding: '0 $space$2',
-  overflow: 'auto',
+  overflowX: 'auto',
+  overflowY: 'hidden',
   display: 'flex',
   flexWrap: 'nowrap',
   alignItems: 'stretch',
