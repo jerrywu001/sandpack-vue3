@@ -252,6 +252,7 @@ const Sandpack = defineComponent({
         <SandpackLayout
           class={rtlLayout.value ? classNames('rtl-layout', [rtlLayoutClassName]) : ''}
         >
+          {/* @ts-ignore */}
           <SandpackCodeEditor
             {...codeEditorOptions.value}
             style={{

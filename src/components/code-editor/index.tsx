@@ -210,6 +210,7 @@ export const SandpackCodeEditor = defineComponent({
             code={code.value}
             editorState={sandpack.editorState}
             extensions={props.extensions}
+            // @ts-ignore
             extensionsKeymap={props.extensionsKeymap}
             filePath={sandpack.activeFile}
             initMode={props.initMode || sandpack.initMode}
@@ -221,6 +222,7 @@ export const SandpackCodeEditor = defineComponent({
             showLineNumbers={props.showLineNumbers}
             showReadOnly={props.showReadOnly}
             wrapContent={props.wrapContent}
+            // @ts-ignore
             additionalLanguages={props.additionalLanguages}
           />
 

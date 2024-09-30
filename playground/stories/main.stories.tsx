@@ -160,7 +160,10 @@ export const Main = () => {
             <div class="playground-grid">
               {config.Components.FileExplorer && <SandpackFileExplorer />}
               {config.Components.Editor && (
-                <SandpackCodeEditor {...codeEditorOptions.value} />
+                <>
+                  {/* @ts-ignore */}
+                  <SandpackCodeEditor {...codeEditorOptions.value} />
+                </>
               )}
               {config.Components.Preview && (
                 <SandpackPreview

@@ -98,6 +98,7 @@ export const SandpackCodeViewer = defineComponent({
           <CodeEditor
             ref={sandpackCodeViewerRef}
             code={props.code ?? activeCode.value}
+            // @ts-ignore
             additionalLanguages={props.additionalLanguages}
             decorators={props.decorators}
             filePath={sandpack.activeFile}

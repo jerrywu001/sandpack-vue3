@@ -46,6 +46,7 @@ export const Component: Story<CodeEditorProps> = (args) => (
     }}
   >
     <SandpackThemeProvider>
+      {/* @ts-ignore */}
       <SandpackCodeEditor {...args} />
     </SandpackThemeProvider>
   </SandpackProvider>
@@ -63,6 +64,7 @@ export const ShowTabs: Story<CodeEditorProps> = (args) => (
     }}
   >
     <SandpackThemeProvider>
+    {/* @ts-ignore */}
       <SandpackCodeEditor showTabs {...args} />
     </SandpackThemeProvider>
   </SandpackProvider>
@@ -108,6 +110,7 @@ export const ExtensionAutocomplete = () => {
             extensions={active.value ? [autocompletion()] : []}
             // @ts-ignore
             extensionsKeymap={active.value ? [completionKeymap] : []}
+            //  @ts-ignore
             id="extensions"
           />
         </SandpackThemeProvider>

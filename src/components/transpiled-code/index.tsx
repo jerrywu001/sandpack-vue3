@@ -88,6 +88,7 @@ export const SandpackTranspiledCode = defineComponent({
           attrs?.class || '',
         ])}
       >
+        {/* @ts-ignore */}
         <SandpackCodeViewer
           {...props}
           code={transpiledCode.value ?? ''}

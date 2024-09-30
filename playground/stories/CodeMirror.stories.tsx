@@ -29,6 +29,7 @@ stories.add('CustomLanguageShell', () => (
     <CodeEditor
       additionalLanguages={[
         {
+          // @ts-ignore
           name: 'shell',
           extensions: ['sh'],
           language: new LanguageSupport(StreamLanguage.define(shell)),
@@ -47,6 +48,7 @@ stories.add('CustomLanguagePython', () => (
     <CodeEditor
       additionalLanguages={[
         {
+          // @ts-ignore
           name: 'python',
           extensions: ['py'],
           language: python(),
