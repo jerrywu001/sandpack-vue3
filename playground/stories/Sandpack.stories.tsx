@@ -290,7 +290,7 @@ export const FileResolver = () => (
       }}
       files={defaultFiles}
       options={{
-        bundlerURL: 'https://1ad528b9.sandpack-bundler.pages.dev',
+        bundlerURL: 'https://sandpack-bundler.codesandbox.io',
         fileResolver: {
           // @ts-ignore
           isFile: async (fileName): Promise<boolean> => new Promise((resolve) => resolve(!!filesA[fileName])),
@@ -307,7 +307,7 @@ export const FileResolver = () => (
       }}
       files={defaultFiles}
       options={{
-        bundlerURL: 'https://1ad528b9.sandpack-bundler.pages.dev',
+        bundlerURL: 'https://sandpack-bundler.codesandbox.io',
         fileResolver: {
           // @ts-ignore
           isFile: async (fileName): Promise<boolean> => new Promise((resolve) => resolve(!!filesB[fileName])),

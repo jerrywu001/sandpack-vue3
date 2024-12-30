@@ -41,6 +41,10 @@ import type {
   SandpackClientDispatch,
 } from '../types';
 
+type InterserctionObserverCallback = (
+  entries: IntersectionObserverEntry[]
+) => void;
+
 export interface ClientPropsOverride {
   startRoute?: string;
 }
@@ -95,6 +99,7 @@ const SandpackProvider = defineComponent({
     const initModeFromProps = props.options?.initMode || 'lazy';
     // const data = reactive({ reactDevTools: undefined } as any);
 
+    const intersectionObserverCallback = ref<InterserctionObserverCallback | undefined>();
     const intersectionObserver = ref<IntersectionObserver | null>(null);
     const initializeSandpackIframeHook = ref<NodeJS.Timer | null>(null);
     const registeredIframes = ref<Record<
@@ -181,7 +186,13 @@ const SandpackProvider = defineComponent({
       shouldUpdatePreview = true,
     ) {
       if (typeof pathOrFiles === 'string' && typeof code === 'string') {
-        state.files = { ...toRaw(state.files), [pathOrFiles]: { code } };
+        state.files = {
+          ...toRaw(state.files),
+          [pathOrFiles]: {
+            ...files[pathOrFiles],
+            code,
+          },
+        };
       } else if (typeof pathOrFiles === 'object') {
         state.files = normalizePath({ ...toRaw(state.files), ...convertedFilesToBundlerFiles(pathOrFiles) });
       }
@@ -340,9 +351,9 @@ const SandpackProvider = defineComponent({
         client.iframe.contentWindow?.location.replace('about:blank');
         client.iframe.removeAttribute('src');
         delete state.clients[clientId];
+      } else {
+        delete registeredIframes.value[clientId];
       }
-
-      delete registeredIframes.value[clientId];
 
       if (timeoutHook.value) {
         clearTimeout(timeoutHook.value as any);
@@ -375,6 +386,10 @@ const SandpackProvider = defineComponent({
         }
         state.error = null;
       } else if (msg.type === 'action' && msg.action === 'show-error') {
+        if (timeoutHook.value) {
+          clearTimeout(timeoutHook.value as any);
+        }
+
         state.error = extractErrorDetails(msg);
       } else if (
         msg.type === 'action' &&
@@ -501,6 +516,16 @@ const SandpackProvider = defineComponent({
       state.status = 'running';
     }
 
+    intersectionObserverCallback.value = (
+      entries: IntersectionObserverEntry[],
+    ): void => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        runSandpack();
+      } else {
+        unregisterAllClients();
+      }
+    };
+
     function initializeSandpackIframe() {
       const autorun = props.options?.autorun ?? true;
 
@@ -520,12 +545,9 @@ const SandpackProvider = defineComponent({
         // If any component registered a lazy anchor ref component, use that for the intersection observer
         intersectionObserver.value = new IntersectionObserver((entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
-            // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)
-            initializeSandpackIframeHook.value = setTimeout(() => {
-              runSandpack();
-            }, 50);
-
-            if (state.lazyAnchorRef) {
+            // Trigger it once
+            if (entries.some((entry) => entry.isIntersecting) && state.lazyAnchorRef) {
+              intersectionObserverCallback.value?.(entries);
               intersectionObserver.value?.unobserve(state.lazyAnchorRef);
             }
           }
@@ -534,19 +556,7 @@ const SandpackProvider = defineComponent({
         intersectionObserver.value.observe(state.lazyAnchorRef);
       } else if (state.lazyAnchorRef && state.initMode === 'user-visible') {
         intersectionObserver.value = new IntersectionObserver((entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            // Delay a cycle so all hooks register the refs for the sub-components (open in csb, loading, error overlay)
-            initializeSandpackIframeHook.value = setTimeout(() => {
-              runSandpack();
-            }, 50);
-          } else {
-            if (initializeSandpackIframeHook.value) {
-              clearTimeout(initializeSandpackIframeHook.value as any);
-            }
-
-            Object.keys(state.clients).map(unregisterBundler);
-            unregisterAllClients();
-          }
+          intersectionObserverCallback.value?.(entries);
         }, observerOptions);
 
         intersectionObserver.value.observe(state.lazyAnchorRef);
@@ -576,7 +586,7 @@ const SandpackProvider = defineComponent({
       () => {
         const { environment: prevEnvironment } = getSandpackStateFromProps(props);
         const recompileMode = props.options?.recompileMode ?? 'delayed';
-        const recompileDelay = props.options?.recompileDelay ?? 500;
+        const recompileDelay = props.options?.recompileDelay ?? 200;
         if (state.status !== 'running' || !state.shouldUpdatePreview) {
           return;
         }

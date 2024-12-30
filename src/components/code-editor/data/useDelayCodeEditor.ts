@@ -7,6 +7,7 @@ import { highlightDecorators } from '../highlightDecorators';
 import { highlightInlineError } from '../highlightInlineError';
 import { shallowEqual } from '../../../utils/array';
 import { useSandpackTheme } from '../../../hooks';
+import { useSandpack } from '../../../contexts/sandpackContext';
 import { useSyntaxHighlight } from '../useSyntaxHighlight';
 import { EditorState, type Extension, StateEffect } from '@codemirror/state';
 import {
@@ -44,6 +45,7 @@ import { type CustomLanguage } from '../../../types';
 export default function useDelayCodeEditor(props: CodeMirrorProps) {
   // ===== vars & states ========
   let timer: NodeJS.Timer;
+  const { sandpack } = useSandpack();
   const sandpackTheme = useSandpackTheme();
   // const languageExtension = getLanguageFromFile(props.filePath, props.fileType);
   // const langSupport = getCodeMirrorLanguage(languageExtension);
@@ -246,6 +248,7 @@ export default function useDelayCodeEditor(props: CodeMirrorProps) {
     () => props.showInlineErrors,
     () => props.wrapContent,
     () => props.readOnly,
+    () => sandpack.autoReload,
     () => sandpackTheme.id,
     shouldInitEditor,
     sortedDecorators,
